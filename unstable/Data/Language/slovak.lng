@@ -1,0 +1,237 @@
+000Slovak
+001Kolekcia
+002Nová
+003Otvori
+004Uložit
+005Uložit pod
+006Importova
+007Štatistika
+008Zostava
+009Koniec
+010Úpravy
+011Prida oddiel
+012Aktualizova oddiel
+013Odstráni oddiel
+014Usporiada
+015H¾ada
+016Nájs
+017Na disku
+018Vlastnosti
+019ID3-Tag
+020Duplikáty
+021Zobrazi
+022Písmo
+023Mriežku
+024Teplú stopu
+025Nástrojový panel
+026Stavový riadok
+027Nástroje
+028Premenova
+029ID3-Tag editor
+030Obal na CD
+031Možnosti
+032?
+033Informácie
+034História
+035Licencia
+036Domovská stránka
+037Pripomienky
+038Príspevky
+039O programe
+040
+041Meno
+042Titul
+043Autor
+044Album
+045Skladba
+046Rok
+047Komentár
+048Nemôžem otvori súbor
+049Kolekcia se zmenila. Uložit zmeny?
+050Potvrdenie
+051Chyba
+052Informácia
+053Upozornenie
+054OK
+055Áno
+056Nie
+057Zruš
+058Nahrávam
+059Naèítavam
+060Vytvorenie kolekcie
+061Obnovovovanie okna
+062Mb
+063
+064H:M:S
+065ABR
+066VBR
+067Kb/s
+068Složka(y/iek)
+069Súbor(y/ov)
+070Hz
+071Stereo
+072Zlúèené stereo
+073Dva kanály
+074Mono
+075MPEG
+076Úroveò
+077Chyba pri zápise do súboru
+078Zapisovanie
+079Pracujem
+080Celková ve¾kost
+081Celkový èas
+082Strední bitový tok
+083Poèet oddielov
+084Poèet súborov
+085Posledné zmeny
+086GB
+087Hodin(y)
+088Oddiel(y/ov)
+089Zdroj
+090ID3-Tag
+091Uložit
+092Odstráni
+093Zavrie
+094Nesprávny formát súboru
+095Súbor neexistuje
+096Chyba zápise ID3-Tagu
+097Chyba pri odstraòovaní ID3-Tagu
+098Chyba pri èítaní vybraného disku!
+099Daný oddiel už v kolekcii je. Aktualizova jeho obsah?
+100Daný oddiel neobsahuje MPEG audio.
+101Prida
+102Preh¾adáva
+103Oddiel
+104Kolekcia
+105Súbor
+106Zoznam oddielov
+107Nie sú vybrané žiadne oddiely!
+108Odstraòovanie
+109Naozaj chcete odstráni dané oddiely?
+110Vyberanie
+111Zoradenie
+112Preindexovanie
+113Naozaj chcete zoradi kolekciu?
+114Zoradenie prebehlo úspešne.
+115Import
+116Naèítanie údajov
+117Kopírovanie údajov
+118Vyprázdòovanie bufferu
+119Importovanie ukonèené úspešne.
+120Názov
+121
+122Preh¾adáva
+123Zložky a súbory
+124Zložky
+125Súbor
+126Možnosti
+127Velké písmená
+128H¾ada
+129
+130Podmienky
+131Bitový tok
+132Vzorkovací kmitoèet
+133Mód
+134MPEG verzia
+135MPEG úroveò
+136Platný ID3-Tag
+137Prítonmý
+138Neprítomný
+139Niè sa nenašlo.
+140Nájdené
+141Vytváram
+142Pri štarte
+143Automaticky naèíta naposledy otevorenú kolekciu
+144Zapamäta si rozmiestnenie okien
+145Výber jazyka
+146Predvolený
+147Obnovený predvolený jazyk.
+148CBR
+149Vybra
+150Nemôžem importova zo súboru
+151Convertova údaje
+152Prehra
+153Prida do playlistu
+154Uloži ako playlist 
+155Zostava
+156Vytvori playlist
+157Nemôzem vytvori playlist
+158Nemôžem nájs zdroj vybranej položky
+159Názov oddielu
+160Èíslo oddielu
+161Súbor kolekcie
+162Súbor playlistu
+163Aktualizácia
+164Naozaj chcete vymaza tento odiel?
+165Naozaj chtete aktualizova tento oddiel?
+166Objekt
+167Formát
+168Informácie
+169Text
+170DIF (pre Excel)
+171Ve¾kos
+172Èas
+173Poèet zložiek
+174Dátum
+175Zložka
+176MPEG verzia/úroveò
+177ID3-Tag
+178Exportova ako
+179Text
+180Pracujem
+181Zostava bola uložená do súboru
+182Kopírovanie všetkých vybraných objektov
+183Formátovanie zostavy
+184Zapisovánie zostavy do súboru
+185Porovnanie
+186Žiadne duplikáty.
+187Tlaè
+188Jednotka CD-ROM 
+189Zväèši stranu
+190Zrovna
+191Zrovna výšku
+192Zrovna šírku
+193Hore
+194Dole
+195Stránka HTML 
+196Roztiahnu
+197Vodorovne
+198Zvisle
+199Všetky položky
+200Len oznaèené
+201Nie všetky zdrojové adresáre sú èitatelné!
+202Vybraný súbor už existuje! Mám ho prepísa?
+203Základné nastavenie
+204Zálohovánie starej kolekcie súborov
+205Rôzne
+206Sèítanie za adresáre
+207Prida aktuálny dátum
+208Názov CD
+209Prehliada len platné súbory
+210Zvláštne ståpce
+211Typ
+212Vyèisti históriu
+213Otvor znova
+214Prípony
+215Èíslovanie
+216Rôzne
+217Cestu
+218Objekt(y)
+219Obsah
+220Premenovávaè súborov
+221Naozaj chcete premenova súbory?
+222Zlúèi
+223Naozaj chcete zlúèi vybrané súbor(y)?
+224Použi uhádnutý enkóder ako komentár
+225Preferovaná verzia ID3-tagu
+226Premenova
+227Nemôžem premenova s
+228Obnovi
+229Filter
+230Prida
+231Vymaza
+232Naozaj chcete vymaza oznaèené súbory?
+233Nemôžem vymaza súbor
+234Automatická ve¾kos
+235Pouzi foobar2000 na prehravanie
+>>>Translation by Jan Bielik www.jack.sk

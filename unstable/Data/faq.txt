@@ -1,0 +1,100 @@
+MPEG Audio Collection: frequently asked questions (F.A.Q.)
+
+
+Q: What is MAC?
+A: MAC means MPEG Audio Collection. It will help you to organize your
+   audio file collection. There are some nice features like ID3-tag
+   editor, file renamer utility etc.
+
+Q: Why is MAC so different from the others MP3 managers?
+A: It has been developed mainly to manage CDs with MP3 and other files.
+
+Q: Where is the official homepage for MAC? Where can I download new
+   versions?
+A: It is at http://www.jfaul.de
+   Here you will find the download page.
+
+Q: What multimedia formats does MAC accept?
+A: MAC supports the MPEG Audio format (*.mpa, *.mp1, *.mp2, *.mp3),
+   MPEGplus (*.mp+, *.mpc), Windows PCM (*.wav), TwinVQ (*.vqf),
+   Ogg Vorbis (*.ogg), Monkey's Audio (*.mac, *.ape) and
+   Windows Media Audio (*.wma) files.
+
+Q: Which language is MAC written in?
+A: MAC is written with Borland Delphi 6.0 Enterprise.
+
+Q: Do you plan to release a Linux version of MAC?
+A: A Linux version is not planned for the near future.
+
+Q: I want to install a newer version of MAC, do I have to uninstall
+   the previous install first?
+A: This is not required unless otherwise indicated on a new release.
+   If you want to delete the old options, just delete the key
+   HKEY_LOCAL_MACHINE\Software\MPEG Audio Collection.
+
+Q: How do I get MAC to scan my drive for MP3 files?
+A: Just use "Edit" -> "Add volume".
+
+Q: What is VBR?
+A: It is short for "Variable bit rate". Some MP3 encoder support
+   this. If there are very complex parts in a song it will use a
+   quite high bit rate and e.g. on silence or easy parts it will use
+   a lower bit rate. So usually the average bit rate will be not as
+   high as the bit rate of an MP3 of the same quality with constant
+   bit rate. 
+
+Q: When MAC lists my MP3's, some of the songs have an incorrect time. 
+A: Depending on how the MP3 files were encoded, this can happen.
+   If they were encoded incorrectly or by using a software
+   application that does not perform this task properly, the internal
+   track time in the MP3 file may be incorrect.
+
+Q: I have installed MAC and I do not know why I can not search for
+   files, the command "Search" appears in gray.
+A: At first you should add a volume to the database
+   ("Edit" -> "Add volume"), then you can search for MP3's in your
+   database.
+
+Q: MAC does not play any of my MP3's, it seems not to load my default
+   MP3 player.
+A: MP3 files must be linked with a player. You can test it: just
+   double click on a MP3 file in MS-Explorer. If it goes to play,
+   then MAC can do it as well. If not - you should assotiate MP3 with
+   a player.
+
+Q: The program reports an error when try to open my database file.
+A: Please try the newest version of MAC at first. If you get error
+   messages anyway, please send me your COL file - I will try to find
+   the bug or fix your database.
+
+Q: The Excel report alters the special characters. Is it a problem of
+   Excel?
+A: Yes. You can browse created DIF files with Notepad - all special
+   characters are in it.
+
+Q: It would be nice to see an option for scanning all file extensions.
+A: No, because MAC would take much more time for scanning.
+
+Q: How am I going to save my MP3 library into a file, where songs are
+   individually described, like song name, album and everything like
+   this?
+A: Just use "Collection" -> "Report".
+
+Q: Is there some way to have the "Genre" from the ID3-tags included in
+   the columns that are displayed?
+A: MAC will not support Genres yet. Sorry!
+
+Q: I want to write a CGI or ASP, that can allow people to search my
+   collection and I was wondering if you could supply me with the COL
+   file format description.
+A: The file "col.txt" describes the COL file format.
+
+Q: How to print out the list of my files?
+A: At first you should make a report ("Collection" -> "Report"). Then
+   you can print out the created file (TXT or HTML).
+
+Q: I always rip my CD's with VBR. MAC shows most of the time correct
+   bit rates, but sometimes I see CBR.
+A: You should not disable writing of the Xing VBR tag, otherwise MAC
+   thinks "it's CBR" and rounds the bit rate to the nearest common CBR
+   setting.

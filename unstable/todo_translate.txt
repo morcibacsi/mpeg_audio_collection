@@ -1,0 +1,7 @@
+__________________
+ MAC 2.91 alpha 2:
+
+ (+) added:
+235Use foobar2000 for playing
+
+_________________

@@ -1,0 +1,237 @@
+000Danish
+001Samling
+002Ny
+003Åbn
+004Gem
+005Gem som
+006Importer
+007Statistik
+008Report
+009Afslut
+010Rediger
+011Tilføj indhold
+012Opdater indhold
+013Slet indhold
+014Sorter alt
+015Søg
+016Find
+017På drev
+018Egenskaber
+019Tag
+020Dubletter
+021Vis
+022Fonte
+023Grid linier
+024Hot track
+025Værktøjlinie
+026Status linie
+027Værktøjer
+028Omdøb label
+029Tag redigering
+030CD cover
+031Indstillinger
+032?
+033Info
+034Historik
+035Licens
+036Hjemmeside
+037Send Feedback
+038Bidrag
+039Om
+040
+041Navn
+042Titel
+043Kunstner
+044Album
+045Track
+046År
+047Kommentar
+048Kan ikke åbne filen
+049Samlingen er ændret. Vil du gemme ændringerne?
+050Bekræftelse
+051Fejl
+052Information
+053Advarsel
+054Ok
+055Ja
+056Nej
+057Afbryd
+058Indlæser
+059Læs data
+060Opbyg samling
+061Opfrisk vindue
+062Mb
+063
+064H:M:S
+065ABR
+066VBR
+067Kbit/s
+068Mappe(r)
+069File(r)
+070Hz
+071Stereo
+072Joint stereo
+073Dual channel
+074Mono
+075MPEG
+076Layer
+077Kan ikke gemme i filen
+078Gemmer
+079Vent venligst
+080Total størrelse
+081Total Spilletid
+082Gennemsnits bit Niveau
+083Indhold antal
+084Fil antal
+085Sidste ændring
+086GB
+087Time(r)
+088Indhold
+089Kilde
+090Tag info
+091Gem
+092Fjern
+093Luk
+094Filen er ikke gyldig
+095Filen eksisterer ikke
+096Kan ikke skrive tag i filen
+097Kan ikke fjerne tag i filen
+098Kan ikke læse det valgte drev!
+099Det valgte indhold eksisterer allerede i samlingen. Vil du opdatere den?
+100Kilden indeholder ikke MPEG lyd filer.
+101Tilføjer
+102Skanner
+103Indhold
+104Mappe
+105Fil
+106Indholdsliste
+107Der er ikke valgt nogen emner!
+108Sletter
+109Vil du virkelig slette det valgte indhold?
+110Fjern det valgte
+111Sorterer
+112Re-index'er data
+113Vil du virkelig sortere samlingen?
+114Sortering udført med succes.
+115Importerer
+116Indlæs data
+117Kopier data
+118Slet buffer
+119Importering udført med succes.
+120Navn
+121
+122I
+123Mappe & Fil
+124Mappe
+125Fil
+126Indstillinger
+127Sammenfald
+128Søger
+129
+130Betingelser
+131Bit Niveau
+132Sample Niveau
+133Kanal indstilling
+134MPEG version
+135MPEG layer
+136Gyldig tag
+137Tilgængelig
+138Ikke Tilgængelig
+139Der er intet sammenfald.
+140Fundet
+141Opbygger
+142Ved opstart
+143Auto åben sidste samling
+144Gendan sidste vindues opsætning
+145Sprogpakke
+146Normal standard
+147Oprindeligt sprog genskabt.
+148CBR
+149Markeret
+150Kan ikke importere fra filen
+151Konverter data
+152Afspil
+153Implementer
+154Gem som playliste
+155Liste
+156Opbyg playliste
+157Kan ikke opbygge playliste i filen
+158Kan ikke finde kilden til det valgte emne
+159Drev Navn
+160Drevs serienummer
+161Samlings fil
+162Playliste fil
+163Opdaterer
+164Vil du virkelig slette dette indhold?
+165Vil du virkelig opdatere dette indhold??
+166Objekt
+167Rappport format
+168Information
+169Tekst
+170DIF til Excel
+171Størrelse
+172Spilletid
+173Mappe antal
+174Dato
+175Mappe
+176MPEG version/layer
+177ID3-Tag
+178Gem Rapport som
+179Tekst
+180Procces
+181Rapport skabt med succes i filen
+182Kopier alle valgte objekter
+183Formater rapport
+184Skriv rapport i filen
+185Sammenlign
+186Der er ingen dubletter.
+187Print
+188CD-ROM drev
+189Side zoom
+190Zoom til passende størrelse
+191Zoom til højde
+192Zoom til bredde
+193Op
+194Ned
+195HTML side
+196Stræk
+197Horizontal
+198Vertical
+199Alle emner
+200kun valgte
+201Ikke alle mapper fra kilden er læsbare!
+202Den valgte fil eksisterer allerede! Vil du overskrive den?
+203Grundindstillinger
+204Backup af gamle Samlings filer
+205Blandede
+206Nummerering af mapper
+207Tilføj aktuel dato
+208CD label
+209Scan kun gyldige filer
+210Ekstra Felter
+211Type
+212Ryd
+213Genåben
+214Fil udvidelse
+215Nummerering
+216Forskellige
+217Fuld sti
+218Emne(r)
+219Sum
+220Fil omdøber
+221Vil du virkelig omdøbe filerne?
+222Flet
+223Vil du virkelig flette det valgte indhold?
+224Brug gætttet encoder som kommentar
+225Foretrukket ID3-tag version
+226Omdøb
+227Kan ikke omdøbe med
+228Genopret
+229Filter
+230Tilføj
+231Slet
+232Vil du virkelig slette de/den valgte fil(er)?
+233Kan ikke slette filen
+234Auto størrelse
+>>>Translation by Bahn
+>>>Correction by Asger Joergensen

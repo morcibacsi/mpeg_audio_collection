@@ -1,0 +1,253 @@
+MPEG Audio Collection: history
+
+
+(05/01/02) 2.90
+---------------
+added: Thai language pack
+added: Galician language pack
+added: support for Windows Media Audio files (*.wma)
+added: support for ID3v2.2.x tags
+added: support for ID3v1, ID3v2, APE tags in Monkey's Audio files
+added: support for ID3v2, APE tags in MPEGplus files
+added: support for ID3v2 tags in Ogg Vorbis files
+fixed: bug with Ogg Vorbis tag fields
+improved: new MPEG reading engine
+improved: encoder guessing for MPEG CBR files
+
+(10/11/01) 2.82
+---------------
+added: Turkish language pack
+added: Latvian language pack
+added: Serbian language pack
+added: Estonian language pack
+added: Greek language pack
+added: Norwegian language pack
+added: Traditional Chinese language pack
+added: Slovenian language pack
+fixed: unicode characters in Ogg Vorbis tags
+added: support for Monkey's Audio files (*.mac, *.ape)
+fixed: bit rate value for WAV files
+added: help file (english only)
+added: Lithuanian language pack
+added: Ukrainian language pack
+improved: some small changes
+
+(08/17/01) 2.82 beta
+--------------------
+added: support for Ogg Vorbis files (*.ogg)
+added: support for TwinVQ files (*.vqf)
+added: support for Windows PCM files (*.wav)
+added: support for ID3v2.4.x tags
+improved: upper limit for text fields increased - 250 symbols
+improved: several small changes
+fixed: wrong sorting on the right pane
+
+(07/26/01) 2.77
+---------------
+fixed: problem if MPEGplus files are "read only"
+
+(07/25/01) 2.77 beta 1d
+-----------------------
+added: Bulgarian language pack
+improved: searching works faster
+added: Danish language pack
+added: auto size option for extra columns
+added: Slovak language pack
+added: name of a selected item to the clipboard (Ctrl-C)
+added: "File Rename" utility
+fixed: wrong bit rate by VBR coded files with the ID3v2 tag
+improved: several small changes
+
+(05/28/01) 2.77 beta 1c
+-----------------------
+added: support for MPEGplus files (*.mp+/*.mpc)
+fixed: problem with the "Update volume" function
+added: support for ID3v2.3.x tags
+added: Catalan language pack
+improved: several small changes
+
+(05/09/01) 2.77 beta 1b
+-----------------------
+fixed: bug by database opening
+improved: "Add volume" dialog window
+added: ability to add guessed encoder info as comment
+added: ability to merge some volumes in one
+added: Afrikaans language pack
+added: Simplified Chinese language pack
+improved: many small changes
+
+(03/18/01) 2.77 beta 1a
+-----------------------
+fixed: problem if file names are too long
+added: drop down list for last searched names
+improved: search result dialog is resizeable
+added: "Information" command in the context menu
+added: summary option for reports
+added: numeration option for reports
+improved: "Delete volume" dialog window
+improved: "Add volume" dialog window
+improved: relative path for playlists entries
+added: show/hide file extensions on the right pane
+added: show/hide the full volume path on the left pane
+modified: "Import" command moved to the menu "Edit"
+added: "Reopen" command in the menu "Collection"
+added: ability to clear the listing of the last opened files
+added: Croatian language pack
+added: Romanian language pack
+added: Arabic language pack
+improved: many small changes
+fixed: some rare bugs
+
+(01/18/01) 2.50
+---------------
+improved: folder information in reports
+modified: all icons
+added: saving marked information in collection
+modified: some language packs
+modified: colors for the HTML report
+added: multiple selection on the right pane 
+added: ability to set the viewable columns on the right pane 
+improved: searching for duplicates (compare ID3-tags)
+added: total disk size option for CD covers
+added: option for scanning valid files only
+modified: menu "Edit"
+added: folder count in collection statistics
+added: Portuguese language pack
+added: ability to change the viewable font
+added: Hungarian language pack
+added: Finnish language pack
+improved: many small changes
+fixed: some small bugs
+
+(11/08/00) 2.25
+---------------
+improved: options for printing CD covers
+added: backup for old collection files
+fixed: bug by scanning a faulty directory
+fixed: bug by scanning a bad ID3-tag
+added: Czech language pack
+added: Italian language pack
+added: Swedish language pack
+improved: several small changes
+
+(09/26/00) 2.17
+---------------
+added: French language pack
+improved: ID3-tag editor
+fixed: bug by reading a volume without subdirectories
+added: Spanish language pack
+added: Polish language pack
+improved: several small changes
+fixed: some small bugs
+
+(09/07/00) 2.10
+---------------
+fixed: bug in collection statistics
+fixed: bug by updating volumes
+added: sorting the list view by a column
+added: editing ID3-tags in collection
+added: renaming volume labels
+improved: 'Find' contains 'Check' and 'Duplicates'
+added: saving search results
+added: sorted or unsorted order for reports
+improved: several small changes
+fixed: some small bugs
+
+(08/29/00) 2.00
+---------------
+added: selecting items
+added: reports: scanning all or selected items
+fixed: bug by update a non-existing volume path
+improved: several small changes
+fixed: some small bugs
+
+(08/23/00) 2.00 beta 4
+----------------------
+added: printing CD-covers
+added: last opened files list
+added: reports: HTML-format
+modified: reports: CSV-format replaced with DIF-format
+added: reports: user can select position of columns
+added: install and uninstall support
+fixed: bug by program file location
+improved: several small changes
+
+(08/16/00) 2.00 beta 3
+----------------------
+added: searching for duplicates
+added: collections associated to the application
+added: loading a collection on the command line
+added: saving program settings in the registry
+added: reporting in CVS-file for Microsoft Excel 2000
+added: Dutch language pack
+fixed: some small bugs
+improved: several small changes
+
+(08/10/00) 2.00 beta 2
+----------------------
+improved: reports: new features
+added: multi language support: English, German, Russian
+improved: several small changes
+
+(08/04/00) 2.00 beta 1
+----------------------
+improved: two-part-window like MS-Explorer
+added: including ID3-tags
+added: searching in ID3-tags
+modified: new collection file format (*.col)
+added: importing from another collection (*.col, *.mac)
+improved: support for very big collections
+added: updating volumes
+improved: reading MPEG-2 files
+removed: collection reports (temporary removed)
+removed: text replacing
+removed: text editing
+removed: font setting
+modified: menu "View"
+
+(07/14/00) 1.30
+---------------
+improved: several small changes
+added: column "Volume" in report
+fixed: some small bugs
+
+(05/23/00) 1.25
+---------------
+added: enqueue files
+added: creating playlists
+added: playing all files in a directory
+fixed: error messages by volume deleting
+fixed: API-error by file checking on CD-ROM
+fixed: hang up on report creating and volume adding
+improved: loading for big collections
+improved: several small changes
+
+(04/28/00) 1.17
+---------------
+fixed: hang up by scanning of no-MPEG-files
+improved: saving and removing tags in all selected files
+added: track number in the tag editor
+fixed: file playing
+improved: several small changes
+
+(04/03/00) 1.12
+---------------
+fixed: directory list boxes
+added: tag editor
+added: info items in the menu
+modified: location for the report in the menu
+added: replacing text in whole collection
+added: editing file and directory names
+added: sorting data tree
+improved: several small changes
+
+(03/12/00) 1.04
+---------------
+added: number of files for directories in the report
+added: program options
+fixed: report saving by an invalid file name
+improved: several small changes
+
+(03/01/00) 1.00
+---------------
+original version

@@ -1,0 +1,36 @@
+MPEG Audio Collection: translation
+
+
+Adapting the program to a different language
+--------------------------------------------
+
+MAC has been written to take full advantage of the language independence.
+All program messages, menus, dialog box texts etc. are stored
+outside of the program in resource files.
+
+Currently, 33 languages are supported:
+
+  - Afrikaans                - Hungarian
+  - Arabic                   - Italian
+  - Bulgarian                - Latvian
+  - Catalan                  - Lithuanian
+  - Chinese                  - Norwegian
+  - Croatian                 - Polish
+  - Czech                    - Portuguese
+  - Danish                   - Romanian
+  - Dutch                    - Russian
+  - English                  - Serbian
+  - Estonian                 - Slovak
+  - Finnish                  - Slovenian
+  - French                   - Spanish
+  - Galician                 - Swedish
+  - German                   - Thai
+  - Greek                    - Turkish
+                             - Ukrainian
+
+To adapt MAC to another language only the *.lng file has to be translated.
+For a native speaker of the language this will take one to two hours.
+The author would appreciate to get a copy of the translated resource file
+for inclusion in the next public release. 
+
+If you make any changes in the existing language files, please let me know.

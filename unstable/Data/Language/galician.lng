@@ -1,0 +1,236 @@
+000Galician
+001Colección
+002Nova
+003Abrir
+004Gardar
+005Gardar como
+006Importar
+007Estatísticas
+008Informes
+009Sair
+010Editar
+011Engadir volume
+012Actualizar volume
+013Borrar volume
+014Clasificar todo
+015Buscar
+016Encontrar
+017En disco
+018Propiedades
+019Etiqueta (Tag)
+020Duplicados
+021Ver
+022Fonte
+023Táboa
+024Hot track
+025Barra de Ferramentas
+026Barra de Estado
+027Ferramentas
+028Renomear etiqueta
+029Editor de Tag
+030Carátulas de CD
+031Opcións
+032?
+033Info
+034Historial
+035Licencia
+036Páxina Web
+037Soporte
+038Donación
+039Acerca de
+040
+041Nome
+042Título
+043Artista
+044Álbum
+045Pista
+046Ano
+047Comentario
+048Non se pode abri-lo arquivo
+049A colección cambiou. ¿Quere garda-los cambios?
+050Confirmación
+051Erro
+052Información
+053Aviso
+054Ok
+055Si
+056Non
+057Cancelar
+058Cargando
+059Lendo datos
+060Construindo colección
+061Refrescando fiestra
+062Mb
+063
+064H:M:S
+065ABR
+066VBR
+067Kbit/s
+068Carpeta(s)
+069Arquivo(s)
+070Hz
+071Stereo
+072Joint stereo
+073Canal doble
+074Mono
+075MPEG
+076Layer
+077Non se pode garda-lo arquivo
+078Gardando
+079Espere, por favor
+080Tamaño total
+081Duración total
+082Compresión media
+083Número de volumes
+084Número de arquivos
+085Último cambio
+086GB
+087Hora(s)
+088volume(s)
+089Fonte
+090Info da etiqueta (Tag)
+091Gardar
+092Borrar
+093Pechar
+094Este arquivo non é válido
+095Ese arquivo non existe
+096Non se pode escribi-lo tag no arquivo
+097Non se pode elimina-lo tag do arquivo
+098!Non se pode ler do disco seleccionado!
+099O volume seleccionado xa existe na colección. ¿Quere actualizalo?
+100O disco de orixe non contén arquivos audio MPEG.
+101Engadindo
+102Buscando
+103Volume
+104Directorio
+105Arquivo
+106Lista de volumes
+107¡Non existen rexistros seleccionados!
+108Eliminando
+109¿quere realmente elimina-lo(s) volume(s) seleccionado(s)?
+110Eliminar selección
+111Clasificando
+112Reindexa-los datos
+113¿Quere realmente clasifica-la colección?
+114A clasificación rematou con éxito.
+115Importando
+116Cargar datos
+117Copiar datos
+118Vaciar buffer
+119A importación rematou con éxito.
+120Nome
+121
+122En
+123Directorio e arquivo
+124Directorio
+125Arquivo
+126Opcións
+127Respetar Maiúsculas-Minúsculas
+128Buscando
+129
+130Termos
+131Tasa de Bits
+132Tasa de Muestreo
+133Modo Audio
+134Versión MPEG
+135MPEG layer
+136Etiqueta (Tag) válido
+137Presente
+138Ausente
+139No existen coincidencias.
+140Atopado
+141Construindo
+142Ó arranque
+143Auto abri-la última colección
+144Restaurar configuración da última fiestra
+145Idioma
+146Por defecto
+147Restaurouse o idioma por defecto.
+148CBR
+149Seleccionar
+150Non se pode importar do arquivo
+151Convertir datos
+152Reproducir
+153Poñer en cola
+154Gardar como lista de reproducción
+155Listando
+156Crear lista de reproducción
+157Non se pode crear unha lista de reproducción no arquivo
+158Non se pode encontra-la orixe do elemento seleccionado
+159Etiqueta do volume
+160Número serie do volume
+161Arquivo de colección
+162Arquivo de lista de reproducción
+163Actualizando
+164¿Quere realmente eliminar este volume?
+165¿Quere realmente actualizar este volume?
+166Obxecto
+167Formato de Informe
+168Información
+169Texto
+170DIF para Excel
+171Tamaño
+172Duración
+173Número de carpetas
+174Data
+175Carpeta
+176Versión/Layer MPEG
+177ID3-Tag
+178Gardar informe como
+179Texto
+180Proceso
+181O informe arquivouse con éxito
+182Copiar tódolos elementos seleccionados
+183Formatear informe
+184Graba-lo informe nun arquivo
+185Comparar
+186Non existen duplicados.
+187Imprimir
+188Unidade
+189Zoom de páxina
+190Zoom de encadre en páxina
+191Zoom ó alto
+192Zoom ó ancho
+193Arriba
+194Abaixo
+195Páxina HTML
+196Reducir
+197Horizontal
+198Vertical
+199Tódolos elementos
+200Elementos seleccionados
+201¡Non tódolos directorios de orixe son lexibles!
+202¡O arquivo seleccionado xa existe!...¿quere reemplazalo?
+203Opcións xerais
+204Backup de coleccións anteriores
+205Miscelaneos
+206Numeración de directorios
+207Agregar data actual
+208Etiqueta do CD
+209Buscar só arquivos válidos
+210Columnas extras
+211Tipo
+212Borrar
+213Reabrir
+214Extensións de arquivos
+215Numeración
+216Varios
+217Directorio completo
+218obxecto(s)
+219Resume
+220Renomear arquivos
+221¿Quere realmente renomea-los arquivos?
+222Fundir
+223¿Realmente desexa fundi-los volumes seleccionados?
+224Usa-lo codificador coma comentario
+225Versión preferida de etiqueta ID3
+226Renombar
+227Non se pode renomear con
+228Restablecer
+229Filtro
+230Agregar
+231Borrar
+232¿Realmente desexa borra-lo(s) arquivo(s) seleccionado(s)?
+233Non se pode borra-lo arquivo
+234Tamaño automático
+>>>Translation by Pablo Fernández Estévez (pablofe@gsmbox.es)

@@ -1,0 +1,237 @@
+000Estonian
+001Kogu
+002Uus
+003Ava
+004Salvesta
+005Salvesta nimega
+006Too
+007Statistika
+008Raport
+009Välju
+010Redigeeri
+011Lisa plaat
+012Plaadi värskendamine
+013Kustuta plaat
+014Sorteeri
+015Otsi
+016Leia
+017Kettalt
+018Atribuudid
+019Silt
+020Identsed failid
+021Vaade
+022Font
+023Joonitud
+024Aktiivne kursor
+025Tööriistariba
+026Olekuriba
+027Tööriistad
+028Uus nimi
+029Sildiredaktor
+030CD ümbris
+031Valikud
+032?
+033Info
+034Ajalugu
+035Litsents
+036Koduleht
+037Saada oma arvamus
+038Sponsoreeri
+039Lühiinfo
+040
+041Nimi
+042Pealkiri
+043Esitaja
+044Album
+045Lugu
+046Aasta
+047Kommentaar
+048Ei suuda faili avada
+049Kogu on muudetud. Kas soovite muudatused salvestada?
+050Kinnitus
+051Viga
+052Informatsioon
+053Hoiatus
+054Ok
+055Jah
+056Ei
+057Tühista
+058Laen
+059Andmete lugemine
+060Kogu loomine
+061Akna värskendamine
+062Mb
+063
+064T:M:S
+065ABR
+066VBR
+067Kbit/s
+068kausta
+069faili
+070Hz
+071Stereo
+072joint stereo
+073Dual channel
+074Mono
+075MPEG
+076Layer
+077Ei suuda failina salvestada
+078Salvestamine
+079Palun oodake
+080Suurus kokku
+081Pikkus kokku
+082Keskmine bitikiirus
+083Plaate kokku
+084Faile kokku
+085Viimati muudetud
+086GB
+087tundi
+088plaati
+089Allikas
+090Sildi info
+091Salvesta
+092Eemalda
+093Sulge
+094Kõlbmatu fail
+095Faili ei ole
+096Ei suuda silti failile lisada
+097Ei suuda silti failist eemaldada
+098Ei suuda valitud ketast lugeda!
+099Kogus on juba olemas sellenimeline plaat. Kas soovite seda värskendada?
+100Valitud allikas ei sisalda MPEG audiofaile.
+101Lisamine
+102Otsing
+103Plaat
+104Kataloog
+105Fail
+106Plaatide nimekiri
+107Midagi ei ole valitud!
+108Kustutamine
+109Kas tõesti soovite valitud plaadi(d) kustutada?
+110Tühista valik
+111Sorteerimine
+112Andmete korrastamine
+113Kas te tõesti soovite kogu uuesti sorteerida?
+114Sorteerimine õnnestus.
+115Toomine
+116Andmete laadimine
+117Andmete kopeerimine
+118Tühjenda puhver
+119Toomine õnnestus.
+120Nimi
+121
+122Kust
+123Kataloog ja fail
+124Kataloog
+125Fail
+126Suvandid
+127Tõstutundlik
+128Otsing
+129
+130Tingimused
+131Bitikiirus
+132Sämplimissagedus
+133Kanal
+134MPEG versioon
+135MPEG layer
+136Kehtiv silt
+137Olemas
+138Pole
+139Ühtegi ei leitud.
+140Leitud
+141Loon
+142Käivitamisel
+143Ava automaatselt viimane kogu
+144Taasta aken
+145Keel
+146Vaikimisi
+147Vaikekeel on taastatud.
+148CBR
+149Märgitud
+150Ei suuda tuua failist
+151Andmete konverteerimine
+152Mängi
+153Pane järjekorda
+154Salvesta playlist`i
+155Nimekiri
+156Loo playlist
+157Ei suuda playlist`i failiks muuta
+158Ei suuda valitud loo allikat leida
+159Ketta nimi
+160Ketta seerianumber
+161Kogufail
+162Playlist`i fail
+163Värskendamine
+164Kas te tõesti soovite selle plaadi kustutada?
+165Kas te tõesti soovite plaadi infot värskendada?
+166Objekt
+167Rapordi vorming
+168Informatsioon
+169Tekst
+170DIF Excel`ile
+171Suurus
+172Pikkus
+173Kaustade arv
+174Kuupäev
+175Kaust
+176MPEG versioon/layer
+177ID3-silt
+178Salvesta raport nimega
+179Tekst
+180Protsess
+181Raport edukalt salvestatud failiks
+182Kopeeri kõik valitud objektid
+183Rapordi vorming
+184Salvesta raport faili
+185Võrdle
+186Topelteksemplare ei ole.
+187Prindi
+188CD-ROM seade
+189Suuruse sobitamine
+190Sobita lehele
+191Sobita kõrguse järgi
+192Sobita laiuse järgi
+193Üles
+194Alla
+195HTML lehekülg
+196Venita
+197Horisontaalselt
+198Vertikaalselt
+199Kõik
+200Ainult märgitud
+201Ei suutnud kõiki allika katalooge lugeda!
+202Valitud fail on juba olemas! Kas soovite asendada?
+203Põhisätted
+204Vanade kogude varukoopia
+205Mitmesegast
+206Kataloogide nummerdamine
+207Lisa kuupäev
+208CD nimi
+209Otsi ainult kõlblikke faile
+210Lisaveerud
+211Tüüp
+212Tühjenda
+213Ava uuesti
+214Faililaiendid
+215Numeratsioon
+216Mitmeid
+217Kogu tee
+218Objektid)
+219Kokkuvõte
+220Failide ümbernimetamine
+221Kas te tõesti soovite failid ümber nimetada?
+222Liida
+223Kas te tõesti soovite valitud plaadid ühte liita?
+224Kasuta arvatavat kodeerijat kommentaarina
+225Soovitav ID3-sildi versioon
+226Ümbernimetamine
+227Ei suuda ümber nimetada koos
+228Taasta
+229Filter
+230Lisa
+231Kustuta
+232Kas te tõesti soovite valitud faili(d) kustutada?
+233Ei suuda faili kustutada
+234Automaatne sobitamine
+>>>Translation by Raivo Kaljuve, raivo.kaljuve@trenet.ee
+>>>Correction by

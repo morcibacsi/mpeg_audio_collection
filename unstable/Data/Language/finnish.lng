@@ -1,0 +1,237 @@
+000Finnish
+001Kokoelma
+002Uusi
+003Avaa
+004Tallenna
+005Tallenna nimellä
+006Tuo
+007Tilastot
+008Raportti
+009Lopeta
+010Muokkaa
+011Lisää levyjä
+012Päivitä levyt
+013Poista levyjä
+014Järjestä kaikki
+015Etsi
+016Etsi
+017Asemalla
+018Ominaisuus
+019Tagi
+020Kopiot
+021Näytä
+022Fontti
+023Riviviivat
+024Valikoiva kursori
+025Työkalurivi
+026Tilarivi
+027Työkalut
+028Nimeä levy
+029Tagi-editori
+030CD-kansi
+031Asetukset
+032?
+033Info
+034Historia
+035Lisenssi
+036Kotisivut
+037Palaute
+038Lahjoitus
+039Tietoja
+040
+041Nimi
+042Kappale
+043Artisti
+044Albumi
+045Raita
+046Vuosi
+047Kommentti
+048Tiedostoa ei voi avata
+049Kokoelmaa on muutettu. Haluatko tallentaa muutokset?
+050Varmistus
+051Virhe
+052Info
+053Varoitus
+054Ok
+055Kyllä
+056Ei
+057Peruuta
+058Avataan
+059Luetaan tietoja
+060Luo kokoelma
+061Päivitä ikkuna
+062Mt
+063
+064T:M:S
+065ABR
+066VBR
+067Kbit/s
+068Kansio(ta)
+069Tiedosto(a)
+070Hz
+071Stereo
+072Joint stereo
+073Dual Channel
+074Mono
+075MPEG
+076Taso
+077Ei voi tallentaa tiedostoon
+078Tallennetaan
+079Odota
+080Yhteiskoko
+081Yhteiskesto
+082Keskimääräinen bittivirta
+083Levyjen määrä
+084Tiedostojen määrä
+085Viimeinen muutos
+086Gt
+087Tunti(a)
+088Levy(ä)
+089Lähde
+090Tagin tiedot
+091Tallenna
+092Poista
+093Sulje
+094Tiedosto ei ole hyväksyttävä
+095Tiedostoa ei ole
+096Ei voi kirjoittaa tagia tiedostoon
+097Ei voi poistaa tagia tiedostossa
+098Ei voi lukea valittua levyä!
+099Valittu levy on jo kokoelmassa. Haluatko päivittää sen?
+100Lähteessä ei ole MPEG äänitiedostoja.
+101Lisätään
+102Etsitään
+103Levyn nimi
+104Hakemisto
+105Tiedosto
+106Levylista
+107Mitään ei ole valittu!
+108Poistetaan
+109Haluatko todella poistaa valitut levyt?
+110Poista valinta
+111Järjestetään
+112Uudestaanjärjestä data
+113Haluatko todella järjestää kokoelman?
+114Järjestely onnistui.
+115Tuodaan
+116Avaa data
+117Kopioi data
+118Tyhjennä puskuri
+119Tuonti onnistui.
+120Nimi
+121
+122Mistä
+123Hakemisto ja tiedosto
+124Hakemisto
+125Tiedosto
+126Asetukset
+127Sama kirjainkoko
+128Etsitään
+129
+130Tiedoston ominaisuudet
+131Bittivirta
+132Taajuus
+133Kanavamuoto
+134MPEG versio
+135MPEG layer
+136Hyväksyttävä tagi
+137On
+138Ei ole
+139Ei löydettyjä.
+140Löydetty
+141Luodaan
+142Käynnistettäessä
+143Avaa automaattisesti viimeksi käsitelty kokoelma
+144Palauta viimekertaiset ohjelman ikkunan asetukset
+145Kielipaketti
+146Oletus
+147Oletuskieli palautettu.
+148CBR
+149Valittu
+150Ei voida tuoda tiedostosta
+151Käännä data
+152Soita
+153Aseta jonoon
+154Tallenna soittolistana
+155Listataan
+156Luo soittolista
+157Ei voida luoda soittolistaa tiedostoon
+158Ei löydetä valitun kohteen lähdettä
+159Levyn nini
+160Levyn sarjatunnus
+161Kokoelmatiedosto
+162Soittolistatiedosto
+163Päivitetään
+164Haluatko todella poistaa levyn?
+165Haluatko todella päivittää levyn?
+166Kohde
+167Raportin muoto
+168Info
+169Teksti
+170Excelin DIF
+171Koko
+172Kesto
+173Kansioiden määrä
+174Päivämäärä
+175Kansio
+176MPEG versio/layer
+177ID3-tagi
+178Tallenna raportti nimellä
+179Teksti
+180Prosessi
+181Raportti onnistuneesti luotu tiedostoon
+182Kopioi kaikki valitut objektit
+183Raportin muoto
+184Kirjoita raportti tiedostotoon
+185Vertaile
+186Kopioita ei ole.
+187Tulosta
+188CD-ROM asema
+189Zoomaus
+190Koko sivu
+191Koko korkeus
+192Koko leveys
+193Ylös
+194Alas
+195HTML-sivu
+196Venytä
+197Leveys
+198Korkeus
+199Kaikista
+200Vain valitut
+201Lähteessä kaikki hakemistot eivät ole luettavia!
+202Valittu tiedosto on jo olemassa! Haluatko kirjoittaa sen yli?
+203Yleiset asetukset
+204Varmistus vanhoille kokoelma-tiedostoille
+205Sekalaiset
+206Hakemistojen numerointi
+207Päivämäärä
+208CD:n nimi
+209Skannaa vain hyväksytyt tiedostot
+210Ylimääräiset sarakkeet
+211Tyyppi
+212Tyhjennä
+213Avaa uudelleen
+214Tiedoston päätteet
+215Numerointi
+216Useita
+217Koko polku
+218Objekti(a)
+219Yhteenveto
+220Tiedoston uudelleennimeäjä
+221Haluatko varmasti uudelleennimetä tiedostot?
+222Yhdistä
+223Haluatko varmasti yhdistää valitut levyt?
+224Käytä arvattua kooderia kommenttina
+225Toivottu ID3-versio
+226Uudelleennimeä
+227Ei voi nimetä
+228Palauta
+229Suodatus
+230Lisää
+231Poista
+232Haluatko varmasti poistaa valitut tiedostot?
+233Tiedostoa ei voi poistaa
+234Muuta koko automaattisesti
+>>>Translation by Antti Kallio
+>>>Correction by Olli Koski

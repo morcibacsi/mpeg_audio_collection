@@ -1,0 +1,238 @@
+000English
+001Collection
+002New
+003Open
+004Save
+005Save as
+006Import
+007Statistics
+008Report
+009Exit
+010Edit
+011Add volume
+012Update volume
+013Delete volume
+014Sort all
+015Search
+016Find
+017On drive
+018Property
+019Tag
+020Duplicates
+021View
+022Font
+023Grid lines
+024Hot track
+025Toolbar
+026Status bar
+027Tools
+028Rename label
+029Tag editor
+030CD cover
+031Options
+032?
+033Info
+034History
+035License
+036Homepage
+037Send Feedback
+038Donation
+039About
+040
+041Name
+042Title
+043Artist
+044Album
+045Track
+046Year
+047Comment
+048Can not open the file
+049The collection has changed. Would you like to save the changes?
+050Confirmation
+051Error
+052Information
+053Warning
+054Ok
+055Yes
+056No
+057Cancel
+058Loading
+059Read data
+060Build collection
+061Refresh window
+062Mb
+063
+064H:M:S
+065ABR
+066VBR
+067Kbit/s
+068Folder(s)
+069File(s)
+070Hz
+071Stereo
+072Joint stereo
+073Dual channel
+074Mono
+075MPEG
+076Layer
+077Can not save in the file
+078Saving
+079Please wait
+080Total size
+081Total duration
+082Average bit rate
+083Volume count
+084File count
+085Last change
+086GB
+087Hour(s)
+088Volume(s)
+089Source
+090Tag info
+091Save
+092Remove
+093Close
+094The file is not valid
+095The file does not exist
+096Can not write tag in the file
+097Can not remove tag in the file
+098Can not read the selected drive!
+099The selected volume already exists in the collection. Would you like to update it?
+100The source does not contain MPEG audio files.
+101Adding
+102Scanning
+103Volume
+104Directory
+105File
+106Volume list
+107There are no items selected!
+108Deleting
+109Do you really want to delete the selected volume(s)?
+110Remove selection
+111Sorting
+112Reindex data
+113Do you really want to sort the collection?
+114The sorting finished successfully.
+115Importing
+116Load data
+117Copy data
+118Clear buffer
+119The importing finished successfully.
+120Name
+121
+122In
+123Directory and file
+124Directory
+125File
+126Options
+127Match case
+128Searching
+129
+130Terms
+131Bit rate
+132Sample rate
+133Channel mode
+134MPEG version
+135MPEG layer
+136Valid tag
+137Present
+138Not present
+139There are no matches.
+140Found
+141Building
+142On start up
+143Auto open last collection
+144Restore last window settings
+145Language pack
+146Default
+147The default language restored.
+148CBR
+149Marked
+150Can not import from the file
+151Convert data
+152Play
+153Enqueue
+154Save as playlist
+155Listing
+156Create playlist
+157Can not create a playlist in the file
+158Can not find the source of the selected item
+159Drive label
+160Drive serial
+161Collection file
+162Playlist file
+163Updating
+164Do you really want to delete this volume?
+165Do you really want to update this volume?
+166Object
+167Report format
+168Information
+169Text
+170DIF for Excel
+171Size
+172Duration
+173Folder count
+174Date
+175Folder
+176MPEG version/layer
+177ID3-Tag
+178Save report as
+179Text
+180Process
+181The report successfully created in the file
+182Copy all selected objects
+183Format report
+184Write report in file
+185Compare
+186There are no duplicates.
+187Print
+188CD-ROM drive
+189Page zoom
+190Zoom to fit
+191Zoom to height
+192Zoom to width
+193Up
+194Down
+195HTML page
+196Stretch
+197Horizontal
+198Vertical
+199All items
+200Marked only
+201Not all directories of the source are readable!
+202The selected file already exists! Would you like to replace it?
+203General settings
+204Backup for old collection files
+205Miscellaneous
+206Numeration for directories
+207Add current date
+208CD label
+209Scan valid files only
+210Extra columns
+211Type
+212Clear
+213Reopen
+214File extensions
+215Numeration
+216Various
+217Full path
+218Object(s)
+219Summary
+220File renamer
+221Do you really want to rename files?
+222Merge
+223Do you really want to merge the selected volume(s)?
+224Use guessed encoder as comment
+225Preferred ID3-tag version
+226Rename
+227Can not rename with
+228Restore
+229Filter
+230Add
+231Delete
+232Do you really want to delete the selected file(s)?
+233Can not delete the file
+234Auto size
+235Use foobar2000 for playing
+>>>Translation by Jurgen Faul
+>>>Correction by Joerg Walther

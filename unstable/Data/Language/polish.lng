@@ -1,0 +1,237 @@
+000Polish
+001Kolekcja
+002Nowa
+003Otwórz
+004Zapisz
+005Zapisz jako
+006Import
+007Statystyka
+008Zestawienie
+009Koniec
+010Edycja
+011Dodaj album
+012Aktualizuj album
+013Usuñ album
+014Posortuj
+015Szukaj
+016ZnajdŸ
+017Na dysku
+018Cecha
+019Znacznik ID3-Tag
+020Powtórzenia
+021Poka¿
+022Czcionka
+023Siatka
+024Hot-track
+025Pasek narzêdzi
+026Linia stanu
+027Narzêdzia
+028Zmieñ etykietê
+029Edytor znaczników (ID3-Tag)
+030Ok³adka CD
+031Opcje
+032?
+033Informacje
+034Historia
+035Licencja
+036Nasza witryna
+037Opinie
+038Datki
+039O programie
+040
+041Nazwa
+042Tytu³
+043Wykonawca
+044Album
+045Œcie¿ka
+046Rok
+047Uwagi
+048B³¹d otwarcia pliku
+049Kolekcja zmieni³a siê. Czy chcesz zapisaæ zmiany?
+050PotwierdŸ
+051B³¹d
+052Informacje
+053Uwaga
+054Ok
+055Tak
+056Nie
+057Porzuæ
+058£adowanie
+059Wczytywanie danych
+060Tworzenie kolekcji
+061Odœwie¿anie okna
+062Mb
+063
+064G:M:S
+065ABR
+066VBR
+067Kbit/s
+068Katalog(i/ów)
+069Plik(i/ów)
+070Hz
+071Stereo
+072Joint stereo
+073Dual channel
+074Mono
+075MPEG
+076Layer
+077B³¹d zapisu pliku
+078Zapisywanie
+079Proszê czekaæ
+080£¹czny rozmiar
+081£¹czny czas
+082Œredni bit-rate
+083Liczba albumów
+084Liczba plików
+085Ostatnie zmiany
+086GB
+087Godzin(y)
+088Album(y/ów)
+089ród³o
+090Znacznik ID3-Tag
+091Zapisz
+092Usuñ
+093Zamknij
+094Nieprawid³owy plik
+095Plik nie istnieje
+096B³¹d zapisu znacznika do pliku
+097B³¹d usuwania znacznika z pliku
+098B³¹d odczytu wskazanego dysku
+099Wskazany album ju¿ jest w kolekcji! Czy zaktualizowaæ jego zawartoœæ?
+100Wskazany katalog nie zawiera plików MPG Audio!
+101Dodawanie
+102Szukanie
+103Album
+104Katalog
+105Plik
+106Lista albumów
+107Nie wybrano ¿adnych pozycji!
+108Usuwanie
+109Czy na pewno chcesz usun¹æ wskazane albumy?
+110Wybierz
+111Sortowanie
+112Przeindeksuj
+113Czy na pewno chcesz posortowaæ kolekcjê?
+114Sortowanie zakoñczone.
+115Importowanie
+116Wczytaj dane
+117Kopiuj dane
+118Wyczyœæ bufor
+119Importowanie zakoñczone.
+120Nazwa
+121
+122W
+123Katalog i plik
+124Katalog
+125Plik
+126Opcje
+127Badaj wielkoœæ znaków
+128Szukanie
+129
+130Warunki
+131Bit rate
+132Sample rate
+133Channel mode
+134MPEG version
+135MPEG layer
+136Znacznik ID3-Tag
+137Obecny
+138Nieobecny
+139Nic nie znaleziono.
+140Znaleziono
+141Budowanie
+142Przy uruchamianiu
+143Automatycznie otwórz ostatni¹ kolekcjê
+144Przywróæ ustawienia okna
+145Definicja jêzyka
+146Domyœlny
+147Przywrócono domyœlny jêzyk.
+148CBR
+149Zaznacz
+150Nie mogê dokonaæ importu z pliku
+151Konwertuj dane
+152Odtwarzaj
+153Dodaj do kolejki
+154Zapisz play-listê 
+155Wykaz
+156Utwórz play-listê
+157Nie mogê zapisaæ play-listy do pliku
+158Nie mogê znaleŸæ pliku zwi¹zanego z wybran¹ pozycj¹
+159Etykieta dysku
+160Numer dysku
+161Plik kolekcji
+162Play-lista
+163Aktualizacja
+164Czy na pewno chcesz skasowaæ ten album?
+165Czy na pewno chcesz zaktualizowaæ ten album?
+166Obiekt
+167Format zestawienia
+168Informacja
+169Tekst
+170DIF (Excel)
+171Rozmiar
+172Czas
+173Liczba katalogów
+174Data
+175Katalog
+176MPEG version/layer
+177ID3-Tag
+178Zapisz jako
+179Tekst
+180Przetwórz
+181Zestawienie zapisano do pliku
+182Skopiuj wszystkie zaznaczone obiekty
+183Ustal format zestawienia
+184Zapisz zestawienie do pliku
+185Porównaj
+186Brak powtórzeñ.
+187Drukuj
+188Napêd CD-ROM
+189Powiêksz stronê
+190Dopasuj
+191Dopasuj wysokoœæ
+192Dopasuj szerokoœæ
+193Do góry
+194Na dó³
+195Strona HTML 
+196Rozci¹gnij
+197Poziomo
+198Pionowo
+199Wszystko
+200Tylko zaznaczone
+201Nie wszystkie katalogi daj¹ siê odczytaæ!
+202Podany plik ju¿ istnieje! Czy chcesz go zamieniæ?
+203Ogólne ustawienia
+204Kopia starych kolekcji
+205Ró¿ne
+206Numeracja katalogów
+207Dodaj bie¿¹c¹ datê
+208Etykieta CD
+209ZnajdŸ tylko poprawne pliki
+210Dodatkowe kolumny
+211Rodzaj
+212Czyœæ
+213Otwórz ponownie
+214Rozszerzenia nazw plików
+215Numeracja
+216Ró¿ne
+217Pe³na œcie¿ka
+218Obiekt(y)
+219Podsumowanie
+220Zmiana nazw plików
+221Czy na pewno chcesz zmieniæ nazwy plików?
+222Po³¹cz
+223Czy na pewno chcesz po³¹czyæ dane albumy?
+224U¿yj nazwy encodera jako komentarz
+225U¿ywaj ID3-tag danej wersji
+226Zmieñ nazwê
+227Nie mogê zmeiniæ nazwy z
+228Zwróæ nazwê
+229Filtr
+230Dodaj
+231Skasuj
+232Czy na pewno chcesz skasowaæ dany(e) plik(i)?
+233Nie mogê skasowaæ tego pliku
+234Optymalny rozmiar podzia³ków
+>>>Translation by Tomasz Waraksa, POLAND, tomaszwaraksa@poczta.onet.pl
+>>>Correction by Mr.Samurai@gmx.net

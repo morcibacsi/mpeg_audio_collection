@@ -1,0 +1,236 @@
+000Czech
+001Kolekce
+002Nová
+003Otevøít
+004Uložit
+005Uložit jako
+006Import
+007Statistika
+008Sestava
+009Konec
+010Úpravy
+011Pøidat oddíl
+012Aktualizovat oddíl
+013Odebrat oddíl
+014Seøadit
+015Hledat
+016Najít
+017Na disku
+018Vlastnosti
+019Popiska ID3-Tag
+020Duplicity
+021Zobrazit
+022Písmo
+023Møížku
+024Horkou stopu
+025Nástrojový panel
+026Stavový øádek
+027Nástroje
+028Zmìnit název oddílu
+029Editor popiskù (ID3-Tag)
+030Obálka CD
+031Možnosti
+032?
+033Informace
+034Historie
+035Licence
+036Domovská stránka
+037Pøipomínky
+038Pøíspìvky
+039O programu
+040
+041Jméno
+042Titul
+043Autor
+044Album
+045Skladba
+046Rok
+047Komentáøe
+048Nelze otevøít soubor
+049Kolekce se zmìnila. Uložit zmìny?
+050Potvrzení
+051Chyba
+052Informace
+053Upozornìní
+054OK
+055Ano
+056Ne
+057Storno
+058Zavádìní
+059Naèítání dat
+060Vytváøení kolekce
+061Obnovování okna
+062Mb
+063
+064H:M:S
+065ABR
+066VBR
+067Kbit/s
+068Složka(y/ek)
+069Soubor(y/ù)
+070Hz
+071Stereo
+072Slouèené stereo
+073Dva kanály
+074Mono
+075MPEG
+076Úroveò
+077Chyba pøi zápisu do souboru
+078Zápisování
+079Pracuji
+080Celková velikost
+081Celkový èas
+082Støední bitový tok
+083Poèet oddílù
+084Poèet souborù
+085Poslední zmìny
+086GB
+087Hodin(y)
+088Oddíl(y/ù)
+089Zdroj
+090Popiska ID3-Tag
+091Uložit
+092Odstranit
+093Zavøít
+094Nesprávný formát souboru
+095Soubor neexistuje
+096Chyba zápisu popisky do souboru
+097Chyba pøi odstraòování popisky ze souboru
+098Chyba pøi ètení vybraného disku!
+099Vybraný oddíl je již v kolekci. Aktualizovat jeho obsah?
+100Vybraný oddíl neobsahuje MPEG audio.
+101Pøidat
+102Prohledávat
+103Oddíl
+104Kolekce
+105Soubor
+106Seznam oddílù
+107Nejsou vybrány žádné oddíly!
+108Odstraòování
+109Opravdu odstranit vybrané oddíly?
+110Vybírání
+111Øazení
+112Pøeindexování
+113Opravdu seøadit kolekci?
+114Øazení ukonèeno.
+115Import
+116Naèítání údajù
+117Kopírování údajù
+118Vyprazdòování bufferu
+119Import dokonèen.
+120Název
+121
+122Prohledávat
+123Složky a soubory
+124Složky
+125Soubor
+126Možnosti
+127Velká písmena
+128Hledat
+129
+130Podmínky
+131Bitový tok
+132Vzorkovací kmitoèet
+133Mód
+134MPEG verze
+135MPEG úroveò
+136Platný ID3-Tag
+137Pøítomen
+138Nepøítomen
+139Nic nebylo nalezeno.
+140Nalezeno
+141Vytváøení
+142Pøi startu
+143Automaticky naèítat naposledy otevøenou kolekci
+144Ukládat rozmístìní oken
+145Výbìr jazyka
+146Pøedvolený
+147Obnoven pøedvolený jazyk.
+148CBR
+149Vybrat
+150Nemohu importovat ze souboru
+151Pøevést údaje
+152Pøehrát
+153Pøidat do fronty
+154Uložit jako play-list 
+155Sestava
+156Vytvoøit play-list
+157Nemohu zapsat play-list do souboru
+158Nemohu najít soubor(y) svázaný(é) s vybranou položkou
+159Název oddílu
+160Èíslo oddílu
+161Soubor kolekce
+162Soubor Play-list
+163Aktualizace
+164Opravdu smazat tento oddíl?
+165Opravdu aktualizovat tento oddíl?
+166Objekt
+167Formát sestavy
+168Informace
+169Text
+170DIF (Excel)
+171Velikost
+172Èas
+173Poèet složek
+174Datum
+175Složka
+176MPEG verze/úroveò
+177ID3-Tag
+178Uložit sestavu jako
+179Text
+180Provádím
+181Sestava byla uložena do souboru.
+182Kopírování všech vybraných objektù
+183Formátování sestavy
+184Zapisování sestavy do souboru
+185Porovnání
+186Bez duplicit.
+187Tisk
+188Jednotka CD-ROM 
+189Zvìtšit stranu
+190Srovnat
+191Srovnat výšku
+192Srovnat šíøku
+193Nahoru
+194Dolù
+195Stránka HTML 
+196Roztáhnout
+197Vodorovnì
+198Svisle
+199Všechny položky
+200Jen oznaèené
+201Ne všechny zdrojové adresáøe jsou èitelné!
+202Vybraný soubor již existuje! Pøejete si jej pøepsat?
+203Základní nastavení
+204Zálohování staré kolekce souborù
+205Rùzné
+206Sèítání za adresáøe
+207Pøidat souèasné datum
+208Štítek CD
+209Prohlížet jen platné soubory
+210Zvláštní sloupce
+211Typ
+212Vymazat
+213Otevøít znovu
+214Pøíponu souborù
+215Èíslovat
+216Rùzné
+217Plnou cestu
+218Objekt(ù)
+219Souhrn
+220Pøejmenovat soubory
+221Opravdu chcete zmìnit názvy souborù?
+222Slouèit
+223Opravdu slouèit vybraný(é) oddíl(y)?
+224Používat hádání enkodéru jako kometáø
+225Preferovaná verze ID3-tagu
+226Pøejmenovat
+227Nelze pøejmenovat s
+228Obnovit
+229Filtr
+230Pøidat
+231Odebrat
+232Opravdu odebrat vybraný(é) soubor(y)?
+233Nelze odebrat soubor
+234Automatická velikost
+>>>Translation by anonymous author

@@ -1,0 +1,237 @@
+000Turkish
+001Kolleksiyon
+002Yeni
+003Aç
+004Sakla
+005Yeni Adıyla Sakla
+006Dosya Al
+007Istatistikler
+008Raporlama
+009Çıkıs
+010Düzenle
+011Cilt Oluştur
+012Cilt güncelleştirme
+013Cilt sil
+014Sıralama
+015Arama
+016Bulma
+017Kontrol Etme
+018Özellikler
+019TAG
+020Mükkererlikler
+021Görünüm
+022Yazı Tipi
+023Ayırma çizgileri göster
+024İmleçi takip et
+025Araç çubuğu
+026Durum çubuğu
+027Araçlar
+028Tanımını değiştir
+029TAG'leri düzenle
+030CD Kapağı
+031Seçenekler
+032Yardım
+033Bilgi
+034Sürüm
+035Lisans
+036Homepage
+037Bize yazın
+038Bizi destekleyin
+039Hakkında
+040
+041İsim
+042Şarkı Adı
+043Sanatçı
+044Albüm
+045İz no.
+046Yıl
+047Not
+048Dosya açılamiyor
+049Kolleksiyon değişti. Değişiklikleri kayıt etmek istermisiniz?
+050Onaylama
+051Hata
+052Bilgi
+053Uyarı
+054Tamam
+055Evet
+056Hayır
+057Vazgeç
+058Yükleme
+059Verileri Okuyorum
+060Kolleksiyonu değiştiriyorum
+061Güncelleştirme yapılıyor
+062Mb
+063
+064Sa:Da:Sn
+065ABR
+066VBR
+067Kbit/s
+068Klasör
+069Dosya
+070Hz
+071Stereo
+072Joint stereo
+073Çift faz
+074Mono
+075MPEG
+076Layer
+077Bu dosyaya saklanamiyor
+078Saklama
+079Lütfen Bekleyiniz
+080Toplam ebadı
+081Toplam Süre
+082Bitrate Ortalaması
+083Cilt Sayısı
+084Dosya Sayısı
+085Son Değişiklik
+086GB
+087Saat
+088Cilt
+089Kaynak
+090TAG
+091Sakla
+092Çıkart
+093Kapat
+094Dosyanın formatı yalnış
+095Dosya bulunamadı
+096Bu TAG dosyaya saklanamadı
+097Bu TAG dosyadan çıkarılamadı
+098Seçilen sürücü okunamadı
+099Eklemek istediğiniz dosya, Kolleksiyon da var zaten. Kolleksiyonu güncelleştiryim mi? 
+100Seçtiğiniz kaynakta herhangi bir .mpeg dosyası bulunamadı.
+101Eklemek
+102Tarama
+103Cilt
+104Klasör
+105Dosya
+106Cilt listesi
+107Hiçbir Cilt seçili değil!
+108Silme
+109Seçtiğiniz ciltleri silmek istediğinizden eminmisiniz?
+110Silme
+111Sıralama
+112Yeniden Endeksleme
+113Kolleksiyonu sıralamak istediğinizden eminmisiniz?
+114Sıralama başarıyla gerçekleşti.
+115Dosya Al
+116Verileri yükliyorum
+117Verileri kopyaliyorum
+118Ara belleği boşaltiyorum
+119Dosya başarıyla alındı.
+120Adı
+121
+122Aranacak Yer
+123Klasör ve Dosya
+124Klasör
+125Dosya
+126Seçenekler
+127Büyük/Küçük yazılımına dikkat et
+128Arama süreci
+129
+130Şart
+131Bitrate
+132Samplerate
+133Kanal modu
+134MPEG-Sürümü
+135MPEG-Layer
+136Geçerli TAG
+137Erişilebilir
+138Erişilemez
+139Birşey bulunamadı
+140Bulundu
+141Oluşturma
+142Başlangıçta
+143En son kolleksiyonu otomatik olarak aç
+144En son pencere pozisyonları tekrar kullan
+145Dil
+146Varsayılan
+147Varsayılan Dili tekrar uygula.
+148CBR
+149İşaretle
+150Dosya dan bilgi alınmiyor
+151Dönüştürüyorum
+152Çal
+153Ekle
+154Playlist olarak sakla
+155GOluşturma
+156Playlist yap
+157Playlist bu dosyaya saklanamiyor
+158Seçili olan için bir kaynak bulunamiyor
+159Sürücü adı
+160Seri numarası
+161Kolleksiyon
+162Playlist
+163Güncelleştirme
+164Bu cildi silmek istediğinizden eminmisiniz?
+165Bu cildi güncelleştirmek istediğinizden eminmisiniz?
+166Obje
+167Rapor biçimi
+168Bilgi
+169Metin (txt)
+170Excel (DIF)
+171Ebat
+172Süre
+173Dosya Sayısı
+174Tarih
+175Klasör
+176MPEG sürüm/layer
+177ID3-TAG
+178Raporu yeni adıyla sakla
+179Text
+180İşlem
+181Rapor başarıyla dosyaya yazıldı
+182Tüm seçili objeleri kopyala
+183Rapor biçimlendiriliyor
+184Rapor dosyaya yazılıyor
+185Karşılaştırma
+186Kolleksiyonda hiçbir mükkerer objeye rastlanmadı
+187Yazdırma
+188CD-ROM Sürücü
+189Zoom modu
+190Tüm Sayfa
+191Sayfa Yüksekliği
+192Sayfa Genişliği
+193Yukarıya
+194Aşağa
+195HTML sayfası
+196Genişletir
+197Yatay
+198Dikey
+199Tümü
+200Sadece seçili olan
+201Tüm klasörler okunamadı!
+202Bu dosya var zaten! Üzerine  yazılsın mı?
+203Genel
+204Kolleksiyonun bir yedeğini al
+205Ayrıca
+206Klasörleri numaralandırma
+207Güncel tarihi ekle
+208CD Açıklaması
+209Sadece tanınan MPEG dosyaları kabul et
+210Sütün tanımları
+211Tipi
+212Listeyi temizle
+213Yeniden aç
+214Dosya ekleri göster
+215Numaralandırma
+216Çeşitli
+217Tüm yolu göster
+218Obje(ler)
+219özet
+220Dosyaların isimlerini değiştir
+221Dosyaları yeniden adlandırmak istediğinizden eminmisiniz?
+222Birleştirme
+223Ciltleri birleştirmek istediğinizden eminmisiniz?
+224Comment'e (Not) olarak Encoder-Bilgileri yaz
+225Tercih edilen ID3-TAG Sürümü
+226Adlandır
+227Dosya adı değiştirilemiyor
+228Geriye
+229Filtreleme
+230Ekleme
+231Silme
+232Seçili Dosya(yı/ları) silmek istediğiniz eminmisiniz?
+233Dosya silinemiyor
+234Genişliği otomatik uyarla
+>>>Translation by Kemal Seçer
+>>>Correction by Beyhan Yurtsever

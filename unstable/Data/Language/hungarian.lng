@@ -1,0 +1,237 @@
+000Hungarian
+001Kollekció
+002Új
+003Megnyitás
+004Mentés
+005Mentés másként
+006Importálás
+007Statisztika
+008Jelentés
+009Kilépés
+010Szerkesztés
+011Kötet hozzáadása
+012Kötet frissítése
+013Kötet törlése
+014Sorbarendezés
+015Keresés
+016Keresés
+017Meghajtó
+018Tulajdonságok
+019Info
+020Dupla példányok
+021Nézet
+022Betû
+023Négyzetrács
+024Kijelölés kattintás nélkül
+025Eszközsor
+026Állapotsor
+027Eszközök
+028Átnevezés
+029ID3 szerkesztése
+030CD borító
+031Beállítások
+032?
+033Infó
+034Verzió-történet
+035Licensz
+036Weblap
+037Visszajelzés
+038Támogatás
+039Névjegy
+040
+041Név
+042Cím
+043Elõadó
+044Album
+045Sáv
+046Év
+047Megjegyzés
+048Nem lehet megnyitni a fájlt
+049A kollekció megváltozott. Mentsem a változásokat?
+050Megerõsítés
+051Hiba
+052Információ
+053Figyelmeztetés
+054Ok
+055Igen
+056Nem
+057Mégsem
+058Betöltés
+059Adatok olvasása
+060Kollekció felépítése
+061Ablak frissítése
+062Mb
+063
+064ó:p:m
+065ABR
+066VBR
+067Kbit/s
+068mappa
+069fájl
+070Hz
+071Sztereó
+072Joint stereo
+073Dual channel
+074Monó
+075MPEG
+076Layer
+077Nem lehet a fájlba menteni
+078Mentés
+079Kérem várjon
+080Teljes méret
+081Teljes lejátszási idõtartam
+082Átlagos bitrate
+083Kötetek száma
+084Fájlok száma
+085Utolsó módosítás
+086GB
+087óra
+088kötet
+089Forrás
+090ID3 infó
+091Mentés
+092Eltávolítás
+093Bezárás
+094A fájl nem érvényes
+095A fájl nem létezik
+096Nem lehet az ID3 infót a fájlba írni
+097Nem lehet az ID3 infót a fájlból eltávolítani
+098Nem lehet olvasni a kijelölt meghajtót!
+099A kiválasztott kötet már létezik a kollekcióban. Frissítsem?
+100A forrás nem tartalmaz MPEG audió fájlokat.
+101Hozzáadás
+102Vizsgálat
+103Kötet
+104Könyvtár
+105Fájl
+106Kötet lista
+107Nincs semmi kiválasztva!
+108Törlés
+109Biztos hogy törölni akarja a kiválasztott kötet(ek)et?
+110Kijelölés törlése
+111Rendezés
+112Adatok újraindexelése
+113Biztos hogy sorba akarja rendezni a kollekciót?
+114A sorbarendezés sikeresen befejezõdött.
+115Importálás
+116Adatok betöltése
+117Adatok másolása
+118Puffer törlése
+119Az importálás sikeresen végetért.
+120Név
+121
+122Mit keres?
+123Könyvtárt és fájlt
+124Könyvtárt
+125Fájlt
+126Beállítások
+127Kisbetû/nagybetû figyelése
+128Keresés
+129
+130Terms
+131Bitrate
+132Mintavételezési frek.
+133Csatorna mód
+134MPEG verzió
+135MPEG layer
+136Érvényes ID3 infó
+137van
+138nincs
+139Nincs találat.
+140Talált
+141Felépítés
+142Induláskor
+143Utolsó kollekció automatikus megnyitása
+144Az utolsó ablakbeállítások visszaállítása
+145Nyelvi csomag
+146Alapértelmezett
+147Az alapértelmezett nyelv visszaállítása.
+148CBR
+149Kiválasztva
+150Nem lehet a fájlból importálni
+151Adatok konvetálása
+152Lejátszás
+153Lejátszási sorba illesztés
+154Elmentés playlist-ként
+155Listázás
+156Playlist készítése
+157Nem lehet a fájlba playlist-et készíteni
+158A kiválasztott fájl/könyvtár nem elérhetõ
+159Média neve
+160Média sorozatszáma
+161Kollekció fájl
+162Playlist fájl
+163Frissítés
+164Biztos hogy törölni akarja ezt a kötetet?
+165Biztos hogy frissíteni akarja ezt a kötetet?
+166Objektum
+167Jelentés formátum
+168Információ
+169Szöveg
+170DIF Excelhez
+171Méret
+172Idõtartam
+173Könyvtárak száma
+174Dátum
+175Mappa
+176MPEG verzió/layer
+177ID3 infó
+178Jelentés mentése mint
+179Szöveg
+180Folyamat
+181A jelentés sikeresen elkészült a fájlba
+182Kijelölt objektumok másolása
+183Jelentés formázása
+184Jelentés fájlba írása
+185Összehasonlítás
+186Nincsenek ismétlõdések.
+187Nyomtatás
+188CD-ROM meghajtó
+189Oldal nagyítása
+190Teljes oldal
+191Egy oldal magas
+192Egy oldal széles
+193Fel
+194Le
+195HTML oldal
+196Nyújtás
+197Vízszintesen
+198Függõlegesen
+199Mindegyik
+200Csak a kiválasztottak
+201Nem minden forráskönyvtár olvasható!
+202A kiválasztott fájl már létezik! Felülírható?
+203Általános beállítások
+204Régi kollekció fájlok biztonsági mentése
+205Vegyes
+206Könyvtárak sorszámozása
+207Mai dátum hozzáadása
+208CD címke
+209Csak érvényes fájlok vizsgálata
+210Extra oszlopok
+211Típus
+212Törlés
+213Megnyitás újra
+214Fájl kiterjesztések
+215Számozás
+216Vegyes
+217Teljes útvonal
+218Objektum(ok)
+219Összegzés
+220Fájl átnevezõ
+221Biztos hogy át akarja nevezni a fájlokat?
+222Egyesítés
+223Biztos hogy egyesíteni akarja a kijelölt kötete(ke)t?
+224Vélt encoder megjegyzésként
+225Preferált ID3-tag verzió
+226Átnevezés
+227Nem lehet átnevezni
+228Visszaállítás
+229Szûrõ
+230Hozzáadás
+231Törlés
+232Biztos hogy le akarja törölni a kiválasztott fálj(oka)t?
+233Nem lehet törölni a fájlt
+234Automata oszlopszélesség
+>>>Translation by Kovács Péter
+>>>Tizedes Krisztián <byter@freemail.hu, last updated: 2001. jul. 24

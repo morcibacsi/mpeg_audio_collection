@@ -1,0 +1,237 @@
+000Romanian
+001Colecşie
+002Nouã
+003Deschide
+004Salveazã
+005Salveazã ca
+006Import
+007Informaşii
+008Raport
+009Ieºire
+010Editare
+011Adaugã volum
+012Actualizare volum
+013ªterge volumul
+014Sortare generalã
+015Cautã
+016Gãseºte
+017Pe discul
+018Proprietãşi
+019TAG
+020Duplicate
+021Vezi
+022Font
+023Liniere
+024Hot track
+025Bara de instrumente
+026Bara de stare
+027Instrumente
+028Redenumeºte eticheta
+029Editor de TAG
+030Copertã CD
+031Opşiuni
+032?
+033Info
+034Istoric
+035Licenşã
+036Paginã web
+037Trimite impresii
+038Donaşie
+039Despre
+040
+041Nume
+042Titlu
+043Artist
+044Album
+045Piesa
+046Anul
+047Comentariul
+048Nu pot deschide fiºierul
+049Colecşia a fost modificatã. Salvaşi modificãrile?
+050Confirmare
+051Eroare
+052Informaşii
+053Atenşie
+054OK
+055Da
+056Nu
+057Renunşã
+058Încãrcare
+059Se citesc datele
+060Se întocmeºte colecşia
+061Se reactualizeazã fereastra
+062Mb
+063
+064O:M:S
+065ABR
+066VBR
+067Kbit/s
+068Dosare
+069Fiºiere
+070Hz
+071Stereo
+072Joint stereo
+073Bifonic
+074Mono
+075MPEG
+076Layer
+077Nu se poate salva în fiºier
+078Se salveazã
+079Aºteptaşi, vã rog
+080Mãrime totalã
+081Duratã totalã
+082Media kbit/s
+083Numãr volume
+084Numãr fiºiere
+085Ultima actualizare
+086GB
+087Ore
+088Volume
+089Sursa
+090Informaşii TAG
+091Salveazã
+092ªterge
+093Închide
+094Fiºierul nu este valid
+095Nu existã fiºierul
+096Nu se poate scrie TAG în acest fiºier
+097Nu se poate ºterge TAG-ul din acest fiºier
+098Nu se poate citi selecşia!
+099Volumul selectat existã în colecşie. Dorişi sã îl actualizaşi?
+100Sursa nu conşine fiºiere audio în format MPEG.
+101Adãugare
+102Scanare
+103Volum
+104Director
+105Fiºier
+106Listã volume
+107Nu aşi fãcut nici o selecşie!
+108ªtergere
+109Sunteşi sigur(ã) cã dorişi sã ºtergeşi selecşia?
+110ªterge selecşia
+111Sortare
+112Reindexare date
+113Dorişi o sortare a colecşiei?
+114Sortarea s-a efectuat cu succes.
+115Import
+116Încãrcare date
+117Copiere date
+118Curãşare memorie tampon
+119Importul s-a efectuat cu succes.
+120Nume
+121
+122În
+123Director ºi fiºier
+124Director
+125Fiºier
+126Opşiuni
+127Potrivire dupã caracter
+128Cãutare
+129
+130Termeni
+131Ratã bişi
+132Ratã samplare
+133Felul canalelor
+134Versiune MPEG
+135MPEG layer
+136TAG valid
+137Prezent
+138Absent
+139Nu existã în colecşie.
+140Gaseºte
+141Înfiinşare
+142La pornire
+143Deschide automat ultima colecşie
+144Pãstreazã setãrile ferestrei
+145Limba
+146Implicitã
+147Limba implicitã a fost restabilitã.
+148CBR
+149Selectat
+150Nu se poate importa din fiºier
+151Conversie date
+152Ruleazã
+153Verificã
+154Salveazã ca listã de piese
+155Listare
+156Creazã lista de piese
+157Nu se poate crea lista de piese în fiºier
+158Nu gãsesc sursa selectatã 
+159Eticheta discului
+160Seria discului
+161Fiºier colecşie
+162Fiºier listã de piese
+163Actualizare
+164Sunteşi sigur(ã) cã dorişi sã ºtergeşi acest volum?
+165Sunteşi sigur(ã) cã dorişi sã actualizaşi acest volum?
+166Obiect
+167Formatul raportului
+168Informaşii
+169Text
+170DIF pentru Excel
+171Mãrime
+172Duratã
+173Numarul dosarului
+174Data
+175Dosar
+176Versiune MPEG/layer
+177ID3-Tag
+178Salveazã raportul ca
+179Text
+180Proceseazã
+181Raportul a fost creat cu succes în fiºierul
+182Copiazã toatã selecşia
+183Format raport
+184Scrie raportul în fiºierul
+185Comparã
+186Nu sunt duplicate!
+187Imprimã
+188CD-ROM
+189Zoom paginã
+190Potrivire perfectã
+191Pe înãlşime
+192Pe lãşime
+193Sus
+194Jos
+195Paginã HTML
+196Intindere
+197Orizontal
+198Vertical
+199Toate
+200Numai cele selectate
+201Nu se pot citi toate directoarele din sursã!
+202Fiºierele selectate existã deja! Dorişi sã le înlocuişi?
+203Configurãri generale
+204Salvãri de siguranşã pentru vechile fiºiere din colecşie
+205Diverse
+206Numerotarea directoarelor
+207Adaugã data curentã
+208Copertã CD
+209Scaneazã numai fiºierele valide
+210Coloane suplimentare
+211Tip
+212ªterge
+213Redeschide
+214Extensiile fiºierelor
+215Numerotare
+216Diverse
+217Calea completã
+218Obiect(e)
+219Sumar
+220Redenumire fiºier
+221Sunteşi sigur(ã) cã dorişi sã redenumişi fiºierele?
+222Unire
+223Sunteşi sigur(ã) cã dorişi sã unişi volumele selectate?
+224Scrie compresorul audio în rubrica de comentarii
+225Versiunea de ID3-TAG preferatã
+226Redenumeºte
+227Nu se poate redenumi
+228Restaureazã
+229Filtru
+230Adaugã
+231ªterge
+232Sunteşi sigur(ã) cã dorişi sã ºtergeşi fiºierele selectate?
+233Fiºierul nu poate fi ºters
+234Dimensionare automatã
+>>>Traducere de Sebastian DIACONU
+>>>sebastid@yahoo.com

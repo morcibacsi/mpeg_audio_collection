@@ -1,0 +1,114 @@
+MPEG Audio Collection: info
+
+
+An ultimate freeware utility for Windows 95/98/NT/2000/ME/XP
+
+It is designed to organize your audio file collection.
+It is fast and easy to use, scans selected drives for supported audio
+files and lists them in an Explorer-style tree-view interface.
+You can retrieve all information about your audio collection and
+you can play files as well.
+
+Features:
+---------
+
+- Scanning for *.mp?, *.wav, *.vqf, *.ogg, *.mac, *.ape, *.wma files
+- Support for MPEG Audio, MPEGplus, WAV, TwinVQ, Ogg Vorbis,
+  Monkey's Audio and Windows Media Audio files
+- File info: size, length, bit rate, sample rate, mode, version, layer
+- Including ID3-tags (versions 1.0, 1.1, 2.2, 2.3, 2.4)
+- Collection, volume and folder information
+- Searching for name, property, ID3-tag or duplicates
+- Searching in collection or on a drive
+- Saving search results
+- Playing file(s) with its associated application
+- Creating playlists
+- ID3-tag editor (ID3-tags version 1.1 only)
+- Support Xing & FhG VBR
+- Auto open last collection option 
+- Importing from another collection
+- Support for very big collections
+- Updating volumes
+- Several collection reports (TXT, HTML, DIF)
+- Multilingual interface
+- Printing CD-covers
+- File Rename utility
+
+
+Description:
+------------
+
+Having a large audio collection can become a very difficult task, if there
+is no proper way to organize it. MPEG Audio Collection makes the task
+relatively easy and puts the fun back into listening to your favorite
+songs. It doesn't group all the songs together into one large database,
+making sorting routines difficult and time consuming. But what it does
+is provide a volume by volume listing of your CD or HDD contents, integrated
+with a search engine so that you can find out all titles specifically by 
+music groups, so that you know exactly which songs you have in your collection.
+The program starts quickly and it's very practical to have a desktop shortcut
+to it, useful especially if you have a large collection.
+
+Here is a general description of the icons that the program uses:
+
+- NEW: Starts a brand new session of scanning CDs HDDs for MP3s to organize.
+- OPEN: Loads a previously saved session.  
+- STATISTICS: Lists total file size in gigabytes, total amount of duration
+      of collection (calculated to the hour), average bit size, volume count,
+      folder count, file count and last date change.
+- REPORT: Allows the user to specify options to tailor the program to their
+      specific needs.
+- ADD VOLUME: Scans a drive and includes those Mp3 files into catalog.
+- VOLUME LIST: Allows user to select volume(s) to remove from generated 
+      catalog or merge in one volume. 
+- SORT ALL: Sorts all files within all volumes (note: this does not group
+      and sort all files together).
+- SEARCH: A very diverse search engine. Generates a list of files found within
+      users specified needs. Can be saved to a file to be printed out.
+- TAG EDITOR: You can decide which of these particular fields are important
+      when adding Mp3s to your catalog.
+- FILE RENAMER: You can rename files with extracted ID3-tag info.
+- CD COVER: Allows you to design a CD cover for your jewel cases.
+- ABOUT: Version number of program and how to reach the author for effective 
+      suggestions towards upcoming versions.
+
+Pull Down Menus:
+
+- COLLECTION
+      - NEW: Starts a new session.
+      - OPEN: Opens a previously saved session.
+      - REOPEN: Quick loading for last opened files.
+      - SAVE: Save session. Ghosted until data have been changed.
+      - SAVE AS: Choose a name for current session. 
+      - STATISTICS: Lists seven criterias.
+      - REPORT: User customization.
+      - EXIT: Cancel session and quit.
+- EDIT
+      - ADD VOLUME: Include CD or HDD to scan files into catalog.
+      - VOLUME LIST: Remove listings of specified volume(s) or merge in one.
+      - IMPORT: Import data from other collection files (*.col or *.mac).
+      - UPDATE VOLUME: Ghosted until a volume has been selected.
+      - RENAME LABEL: Useful for giving listings a user specified name.
+      - SORT ALL: Sorts all volumes and files within each volume.
+- VIEW
+      - Allows you to change the layout view and offers more options to the
+        physical layout with these options: Grid Lines, Hot Track, Toolbar,
+        Status Bar, Full Path, File Extensions, Font and Extra Columns. Extra
+        columns allows you to add infos like File Size, Duration, Bit Rate,
+        Sample Rate, Channel Mode and Type.
+- TOOLS
+      - SEARCH: Good search tool with lots of options.
+      - TAG EDITOR: Allows you to change the names of each field or allows
+            you to remove specified field(s).
+      - FILE RENAMER: You can rename files with extracted ID3-tag info.
+      - CD COVER: Print up a CD cover for your jewel case.
+      - OPTIONS: Backup, Scan valid, Guessed encoder, Preferred ID3-tag
+            version, Auto open, Restore and language options.
+
+In Summary:
+
+MPEG Audio Collection will become one of those useful gems that you'll find
+that you just can't do without it. You will go back to it again and again, 
+especially as your collection grows. It is also proof that Freeware can be
+of such high standards and the authors need all the support that we can
+give them. 

@@ -1,0 +1,237 @@
+000French
+001Collection
+002Nouveau
+003Ouvrir
+004Enregistrer
+005Enregistrer sous
+006Importer
+007Statistiques
+008Rapport
+009Quitter
+010Edition
+011Ajouter un volume
+012Mise à jour du volume
+013Supprimer le volume
+014Tout trier
+015Rechercher
+016Rechercher
+017Disque
+018Propriétés
+019Vignette
+020Doublons
+021Visualisation
+022Police
+023Afficher la grille
+024Piste principale
+025Barre d'outils
+026Barre de statut
+027Outils
+028Renommer le volume
+029Editeur de vignette
+030Couverture de CD
+031Options
+032?
+033Informations
+034Historique
+035Licence
+036Page Web
+037Avis
+038Don
+039À propos
+040
+041Nom
+042Titre
+043Artiste
+044Album
+045Piste
+046Année
+047Commentaire
+048Ne peut ouvrir le fichier
+049La collection a changé. Sauvegarder les changements?
+050Confirmation
+051Erreur
+052Information
+053Avertissement
+054Ok
+055Oui
+056Non
+057Annuler
+058Chargement
+059Lecture des informations
+060Construction de la collection
+061Mise à jour de la fenêtre
+062Mb
+063
+064H:M:S
+065ABR
+066VBR
+067Kbit/s
+068Répertoire(s)
+069Fichier(s)
+070Hz
+071Stéréo
+072Joint stéréo
+073Dual Channel
+074Mono
+075MPEG
+076Layer
+077Ne peut sauvegarder le fichier
+078Sauvegarde
+079Veuillez patienter
+080Taille totale
+081Total durée
+082Bit rate Moyenne
+083Nombre de volume(s)
+084Nombre de fichier(s)
+085Dernière modification
+086GB
+087Heure(s)
+088Volume(s)
+089Source
+090Information sur la vignette
+091Sauvegarder
+092Enlever
+093Fermer
+094Ce fichier n'est pas valide
+095Ce fichier n'existe pas
+096Impossible d'écrire la vignette dans le fichier
+097Impossible de supprimer la vignette du fichier
+098Ne peut lire le disque sélectionné!
+099Le volume sélectionné existe déjà dans la collection. Voulez vous le mettre à jour?
+100La source ne contient aucun fichier MPEG audio.
+101Ajout
+102Parcourir
+103Volume
+104Répertoire
+105Fichier
+106Liste des Volumes
+107Il n'y à aucune chanson sélectionnée!
+108Suppression
+109Voulez-vous vraiment supprimer le(s) volume(s) selectionné(s)?
+110Suppression de la sélection
+111Tri
+112Réindexation des informations
+113Désirez-vous vraiment trier la collection?
+114Le tri a été effectué avec succès.
+115Importation
+116Chargement des informations
+117Copie des Informations
+118Vidage Tampons
+119L'importation s'est termineé avec succès.
+120Nom
+121
+122Dans
+123Répertoires et fichiers
+124Répertoires
+125Fichiers
+126Options
+127Respercter la casse
+128Recherche
+129
+130Termes
+131Bit rate
+132Sample rate
+133Mode de canal
+134Version MPEG
+135Couche MPEG
+136Vignette valide
+137Présent
+138Non présent
+139Il n'y à rien de correspondant.
+140Rechercher
+141Construction
+142Au démarrage
+143Ouvrir automatiquement la dernière collection
+144Restaurer les paramètres de la dernière fenêtre
+145Fichier de langue
+146Défaut
+147Langage par défaut restoré.
+148CBR
+149Selectionner
+150Ne peut importer du fichier
+151Conversion informations
+152Jouer la sélection
+153Liste d'attente
+154Sauvegarder comme playlist
+155Liste
+156Créer une playlist
+157Ne peut créer une playlist dans le fichier
+158Ne peut trouver la source de l'article sélectionné
+159Étiquette du support
+160Numéro de série du support
+161Fichier Collection
+162Fichier Playlist
+163Mise à jour
+164Désirez-vous vraiment supprimer ce volume?
+165Désirez-vous vraiment mettre ce volume à jour?
+166Objet
+167Format Rapport
+168Information
+169Texte
+170DIF pour Excel
+171Taille
+172Durée
+173Nombre de répertoire(s)
+174Date
+175Répertoire
+176MPEG version/layer
+177ID3-Tag
+178Sauvegarder le rapport sous
+179Texte
+180Création du rapport en cours
+181Le rapport a été créé dans le fichier avec succès
+182Copie tous les objets selectionnés
+183Format du rapport 
+184Ecrire le rapport dans un fichier
+185Comparer
+186Il n'y a pas de doublons.
+187Imprimer
+188Lecteur
+189Zoom
+190Adapter le zoom 
+191Zoom en hauteur
+192Zoom en largeur
+193Vers le haut
+194Vers le bas
+195Page HTML
+196Étendue
+197Horizontale
+198Verticale
+199Tout
+200Seulement sélectionnés
+201Tous les répértoires de la source ne peuvent être lus!
+202Le fichier selectionné existe déjâ! Voulez-vous le remplacer?
+203Paramètres généraux
+204Créer une copie de sauvegarde pour les collections
+205Divers
+206Numéroter les répertoires
+207Ajouter date du jour
+208Étiquette de CD
+209Lire uniquement les fichiers valides
+210Colonnes additionnelles
+211Type
+212Effacer
+213Ré-ouvrir
+214Extensions de fichier
+215Numerotation
+216Divers
+217Chemin complet
+218Objet(s)
+219Résumé
+220Renommer fichier
+221Voulez-vous vraiment renommer le(s) fichier(s)?
+222Fusion
+223Désirez-vous vraiment fusionner ces modules?
+224Utiliser l'encodage identifié en tant que commentaire
+225Version préféré d'étiquette ID3
+226Renommer
+227Impossible de renommer à
+228Restauration
+229Filtrer
+230Ajouter
+231Supprimer
+232Désirez-vous vraiment supprimer le(s) fichier(s) sélectionné(s)?
+233Impossible de supprimer le(s) fichier(s)
+234Largeur automatique
+>>>Translation by Guy Bouché
+>>>Correction by Bernard DeGuire

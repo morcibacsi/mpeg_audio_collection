@@ -1,0 +1,238 @@
+000German
+001Sammlung
+002Neu
+003Öffnen
+004Speichern
+005Speichern unter
+006Import
+007Statistik
+008Report
+009Beenden
+010Bearbeiten
+011Einheit einlesen
+012Einheit aktualisieren
+013Einheit löschen
+014Sortierung
+015Suchen
+016Finden
+017Prüfen
+018Eigenschaften
+019TAG
+020Duplikate
+021Ansicht
+022Anzeigeschrift
+023Trennlinien anzeigen
+024Cursor verfolgen
+025Taskleiste
+026Statusleiste
+027Werkzeuge
+028Bezeichnung ändern
+029TAGs bearbeiten 
+030CD Umschlag
+031Optionen
+032?
+033Information
+034Versionen
+035Lizenz
+036Homepage
+037Feedback
+038Spenden
+039Über
+040
+041Name
+042Titel
+043Künstler
+044Album
+045Track
+046Jahr
+047Kommentar
+048Die Datei kann nicht geöffnet werden
+049Die Sammlung wurde geändert. Wollen Sie die Änderungen speichern?
+050Bestätigung
+051Fehler
+052Information
+053Warnung
+054Ok
+055Ja
+056Nein
+057Abbrechen
+058Ladung
+059Lese Daten
+060Ändere Sammlung
+061Aktualisiere
+062Mb
+063
+064St:M:S
+065ABR
+066VBR
+067Kbit/s
+068Verzeichnis(se)
+069Datei(en)
+070Hz
+071Stereo
+072Joint stereo
+073Doppelkanal
+074Mono
+075MPEG
+076Layer
+077In der Datei kann nichts gespeichert werden
+078Speicherung
+079Bitte warten
+080Gesamtgröße
+081Gesamtzeit
+082Mittlere Bitrate
+083Einheitenanzahl
+084Dateienanzahl
+085Letzte Änderung
+086GB
+087Stunde(n)
+088Einheit(en)
+089Quelle
+090TAG
+091Speichern
+092Entfernen
+093Schließen
+094Die Datei hat ein falsches Format
+095Die Datei existiert nicht
+096Das TAG kann in der Datei nicht gespeichert werden
+097Das TAG kann aus der Datei nicht entfernt werden
+098Das ausgewählte Laufwerk kann nicht gelesen werden!
+099Die ausgewählte Einheit existiert in der Sammlung bereits. Wollen Sie diese aktualisieren?
+100Die Quelle enhält keine MPEG-Audiodateien.
+101Hinzufügung
+102Durchsuchung
+103Einheit
+104Verzeichnis
+105Datei
+106Einheitenliste
+107Keine Einheiten ausgewählt!
+108Löschung
+109Sind Sie sicher, die ausgewählte Einheit löschen zu wollen?
+110Löschung
+111Sortierung
+112Reindiziere
+113Sind Sie sicher, die Sammlung sortieren zu wollen?
+114Die Sortierung war erfolgreich.
+115Import
+116Lade Daten
+117Kopiere Daten
+118Lösche Puffer
+119Der Import war erfolgreich.
+120Name
+121
+122In
+123Verzeichnis und Datei
+124Verzeichnis
+125Datei
+126Optionen
+127Gross-/Kleinschreibung beachten
+128Suchvorgang
+129
+130Bedingung
+131Bitrate
+132Samplerate
+133Kanalmodus
+134MPEG-Version
+135MPEG-Layer
+136Gültiges TAG
+137Anwesend
+138Abwesend
+139Es wurde nichts gefunden.
+140Gefunden
+141Generierung
+142Beim Start
+143Letzte Sammlung automatisch öffnen
+144Letzte Fenstereinstellungen wiederherstellen
+145Sprache
+146Default
+147Die voreingestellte Sprache wiederhergestellt.
+148CBR
+149Markiert
+150Es kann kein Import aus der Datei durchgefürt werden
+151Konvertiere
+152Abspielen
+153Anhängen
+154Speichern als Playlist
+155Generierung
+156Mache Playlist
+157Die Playlist kann in der Datei nicht gespeichert werden
+158Für das Ausgewählte kann keine Quelle gefunden werden
+159Laufwerkname
+160Seriennummer
+161Sammlung
+162Playlist
+163Aktualisierung
+164Sind Sie sicher, diese Einheit löschen zu wollen?
+165Sind Sie sicher, diese Einheit aktualisieren zu wollen?
+166Objekt
+167Report format
+168Information
+169Text
+170DIF für Excel
+171Größe
+172Zeit
+173Verzeichnisanzahl
+174Datum
+175Verzeichnis
+176MPEG version/layer
+177ID3-TAG
+178Speichern Report unter
+179Text
+180Vorgang
+181Der Report wurde erfolgreich in die Datei geschrieben
+182Kopiere alle ausgewählten Objekte
+183Formatiere Report
+184Schreibe Report in Datei
+185Vergleichen
+186Keine Duplikate in der Sammlung gefunden.
+187Drucken
+188CD-ROM Laufwerk
+189Zoommodus
+190Ganze Seite
+191Seitenhöhe
+192Seitenbreite
+193Nach oben
+194Nach unten
+195HTML Webseite
+196Strecken
+197Horizontal
+198Vertikal
+199Alles
+200Nur Markiertes
+201Nicht alle Verzeichnisse sind lesbar!
+202Die ausgewählte Datei existiert bereits! Wollen sie diese Überschreiben?
+203Allgemein
+204Sicherungskopie für Sammlungen erstellen
+205Extra
+206Numerierung für Verzeichnisse
+207Aktuelles Datum hinzufügen
+208CD Bezeichnung
+209Nur erkannte MPEG Dateien akzeptieren
+210Spalten definieren
+211Typ
+212Leeren
+213Wiederöffnen
+214Dateiendungen anzeigen
+215Numeration
+216Verschiedene
+217Ganzer Pfad anzeigen
+218Objekt(en)
+219Zusammenfassung
+220Dateien umbenennen
+221Sind Sie sicher, Dateien umbenennen zu wollen?
+222Verbinden
+223Sind Sie sicher, diese Einheiten verbinden zu wollen?
+224Encoder-Information als Kommentar
+225Bevorzugte ID3-TAG Version
+226Umbenennen
+227Es kann nicht umbenannt werden in
+228Zurück
+229Filter
+230Hinzufügen
+231Löschen
+232Sind Sie sicher, die ausgewählte(n) Datei(en) löschen zu wollen?
+233Die Datei kann nicht gelöscht werden
+234Breite anpassen
+235Benutze foobar2000 zum abspielen
+>>>Translation by Jurgen Faul
+>>>Correction by Joerg Walther

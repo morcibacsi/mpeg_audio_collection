@@ -1,0 +1,237 @@
+000Catalan
+001Col·lecció
+002Nova
+003Obrir
+004Guardar
+005Guardar com
+006Importar
+007Estadístiques
+008Informes
+009Sortir
+010Editar
+011Afegir un volum
+012Actualizar el volum
+013Borrar el volum
+014Ordenar-ho tot
+015Buscar
+016Trobar
+017En el disc
+018Propietats
+019Tag
+020Duplicats
+021Veure
+022Font
+023Graella
+024Selecció automàtica
+025Barra d'eines
+026Barra d'estat
+027Eines
+028Renombrar l'etiqueta
+029Editor de Tag
+030Portada del CD
+031Opcions
+032?
+033Informació
+034Historial
+035Llicència
+036Pàgina web
+037Suport
+038Donacions
+039Sobre
+040
+041Nom
+042Títol
+043Artista
+044Àlbum
+045Pista
+046Any
+047Comentari
+048No es pot obrir l'arxiu
+049La col·lecció ha canviat. Vol guardar els canvis?
+050Confirmació
+051Error
+052Informació
+053Avís
+054D'acord
+055Sí
+056No
+057Cancel·lar
+058Carregant
+059Llegir les dades
+060Construint la col·lecció
+061Actualitzar la finestra
+062Mb
+063
+064H:M:S
+065ABR
+066VBR
+067Kbit/s
+068Carpeta(es)
+069Arxiu(s)
+070Hz
+071Stereo
+072Joint stereo
+073Doble canal
+074Mono
+075MPEG
+076Layer
+077No es pot guardar l'arxiu
+078Guardant
+079Esperi, si us plau
+080Tamany total
+081Duració total
+082Compressió mitjana
+083Número de volums
+084Número d'arxius
+085Últim canvi
+086GB
+087Hora(es)
+088Volum(s)
+089Font
+090Informació Tag
+091Guardar
+092Borrar
+093Tancar
+094Aquest arxiu no és vàlid
+095Aquest arxiu no existeix
+096No es pot escriure el tag dins l'arxiu
+097No es pot eliminar el tag de l'arxiu
+098No es pot llegir el disc seleccionat!
+099El volum seleccionat ja existeix dins la col·lecció. Vol actualitzar-lo?
+100La font no conté arxius d'àudio MPEG.
+101Afegint
+102Buscar a
+103Volum
+104Directori
+105Arxiu
+106Llista del volum
+107No existeixen registres seleccionats!
+108Eliminant
+109Està segur de voler eliminar el(s) volum(s) seleccionat(s)?
+110Eliminar la selecció
+111Ordenant
+112Reindexar les dades
+113Vol ordenar la col·lecció?
+114L'ordenació ha acabat amb èxit.
+115Important
+116Carregar dades
+117Copiar dades
+118Buidar buffer
+119La importació ha acabat amb èxit.
+120Nom
+121
+122Dins de
+123Directoris i arxius
+124Directoris
+125Arxius
+126Opcions
+127Concordància Majúscules - Minúscules
+128Buscar
+129
+130Termes
+131Bit rate
+132Frequència
+133Mode d'àudio
+134Versió MPEG
+135MPEG layer
+136Tag vàlid
+137Present
+138Ausent
+139No existeixen coincidències.
+140Trobat
+141Construint
+142A l'inici
+143Obrir automàticament l'última col·lecció
+144Restaurar la configuració de l'última finestra
+145Idioma
+146Per defecte
+147S'ha restaurat l'idioma per defecte.
+148CBR
+149Seleccionar
+150No es pot importar de l'arxiu
+151Convertir dades
+152Reproduir
+153Posar a la cua
+154Guardar com a llista de reproducció
+155Creant el llistat
+156Crear llista de reproducció
+157No es pot crear una llista de reproducció dins l'arxiu
+158No es pot trobar l'origen de l'element seleccionat
+159Etiqueta del volum
+160Número de sèrie del volum
+161Arxiu de col·lecció
+162Arxiu de llista de reproducció
+163Actualizant
+164Segur que vol eliminar aquest volum?
+165Segur que vol actualitzar aquest volum?
+166Incloure els següents objectes
+167Format del informe
+168Informació
+169Text
+170DIF per Excel
+171Tamany
+172Duració
+173Número de carpetes
+174Data
+175Carpeta
+176Versió/Layer MPEG
+177ID3-Tag
+178Guardar informe com
+179Text
+180Procés
+181L'informe ha estat guardat satisfactòriament
+182Copiar tots els elements seleccionats
+183Formatar l'informe
+184Escriure l'informe en un arxiu
+185Comparar
+186No existeixen duplicats.
+187Imprimir
+188Unitat
+189Zoom de pàgina
+190Zoom d'ajustament en la pàgina
+191Zoom d'ajustament en l'alçada
+192Zoom d'ajustament en l'amplada
+193Amunt
+194Avall
+195Pàgina HTML
+196Reduir
+197Horitzontal
+198Vertical
+199Tots els elements
+200Elements seleccionats
+201No tots els directoris d'origen són llegibles!
+202L'arxiu seleccionat ja existeix! Vol reemplaçar-lo?
+203Opcions generals
+204Backup de col·leccions anteriors
+205Miscel·lània 
+206Numeració de directoris
+207Agregar la data actual
+208Etiqueta del CD
+209Buscar només arxius vàlids
+210Columnes extra
+211Tipus
+212Netejar la llista
+213Recents
+214Extensions dels arxius
+215Numeració
+216Varis
+217Ruta completa
+218Objecte(s)
+219Resum
+220Renombrar arxius
+221Està segur que vol renombrar els arxius?
+222Combinar
+223Està segur que vol combinar els volums seleccionats?
+224Utilitzar el nom del codificador com a comentari
+225Versió d'ID3-tag preferida
+226Renombrar
+227No es pot renombrar amb
+228Restaurar
+229Filtre
+230Afegir
+231Esborrar
+232Està segur que vol esborrar l'(els) arxiu(s) seleccionat(s)?
+233No es pot esborrar l'arxiu
+234Mida automàtica
+>>>Traduït per en Ricard Manén
+>>>E-mail: manen@iname.com

@@ -1,0 +1,236 @@
+000Swedish
+001Kollektion
+002Ny
+003Öppna
+004Spara
+005Spara som
+006Importera
+007Statistik
+008Rapportera
+009Avsluta
+010Redigera
+011Lägg till volym
+012Uppdatera volym
+013Ta bort volym
+014Sortera allt
+015Sök
+016Sök
+017Enhet
+018Egenskap
+019Tag
+020Kopiera
+021Se
+022Teckensnitt
+023Rutnät
+024Het spår
+025Verktygsrad
+026Statusrad
+027Verktyg
+028Byt namn
+029Tag redigerare
+030CD omslag
+031Inställningar
+032?
+033Info
+034Historia
+035Licens
+036Hemsida
+037E-Mail
+038Donation
+039Om
+040
+041Namn
+042Titel
+043Artist
+044Album
+045Spår
+046År
+047Kommentar
+048Kan inte öppna filen
+049Kollektionen har ändrats. Skulle du vilja spara ändringarna?
+050Bekräftelse
+051Fel
+052Information
+053Varning
+054Ok
+055Ja
+056Nej
+057Avbryt
+058Laddar
+059Läser data
+060Bygger kollektion
+061Uppdaterar fönster
+062Mb
+063
+064T:M:S
+065ABR
+066VBR
+067Kbit/s
+068Mapp(ar)
+069Fil(er)
+070Hz
+071Stereo
+072Kopplad stereo
+073Dubbla kanaler
+074Mono
+075MPEG
+076Lager
+077Kan inte spara i filen
+078Sparar
+079Var vänlig vänta
+080Total storlek
+081Total längd
+082Medelbitvärde
+083Antal volymer
+084Antal filer
+085Senast ändrad
+086GB
+087H
+088Volym(er)
+089Källa
+090Tag info
+091Spara
+092Ta bort
+093Stäng
+094Filen är inte giltig
+095Filen existerar inte
+096Kan inte skriva tag i filen
+097Kan inte ta bort tag i filen
+098Kan inte läsa vald enhet!
+099Vald volym existerar redan i kollektionen. Skulle du vilja uppdatera den?
+100Källan innehåller inga MPEG ljudfiler.
+101Lägger till
+102Avsökning
+103Volym
+104Katalog
+105Fil
+106Volymlista
+107Det finns inga föremål valda!
+108Tar bort
+109Vill du verkligen ta bort vald(a) volym(er)?
+110Ta bort val
+111Sorterar
+112Omsortera data
+113Vill du verkligen sortera kollektionen?
+114Sorteringen avslutades framgångsrikt.
+115Importerar
+116Ladda data
+117Kopierar data
+118Rensar buffert
+119Importerandet avslutades framgångsrikt.
+120Namn
+121
+122I 
+123Katalog och fil
+124Katalog
+125Fil
+126Valmöjligheter
+127Matcha fall
+128Söker
+129
+130Villkor
+131Bitvärde
+132Samplingsvärde
+133Kanalläge
+134MPEG version
+135MPEG lager
+136Giltig tag
+137Närvarande
+138Inte närvarande
+139Ingenting matchade.
+140Hittade
+141Bygger
+142Vid programstart
+143Öppna automatiskt föregående kollektion
+144Återställ föregående fönsterinställningar
+145Programspråk
+146Standard
+147Standardspråk återställt.
+148CBR
+149Vald
+150Kan inte importera från filen
+151Konvertera data
+152Spela
+153Lägg till i kö
+154Spara som spellista
+155Listar
+156Skapar spellista
+157Kan inte skapa en spellista i filen
+158Kan inte finna källa av vald sak
+159Enhetsetikett
+160Enhetsserie
+161Kollektionsfil
+162Spellista
+163Uppdaterar
+164Vill du verkligen ta bort denna volym?
+165Vill du verkligen uppdatera denna volym?
+166Objekt
+167Rapportformat
+168Upplysningar
+169Text
+170DIF för Excel
+171Storlek
+172Längd
+173Antal mappar
+174Datum
+175Mapp
+176MPEG version/lager
+177ID3-Tag
+178Spara rapport som
+179Text
+180Behandlar
+181Rapport skapades framgångsrikt till 
+182Kopiera alla valda objekt
+183Formatera rapport
+184Spara rapport till fil
+185Jämför
+186Det finns inga som är likadana.
+187Skriv ut
+188CDROM-enhet
+189Zooma
+190Hel sida
+191Anpassa efter höjd
+192Anpassa efter bredd
+193Upp
+194Ner
+195HTML sida
+196Sträck ut
+197Horisontellt
+198Vertikalt
+199Alla föremål
+200Bara Valda
+201Inte alla kataloger av vald källa är läsbara!
+202Den markerade filen existerar redan! Vill du skriva över den?
+203Generella inställningar
+204Backup av gamla kollektionsfiler
+205Blandat
+206Numrering av kataloger
+207Lägg till dagens datum
+208CD etikett
+209Sök bara igenom giltiga filer
+210Extra kolumner
+211Typ
+212Rensa
+213Öppna Igen
+214Filändelser
+215Numeration
+216Various
+217Full sökväg
+218Objekt
+219Summary
+220Filomdöpare
+221Vill du verkligen döpa om filen/filerna?
+222Lägg ihop
+223Vill du verkligen lägga ihop vald(a) volym(er)?
+224Använd gissad encoder som kommentar
+225Föredragen ID3-tag version
+226Döp om
+227Kan inte döpa om med
+228Återställ
+229Filter
+230Lägg till
+231Ta bort
+232Vill du verkligen ta bort markerade filer?
+233Kan inte ta bort filen
+234Automatisk storlek
+>>>Översättning av Jonas Eklund
