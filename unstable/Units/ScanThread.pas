@@ -4,7 +4,7 @@ interface
 
 uses
 	Monkey, WAVfile, OggVorbis, TwinVQ, MPEGplus, ID3v2, MPEGaudio, WMAfile,
-  Global, Classes, StdCtrls,ComCtrls, SysUtils;
+  FlacFile, OptimFROG, Global, Classes, StdCtrls,ComCtrls, SysUtils, Masks;
 
 type
 	TScanThread = class(TThread)
@@ -21,6 +21,8 @@ type
     WMAFile: TWMAfile;
     OGGFile: TOggVorbis;
     WAVFile: TWAVfile;
+    FlacFile: TFLACFile;
+    OfrFile: TOptimFROG;
     Monkey: TMonkey;
     ID3v2: TID3v2;
 		VolumeData: DataArray;
@@ -46,7 +48,13 @@ begin
 	DLabel := Label1;
 	FLabel := Label2;
 
-	FileList.Mask := FileMask + ';' + MPPFileMask + ';*.' + VQFExt + ';*.' + WMAExt + ';*.' + OGGExt + ';*.' + WAVExt + ';' + MonkeyMask;
+
+  if AllFiles then
+    FileList.Mask := '*.*'
+  else
+	FileList.Mask := FileMask + ';' + MPPFileMask + ';*.' + VQFExt + ';*.' +
+                   WMAExt + ';*.' + OGGExt + ';*.' + WAVExt + ';' + MonkeyMask +
+                   ';' + FlacMask + ';' + OfrMask;
 
 	MPEGFile := TMPEGaudio.Create;
   MPPFile := TMPEGplus.Create;
@@ -54,8 +62,10 @@ begin
   WMAFile := TWMAfile.Create;
   OGGFile := TOggVorbis.Create;
   WAVFile := TWAVfile.Create;
-  ID3v2 := TID3v2.Create;
+  FlacFile := TFlacFile.Create;
   Monkey := TMonkey.Create;
+  OfrFile := TOptimFROG.Create;
+  ID3v2 := TID3v2.Create;
 
 	inherited Create(false);
 end;
@@ -85,6 +95,7 @@ begin
 
  	MPEGFile.Free;
   MPPFile.Free;
+  FlacFile.Free;
   VQFFile.Free;
   WMAFile.Free;
   OGGFile.Free;
@@ -175,7 +186,7 @@ begin
 		if Length(CurrentDir) > 3 then CurrentDir := CurrentDir + '\' + CurrentItem
 		else CurrentDir := CurrentDir + CurrentItem;
 
-		Child := Tree.Items.AddChild(Root, Trim(CurrentItem));
+		Child := Tree.Items.AddChild(Root, CurrentItem);
 		DirData := ScanDir(Child, CurrentDir);
 
 		if DirData[4] > 0 then
@@ -201,7 +212,7 @@ begin
 		if Terminated then exit;
 
 		FileList.ItemIndex := Index;
-		CurrentItem := Trim(FileList.Items.Strings[Index]);
+		CurrentItem := FileList.Items.Strings[Index];
 		FLabel.Caption := FLabel.Hint + CurrentItem;
 
 		for Index2 := 1 to 6 do
@@ -210,6 +221,34 @@ begin
 			FileTag[Index2] := '';
       FileTag2[Index2] := '';
 		end;
+
+    if FlacMaskObj.Matches(FileList.FileName) then
+    begin
+      FlacFile.ReadFromFile(FileList.FileName);
+      FileData[1] := FlacFile.FileLength div 1024;
+      if FlacFile.Valid then
+      begin
+        FileData[2] := -Round(FlacFile.Duration); //Always variable bitrate
+        FileData[3] := FlacFile.SampleRate div 10;
+        if FlacFile.Channels = 1 then FileData[4] := 4;
+        if FlacFile.Channels = 2 then FileData[4] := 1;
+        FileData[5] := 35;
+        FileData[6] := FlacFile.BitsPerSample;
+
+        if FlacFile.VorbisComment.Valid then
+        begin
+          FileTag[1] := TextFilter(FlacFile.VorbisComment.Value['Title'], 0);
+					FileTag[2] := TextFilter(FlacFile.VorbisComment.Value['Artist'], 0);
+					FileTag[3] := TextFilter(FlacFile.VorbisComment.Value['Album'], 0);
+					FileTag[4] := TextFilter(FlacFile.VorbisComment.Value['Track'], 0);
+					FileTag[5] := TextFilter(FlacFile.VorbisComment.Value['Date'], 0);
+					FileTag[6] := TextFilter(FlacFile.VorbisComment.Value['Comment'], 0);
+        end;
+
+        if GuessedEncoder then FileTag[6] := 'FLAC';
+      end
+      else if ValidFiles then continue;
+    end;
 
     if Pos(LowerCase(ExtractFileExt(FileList.FileName)), MPPFileMask) > 0 then
     begin
@@ -340,6 +379,42 @@ begin
    	  else if ValidFiles then continue;
     end;
 
+    if OfrMaskObj.Matches(FileList.FileName) then
+    begin
+    	OfrFile.ReadFromFile(FileList.FileName);
+			FileData[1] := OfrFile.FileLength div 1024;
+
+			if OfrFile.Valid then
+			begin
+				FileData[2] := -Round(OfrFile.Duration);
+				FileData[3] := OfrFile.SampleRate div 10;
+        if OfrFile.Header.ChannelMode = 0 then FileData[4] := 4;
+        if OfrFile.Header.ChannelMode = 1 then FileData[4] := 1;
+				FileData[5] := 40;
+				FileData[6] := Abs(OfrFile.Bits) or OfrFile.Header.CompressionID shl 8;
+
+				if (OfrFile.ID3v1.Exists) or (OfrFile.ID3v2.Exists) then
+          FileTag2 := GetFileTag(FileList.FileName, 0, 0);
+
+				if OfrFile.APEtag.Exists then
+				begin
+					FileTag[1] := TextFilter(OfrFile.APEtag.Title, 0);
+					FileTag[2] := TextFilter(OfrFile.APEtag.Artist, 0);
+					FileTag[3] := TextFilter(OfrFile.APEtag.Album, 0);
+					if Monkey.APEtag.Track in [1..99] then FileTag[4] :=
+            IntToStr(OfrFile.APEtag.Track);
+					FileTag[5] := TextFilter(OfrFile.APEtag.Year, 0);
+					FileTag[6] := TextFilter(OfrFile.APEtag.Comment, 0);
+				end;
+
+  			for Index2 := 1 to 6 do
+          if FileTag[Index2] = '' then FileTag[Index2] := FileTag2[Index2];
+
+	      if GuessedEncoder then FileTag[6] := 'OptimFROG ' + OfrFile.Version;
+			end
+   	  else if ValidFiles then continue;
+    end;
+
     if Pos(LowerCase(ExtractFileExt(FileList.FileName)), MonkeyMask) > 0 then
     begin
     	Monkey.ReadFromFile(FileList.FileName);
@@ -347,7 +422,7 @@ begin
 
 			if Monkey.Valid then
 			begin
-				FileData[2] := Round(Monkey.Duration);
+				FileData[2] := -Round(Monkey.Duration);
 				FileData[3] := Monkey.Header.SampleRate div 10;
         if Monkey.Header.Channels = 1 then FileData[4] := 4;
         if Monkey.Header.Channels = 2 then FileData[4] := 1;

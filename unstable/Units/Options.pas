@@ -33,6 +33,9 @@ type
     RadioButton1: TRadioButton;
     RadioButton2: TRadioButton;
     CheckBoxFoobar: TCheckBox;
+    ImageFoobar: TImage;
+    CheckBoxAllFiles: TCheckBox;
+    ImageAllFiles: TImage;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
@@ -76,6 +79,7 @@ begin
   ValidFiles := CheckBox5.Checked;
   GuessedEncoder := CheckBox4.Checked;
   UseFoobar := CheckBoxFoobar.Checked;
+  AllFiles := CheckBoxAllFiles.Checked;
 
   if RadioButton2.Checked then PreferTag := 2
   else PreferTag := 1;
@@ -135,6 +139,7 @@ begin
   CheckBox5.Caption := GetText(209);
   CheckBox4.Caption := GetText(224);
   CheckBoxFoobar.Caption := GetText(235);
+  CheckBoxAllFiles.Caption := GetText(236);
 
 	if DirectoryExists(RootD + LanguageDir) then LangPath := RootD + LanguageDir + '\'
   else LangPath := RootD;
@@ -162,6 +167,7 @@ begin
   CheckBox5.Checked := ValidFiles;
   CheckBox4.Checked := GuessedEncoder;
   CheckBoxFoobar.Checked := UseFoobar;
+  CheckBoxAllFiles.Checked := AllFiles;
   if PreferTag = 2 then RadioButton2.Checked := true
   else RadioButton1.Checked := true;
 end;

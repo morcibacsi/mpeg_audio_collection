@@ -98,7 +98,7 @@ begin
 	Label7.Caption := FloatToStr(Round(CollectionData[1] / 1048576 * 100) / 100) + ' ' + GetText(86);
 	Label8.Caption := FloatToStr(Round(Abs(CollectionData[2]) / 360) / 10) + ' ' + GetText(87);
 
-	if CollectionData[2] > 0 then Label9.Caption := IntToStr(Round(CollectionData[1] * 8 * 1.024 / CollectionData[2])) + ' ' + GetText(67)
+	if CollectionData[2] > 0 then Label9.Caption := FloatToStr(Round(CollectionData[1] * 8 * 1.024 / CollectionData[2])) + ' ' + GetText(67)
 	else Label9.Caption := '0 ' + GetText(67);
 
 	Label10.Caption := IntToStr(CollectionData[3]) + ' ' + GetText(88);

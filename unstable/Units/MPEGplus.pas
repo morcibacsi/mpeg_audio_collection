@@ -38,7 +38,7 @@ unit MPEGplus;
 interface
 
 uses
-  Classes, SysUtils, ID3v1, ID3v2, APEtag;
+  Classes, SysUtils, ID3v1, ID3v2, APEtag, WideStrings;
 
 const
   { Used with ChannelModeID property }
@@ -65,7 +65,8 @@ const
   { Profile names }
   MPP_PROFILE: array [0..11] of string =
     ('Unknown', 'Thumb', 'Radio', 'Standard', 'Xtreme', 'Insane', 'BrainDead',
-     '--quality 9', '--quality 10', '--quality 0', '--quality 1', 'Telephone');
+     'Above Braindead', 'Above Braindead', 'Below Telephone', 'Below Telephone',
+     'Telephone');
 
 type
   { Class TMPEGplus }
@@ -92,7 +93,7 @@ type
       { Public declarations }
       constructor Create;                                     { Create object }
       destructor Destroy; override;                          { Destroy object }
-      function ReadFromFile(const FileName: string): Boolean;   { Load header }
+      function ReadFromFile(const FileName: WideString): Boolean;{Load header }
       property Valid: Boolean read FValid;             { True if header valid }
       property ChannelModeID: Byte read FChannelModeID;   { Channel mode code }
       property ChannelMode: string read FGetChannelMode;  { Channel mode name }
@@ -127,28 +128,27 @@ type
 
 { ********************* Auxiliary functions & procedures ******************** }
 
-function ReadHeader(const FileName: string; var Header: HeaderRecord): Boolean;
+function ReadHeader(const FileName: WideString; var Header: HeaderRecord): Boolean;
 var
-  SourceFile: file;
+  Source: TFileStreamW;
   Transferred: Integer;
 begin
   try
-    Result := true;
-    { Set read-access and open file }
-    AssignFile(SourceFile, FileName);
-    FileMode := 0;
-    Reset(SourceFile, 1);
-    Seek(SourceFile, Header.ID3v2Size);
-    { Read header and get file size }
-    BlockRead(SourceFile, Header, 12, Transferred);
-    Header.FileSize := FileSize(SourceFile);
-    CloseFile(SourceFile);
-    { if transfer is not complete }
-    if Transferred < 12 then Result := false
-    else Move(Header.ByteArray, Header.IntegerArray, SizeOf(Header.ByteArray));
-  except
-    { Error }
     Result := false;
+    { Set read-access and open file }
+    Source := TFileStreamW.Create(FileName, fmOpenRead);
+    Source.Seek(Header.ID3v2Size, soFromBeginning);
+    { Read header and get file size }
+    Transferred := Source.Read(Header, 12);
+    Header.FileSize := Source.Size;
+    { if transfer is not complete }
+    if Transferred >= 12 then 
+    begin
+      Move(Header.ByteArray, Header.IntegerArray, SizeOf(Header.ByteArray));
+      Result := true;
+    end;
+  finally
+    Source.Free;
   end;
 end;
 
@@ -312,7 +312,7 @@ end;
 
 { --------------------------------------------------------------------------- }
 
-function TMPEGplus.ReadFromFile(const FileName: string): Boolean;
+function TMPEGplus.ReadFromFile(const FileName: WideString): Boolean;
 var
   Header: HeaderRecord;
 begin

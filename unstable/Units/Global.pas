@@ -3,8 +3,8 @@ unit Global;
 interface
 
 uses
-	ID3v1, ID3v2, APEtag,
-  MPEGplus, Dialogs, FileCtrl, SysUtils, ComCtrls, StdCtrls, Windows;
+	ID3v1, ID3v2, APEtag, MPEGplus, OptimFROG, Dialogs, FileCtrl, SysUtils,
+  ComCtrls, StdCtrls, Windows, Masks;
 
 type
 	DataArray = array [1..6] of int64;
@@ -19,8 +19,8 @@ var
 	AppTitle: string = 'MPEG Audio Collection';
   AppTitleShort: string = 'MAC';
 	////////////////////////////
-	AVersion: string = '2.91 alpha';
-  ADate: string = 'June 2003';
+	AVersion: string = '2.91 alpha4';
+  ADate: string = 'July 2003';
 	////////////////////////////
   AppCopyright: string = 'Freeware, copyright by Jurgen Faul';
 	Homepage: string = 'http://sourceforge.net/projects/mac';
@@ -49,6 +49,10 @@ var
   WMAExt: string = 'wma';
   OGGExt: string = 'ogg';
   WAVExt: string = 'wav';
+  FlacMask: string = '*.flac';
+  FlacMaskObj: TMask;
+  OfrMask: string = '*.ofr';
+  OfrMaskObj: TMask;
   MonkeyMask: string = '*.mac;*.ape';
 	PlaylistFile: string = 'mac.m3u';
 
@@ -151,6 +155,8 @@ var
   GuessedEncoder: boolean = false;
 
   UseFoobar: boolean = false;
+
+  AllFiles: boolean = false;
 
   PreferTag: integer = 1;
 
@@ -606,16 +612,37 @@ end;
 
 function GetMPEGType(Version, Layer: integer): string;
 begin
+  case Version of
+    1, 2, 3: Result := GetText(75) + ' ' + GetMPEGVersion(Version) + ' ' +
+      GetText(76) + ' ' + IntToStr(Layer);
+    4, 5, 6, 7, 71:
+      begin
+        Result := 'MPC SV ' + GetMPCVersion(Version);
+        if Layer in [1..11] then Result := Result + #32 + MPP_PROFILE[Layer];
+      end;
+    9: Result := 'PCM (' + IntToStr(Layer) + '-bit)';
+    10: Result := 'Twin VQ';
+    20: Result := 'Ogg Vorbis';
+    25: Result := 'WMA';
+    30: Result := 'Monkey''s Audio (' + IntToStr(Layer) + '-bit)';
+    35: Result := 'FLAC (' + IntToStr(Layer) + '-bit)';
+    40: Result := 'OptimFROG (' + IntToStr(Layer and $FF) + '-bit ' +
+      OFR_COMPRESSION[Layer shr 11] + ')';
+  else
+    Result := '?';
+  end;
+{
 	Result := '?';
   if Version = 0 then exit;
 
-  if Version in [9, 10, 20, 25, 30] then
+  if Version in [9, 10, 20, 25, 30, 35] then
   begin
     if Version = 9 then Result := 'PCM (' + IntToStr(Layer) + '-bit)';
     if Version = 10 then Result := 'Twin VQ';
     if Version = 20 then Result := 'Ogg Vorbis';
     if Version = 25 then Result := 'WMA';
-    if Version = 30 then Result := 'MA (' + IntToStr(Layer) + '-bit)';
+    if Version = 30 then Result := 'Monkey''s Audio (' + IntToStr(Layer) + '-bit)';
+    if Version = 35 then Result := 'FLAC (' + IntToStr(Layer) + '-bit)';
     exit;
   end;
 
@@ -632,6 +659,7 @@ begin
 		Result := GetText(75) + ' ' + GetMPEGVersion(Version) + ' ';
 		Result := Result + GetText(76) + ' ' + IntToStr(Layer);
   end;
+}
 end;
 
 // -----------------------------------------------------------------------------
@@ -841,4 +869,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
+begin
+  FlacMaskObj := TMask.Create(FlacMask);
+  OfrMaskObj := TMask.Create(OfrMask);
 end.

@@ -337,6 +337,7 @@ begin
 
       Reg.WriteBool('GuessedEncoder', GuessedEncoder);
       Reg.WriteBool('UseFoobar', UseFoobar);
+      Reg.WriteBool('AllFiles', AllFiles);
       Reg.WriteInteger('PreferTag', PreferTag);
 
       Reg.WriteString('LastEditDir', LastEditDir);
@@ -452,6 +453,7 @@ begin
 
       GuessedEncoder := Reg.ReadBool('GuessedEncoder');
       UseFoobar := Reg.ReadBool('UseFoobar');
+      AllFiles := Reg.ReadBool('AllFiles');
       PreferTag := Reg.ReadInteger('PreferTag');
 
       LastEditDir := Reg.ReadString('LastEditDir');
@@ -670,6 +672,8 @@ begin
 	if (Trim(ParamStr(1)) <> '') and (OpenCollectionOK(Trim(ParamStr(1)))) then exit;
 	if (AutoOpen) and (CurrentCollection <> '') and (OpenCollectionOK(CurrentCollection)) then exit;
 	NewCollection;
+
+  Application.HintHidePause := 10000;
 end;
 
 // -----------------------------------------------------------------------------
@@ -2151,7 +2155,7 @@ begin
      	try
        	TempList.Items.SaveToFile(RootD + PlaylistFile);
         if (UseFoobar) and (FoobarPath <> '') then
-          ShellExecute(Handle, nil, PChar(FoobarPath + '\foobar2000.exe'), PChar(RootD + PlaylistFile), nil, SW_SHOW)
+          ShellExecute(Handle, nil, PChar('"' + FoobarPath + '\foobar2000.exe"'), PChar('"' + RootD + PlaylistFile + '"'), nil, SW_SHOW)
         else
           ShellExecute(Handle, 'open', PChar(RootD + PlaylistFile), nil, nil, SW_SHOW);
       except
@@ -2182,7 +2186,7 @@ begin
      	try
        	TempList.Items.SaveToFile(RootD + PlaylistFile);
         if (UseFoobar) and (FoobarPath <> '') then
-          ShellExecute(Handle, nil, PChar(FoobarPath + '\foobar2000.exe'), PChar('/add ' + RootD + PlaylistFile), nil, SW_SHOW)
+          ShellExecute(Handle, nil, PChar('"' + FoobarPath + '\foobar2000.exe"'), PChar('/add "' + RootD + PlaylistFile + '"'), nil, SW_SHOW)
         else
           ShellExecute(Handle, 'enqueue', PChar(RootD + PlaylistFile), nil, nil, SW_SHOW);
       except
