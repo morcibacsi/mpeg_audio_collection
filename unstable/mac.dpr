@@ -43,7 +43,12 @@ uses
   WMAfile in 'Units\WMAfile.pas',
   AACfile in 'Units\AACfile.pas',
   CDAtrack in 'Units\CDAtrack.pas',
-  FLACfile in 'Units\FLACfile.pas';
+  FLACfile in 'Units\FLACfile.pas',
+  WideStrings in 'Units\WideStrings.pas',
+  FolderTree in 'Units\FolderTree.pas',
+  Preview in 'Units\Preview.pas',
+  VorbisComment in 'Units\VorbisComment.pas',
+  OptimFROG in 'Units\OptimFROG.pas';
 
 {$R *.RES}
 {$R Units\XPThemes.res}
