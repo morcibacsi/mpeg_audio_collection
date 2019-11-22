@@ -1,4 +1,10 @@
 
+MPEG Audio Collection 2.91 alpha 7 (Aug-18-2003):
+ - volume type detected and indicated by the icon
+ - non-audio files are no longer added to playlist
+ - filesize reported for non-audio files
+ - some text corrections (see todo_translate.txt)
+
 MPEG Audio Collection 2.91 alpha 6 a.k.a. "The Futurama Edition" (Aug-15-2003):
  - more new icons (thanks to SacRat, Jan S. and M. Blake)
  - fixed the bug when closing the scanning window

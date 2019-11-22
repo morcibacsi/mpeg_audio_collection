@@ -56,28 +56,10 @@ type
       Y: Integer);
     procedure Panel2MouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
-    procedure edtAlbumMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
-    procedure edtArtistMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
-    procedure edtTitleMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
-    procedure edtTrackMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
-    procedure edtYearMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
+
     procedure edtCommentEnter(Sender: TObject);
     procedure edtCommentExit(Sender: TObject);
-    procedure edtAlbumEnter(Sender: TObject);
-    procedure edtAlbumExit(Sender: TObject);
-    procedure edtArtistEnter(Sender: TObject);
-    procedure edtArtistExit(Sender: TObject);
-    procedure edtTitleEnter(Sender: TObject);
-    procedure edtTitleExit(Sender: TObject);
-    procedure edtTrackEnter(Sender: TObject);
-    procedure edtTrackExit(Sender: TObject);
-    procedure edtYearEnter(Sender: TObject);
-    procedure edtYearExit(Sender: TObject);
+
   private
   	SelectedNode: TTreeNode;
   end;
@@ -257,69 +239,9 @@ end;
 procedure TfrmFileInfo.edtCommentMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
 begin
-  if edtComment.Color = clSilver then
+  if TEdit(Sender).Color = clSilver then
   begin
-    edtComment.Color := clSkyBlue;
-    Panel2.Tag := 1;
-  end;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtAlbumMouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  if edtAlbum.Color = clSilver then
-  begin
-    edtAlbum.Color := clSkyBlue;
-    Panel2.Tag := 1;
-  end;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtArtistMouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  if edtArtist.Color = clSilver then
-  begin
-    edtArtist.Color := clSkyBlue;
-    Panel2.Tag := 1;
-  end;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtTitleMouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  if edtTitle.Color = clSilver then
-  begin
-    edtTitle.Color := clSkyBlue;
-    Panel2.Tag := 1;
-  end;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtTrackMouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  if edtTrack.Color = clSilver then
-  begin
-    edtTrack.Color := clSkyBlue;
-    Panel2.Tag := 1;
-  end;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtYearMouseMove(Sender: TObject;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  if edtYear.Color = clSilver then
-  begin
-    edtYear.Color := clSkyBlue;
+    TEdit(Sender).Color := clSkyBlue;
     Panel2.Tag := 1;
   end;
 end;
@@ -328,96 +250,16 @@ end;
 
 procedure TfrmFileInfo.edtCommentEnter(Sender: TObject);
 begin
-  edtComment.Color := clCream;
-  edtComment.Tag := 2;
+  TEdit(Sender).Color := clCream;
+  TEdit(Sender).Tag := 2;
 end;
 
 // -----------------------------------------------------------------------------
 
 procedure TfrmFileInfo.edtCommentExit(Sender: TObject);
 begin
-  edtComment.Color := clSilver;
-  edtComment.Tag := 0;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtAlbumEnter(Sender: TObject);
-begin
-  edtAlbum.Color := clCream;
-  edtAlbum.Tag := 2;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtAlbumExit(Sender: TObject);
-begin
-  edtAlbum.Color := clSilver;
-  edtAlbum.Tag := 0;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtArtistEnter(Sender: TObject);
-begin
-  edtArtist.Color := clCream;
-  edtArtist.Tag := 2;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtArtistExit(Sender: TObject);
-begin
-  edtArtist.Color := clSilver;
-  edtArtist.Tag := 0;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtTitleEnter(Sender: TObject);
-begin
-  edtTitle.Color := clCream;
-  edtTitle.Tag := 2;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtTitleExit(Sender: TObject);
-begin
-  edtTitle.Color := clSilver;
-  edtTitle.Tag := 0;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtTrackEnter(Sender: TObject);
-begin
-  edtTrack.Color := clCream;
-  edtTrack.Tag := 2;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtTrackExit(Sender: TObject);
-begin
-  edtTrack.Color := clSilver;
-  edtTrack.Tag := 0;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtYearEnter(Sender: TObject);
-begin
-  edtYear.Color := clCream;
-  edtYear.Tag := 2;
-end;
-
-// -----------------------------------------------------------------------------
-
-procedure TfrmFileInfo.edtYearExit(Sender: TObject);
-begin
-  edtYear.Color := clSilver;
-  edtYear.Tag := 0;
+  TEdit(Sender).Color := clSilver;
+  TEdit(Sender).Tag := 0;
 end;
 
 // -----------------------------------------------------------------------------

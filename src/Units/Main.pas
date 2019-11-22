@@ -698,6 +698,7 @@ begin
 	NewCollection;
 
   Application.HintHidePause := 10000;
+
 end;
 
 // -----------------------------------------------------------------------------
@@ -765,7 +766,7 @@ end;
 procedure TfrmMain.UpdateListView;
 var
 	Index, BitRate: longint;
-	Line, ItemText, ItemExtension, SupportedExtension: string;
+	Line, ItemText, ItemExtension : string;
 	ListItem: TListItem;
 	Child: TTreeNode;
 	FileTag: TagArray;
@@ -800,9 +801,6 @@ begin
       begin
         ItemExtension := '';
         ItemExtension := LowerCase(ExtractFileExt(ExtractName(Line)));
-        SupportedExtension := FileMask + ';' + MPPFileMask + ';*.' + VQFExt +
-        ';*.' + WMAExt + ';*.' + OGGExt + ';*.' + WAVExt + ';' + MonkeyMask +
-        ';' + FlacMask + ';' + OfrMask + ';' + AacMask;;
 
         // determines file type icons
         if Pos(ItemExtension, SupportedExtension) > 0 then
@@ -825,6 +823,8 @@ begin
           ListItem.ImageIndex := 15
         else if Pos(ItemExtension, BatMask) > 0 then
           ListItem.ImageIndex := 16
+        else if Pos(ItemExtension, HtmlMask) > 0 then
+          ListItem.ImageIndex := 23
         else
           ListItem.ImageIndex := 8;
       end;
@@ -1054,6 +1054,7 @@ var
 	Index, Index2, Level: longint;
 	Line: string;
 	Dir: array[0..100] of TTreeNode;
+  DirectoryData: DataArray;
 begin
 	TreeView1.Items.BeginUpdate;
 
@@ -1075,7 +1076,20 @@ begin
       begin
       	if (not Fullpath1.Checked) and (Pos('\', Line) > 0) then Line := Copy(Line, 1, Pos('\', Line) - 1);
       	Dir[0] := TreeView1.Items.Add(nil, Line);
-        Dir[0].ImageIndex := 1;
+
+        // volume type icon
+        DirectoryData := ExtractData(Tree.Items[Index].Text);
+        case DirectoryData[7] of
+          VOLUME_TYPE_REMOVABLE : Dir[0].ImageIndex := 19;
+          VOLUME_TYPE_FIXED : Dir[0].ImageIndex := 20;
+          VOLUME_TYPE_REMOTE : Dir[0].ImageIndex := 21;
+          VOLUME_TYPE_CDROM : Dir[0].ImageIndex := 18;
+          VOLUME_TYPE_RAM : Dir[0].ImageIndex := 22;
+          VOLUME_TYPE_AUDIO_CD : Dir[0].ImageIndex := 17;
+        else
+          Dir[0].ImageIndex := 1;
+        end;
+        
       end
 			else
 			begin
@@ -1191,8 +1205,10 @@ end;
 
 procedure TfrmMain.TreeView1GetSelectedIndex(Sender: TObject;	Node: TTreeNode);
 begin
-	if Node.Level > 0 then Node.SelectedIndex := 3
-  else Node.SelectedIndex := 1;
+	if Node.Level > 0 then
+    Node.SelectedIndex := 3
+  else
+    Node.SelectedIndex := Node.ImageIndex;
 
 	if Tag = 0 then UpdateInformation
 	else
@@ -2111,8 +2127,12 @@ function TfrmMain.CreatePlayList(SNode: TTreeNode; PlayList: TListBox): string;
 		begin
 			if not Child.HasChildren then
       begin
-      	PlayList.Items.Add(FPath + '\' + ExtractName(Child.Text));
-        PlayList.Items.Objects[PlayList.Items.Count - 1] := Child;
+      // scans added directories
+        if Pos(LowerCase(ExtractFileExt(ExtractName(Child.Text))), SupportedExtension) > 0 then
+        begin
+          PlayList.Items.Add(FPath + '\' + ExtractName(Child.Text));
+          PlayList.Items.Objects[PlayList.Items.Count - 1] := Child;
+        end;
       end
 			else ScanTreeNode(Child, FPath + '\' + ExtractName(Child.Text));
 			Child := Child.GetNextSibling;
@@ -2178,8 +2198,12 @@ begin
         		Result := GetText(158) + ': ' + Path;
 						exit;
 		      end;
-	      	PlayList.Items.Add(Path);
-  	      PlayList.Items.Objects[PlayList.Items.Count - 1] := SNode;
+          // scans added files
+          if Pos(LowerCase(ExtractFileExt(Path)), SupportedExtension) > 0 then
+          begin
+            PlayList.Items.Add(Path);
+  	        PlayList.Items.Objects[PlayList.Items.Count - 1] := SNode;
+          end;
     	  end;
 
 	      break;

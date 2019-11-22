@@ -7,7 +7,11 @@ uses
   ComCtrls, StdCtrls, Windows, Masks;
 
 type
-	DataArray = array [1..6] of int64;
+  // volume info is saved here
+  // in 2.91 increased from 6 to 7
+  // because of the volume type info
+	DataArray = array [1..7] of int64;
+
 	TagArray = array [1..6] of string;
 	PropertyArray = array [1..6] of array [1..3] of byte;
 	MatchArray = array [1..6] of boolean;
@@ -19,7 +23,7 @@ var
 	AppTitle: string = 'MPEG Audio Collection';
   AppTitleShort: string = 'MAC';
 	////////////////////////////
-	AVersion: string = '2.91 alpha6';
+	AVersion: string = '2.91 alpha7';
   ADate: string = 'August 2003';
 	////////////////////////////
   AppCopyright: string = 'Freeware, copyright by Jurgen Faul && MAC Team';
@@ -66,12 +70,16 @@ var
   DllMask: string = '*.dll;*.sys;*.drv;*.ocx;*.cpl;*.vxd';
   IniMask: string = '*.inf;*.ini;*.cfg';
   BatMask: string = '*.bat';
+  HtmlMask: string = '*.htm;*.html';
   ImageMask: string = '*.ani;*.b3d;*.bmp;*.dib;*.cam;*.clp;*.crw;*.cur;*.dcm;' +
   '*.acr;*.dcx;*.djvu;*.iw44;*.ecw;*.emf;*.eps;*.fpx;*.fsh;*.g3;*.gif;*.icl;' +
   '*.ico;*.ics;*.ids;*.iff;*.lbm;*.img;*.jp2;*.jpc;*.j2k;*.jpf;*.jpg;*.jpeg;' +
   '*.jpe;*.kdc;*.ldf;*.lwf;*.mng;*.jng;*.nlm;*.nol;*.ngg;*.gsm;*.pbm;*.pcd;' +
   '*.pcx;*.pgm;*.png;*.ppm;*.psd;*.psp;*.ras;*.sun;*.raw;*.rle;*.sff;*.sfw;' +
   '*.sgi;*.rgb;*.sid;*.swf;*.tga;*.tif;*.tiff;*.wbmp;*.wmf;*.xbm;*.xpm';
+
+  SupportedExtension : String = '*.mpa;*.mp1;*.mp2;*.mp3;*.mp+;*.mpc;*.vqf;' +
+  '*.wma;*.ogg;*.wav;*.mac;*.ape;*.flac;*.ofr;*.aac';
 
 	RootD: string;
   FirstDrive: integer;
@@ -188,7 +196,7 @@ var
 
 const
   { Volume type IDs }
-  VOLUME_TYPE_REMOVABLE = 1;                                       { Diskette }
+  VOLUME_TYPE_REMOVABLE = 1;                                         { Floppy }
   VOLUME_TYPE_FIXED = 2;                                                { HDD }
   VOLUME_TYPE_REMOTE = 3;                                           { Network }
   VOLUME_TYPE_CDROM = 4;                                        { CD-ROM disk }
@@ -324,13 +332,15 @@ end;
 
 function ExtractData(Source: string): DataArray;
 var
-	CharPos: array [1..7] of integer;
+  // increased from 7 to 8 in 2.91
+  // because of volume type info
+	CharPos: array [1..8] of integer;
 	Index, Value, ErrorCode: longint;
 	Text: string;
 begin
-	for Index := 1 to 7 do CharPos[Index] := Pos(Chr(Index), Source);
+	for Index := 1 to 8 do CharPos[Index] := Pos(Chr(Index), Source);
 
-	for Index := 1 to 6 do
+	for Index := 1 to 7 do
 	begin
 		Text := Copy(Source, CharPos[Index] + 1, CharPos[Index + 1] - CharPos[Index] - 1);
 		Val(Text, Value, ErrorCode);

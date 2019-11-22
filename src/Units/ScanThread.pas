@@ -114,10 +114,12 @@ begin
 	begin
 		VolumeData[5] := Trunc(Date);
 		VolumeData[6] := SourceSerial;
+    VolumeData[7] := SourceType;
 
-		for Index := 1 to 6 do
+		for Index := 1 to 7 do
 			VolumeNode.Text := VolumeNode.Text + Chr(Index) + IntToStr(VolumeData[Index]);
-		VolumeNode.Text := VolumeNode.Text + #7;
+    // saves the volume info and adds the end symbol
+		VolumeNode.Text := VolumeNode.Text + #8;
 
 		if UpdateInfo then UpdateCollectionInfo(VolumeData);
 	end
@@ -164,6 +166,8 @@ var
 	DirData, FileData: DataArray;
 	FileTag, FileTag2: TagArray;
 	Child: TTreeNode;
+  FileUnknown: file of Byte;
+  SizeUnknown: Longint;
 begin
 	for Index := 1 to 4 do Result[Index] := 0;
 
@@ -227,6 +231,21 @@ begin
 			FileTag[Index2] := '';
       FileTag2[Index2] := '';
 		end;
+
+    // File size for non-audio files
+    if Pos(LowerCase(ExtractFileExt(FileList.FileName)), SupportedExtension) = 0 then
+    begin
+      AssignFile(FileUnknown, FileList.FileName);
+      // set's read-only access
+      FileMode := 0;
+      Reset(FileUnknown);
+      try
+        SizeUnknown := FileSize(FileUnknown);
+      finally
+        CloseFile(FileUnknown);
+      end;
+      FileData[1] := SizeUnknown div 1024;
+    end;
 
     if FlacMaskObj.Matches(FileList.FileName) then
     begin
@@ -525,6 +544,7 @@ begin
 			TagString := TagString + FileTag[Index2] + Chr(Index2 + 21);
 		end;
 
+    // file info
     DataString := DataString + #7 + TagString;
 
 		Tree.Items.AddChild(Root, CurrentItem + DataString);

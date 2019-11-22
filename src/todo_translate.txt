@@ -1,4 +1,15 @@
 
+ MAC 2.91 alpha 7:
+
+ (*) changed:
+065~
+100The source does not contain audio files.
+- small changes:
+  - changed "bit rate" to "bitrate"
+  - "Mb" to "MB"
+  - "Kbit/s" to "kbps"
+__________________
+
  MAC 2.91 alpha 5:
 
  (+) added:

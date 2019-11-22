@@ -1889,9 +1889,9 @@ object frmFileInfo: TfrmFileInfo
       Color = clSilver
       ReadOnly = True
       TabOrder = 0
-      OnEnter = edtTitleEnter
-      OnExit = edtTitleExit
-      OnMouseMove = edtTitleMouseMove
+      OnEnter = edtCommentEnter
+      OnExit = edtCommentExit
+      OnMouseMove = edtCommentMouseMove
     end
     object edtArtist: TEdit
       Left = 116
@@ -1903,9 +1903,9 @@ object frmFileInfo: TfrmFileInfo
       Color = clSilver
       ReadOnly = True
       TabOrder = 1
-      OnEnter = edtArtistEnter
-      OnExit = edtArtistExit
-      OnMouseMove = edtArtistMouseMove
+      OnEnter = edtCommentEnter
+      OnExit = edtCommentExit
+      OnMouseMove = edtCommentMouseMove
     end
     object edtAlbum: TEdit
       Left = 116
@@ -1917,9 +1917,9 @@ object frmFileInfo: TfrmFileInfo
       Color = clSilver
       ReadOnly = True
       TabOrder = 2
-      OnEnter = edtAlbumEnter
-      OnExit = edtAlbumExit
-      OnMouseMove = edtAlbumMouseMove
+      OnEnter = edtCommentEnter
+      OnExit = edtCommentExit
+      OnMouseMove = edtCommentMouseMove
     end
     object edtTrack: TEdit
       Left = 116
@@ -1931,9 +1931,9 @@ object frmFileInfo: TfrmFileInfo
       Color = clSilver
       ReadOnly = True
       TabOrder = 3
-      OnEnter = edtTrackEnter
-      OnExit = edtTrackExit
-      OnMouseMove = edtTrackMouseMove
+      OnEnter = edtCommentEnter
+      OnExit = edtCommentExit
+      OnMouseMove = edtCommentMouseMove
     end
     object edtYear: TEdit
       Left = 116
@@ -1945,9 +1945,9 @@ object frmFileInfo: TfrmFileInfo
       Color = clSilver
       ReadOnly = True
       TabOrder = 4
-      OnEnter = edtYearEnter
-      OnExit = edtYearExit
-      OnMouseMove = edtYearMouseMove
+      OnEnter = edtCommentEnter
+      OnExit = edtCommentExit
+      OnMouseMove = edtCommentMouseMove
     end
     object edtComment: TEdit
       Left = 116
