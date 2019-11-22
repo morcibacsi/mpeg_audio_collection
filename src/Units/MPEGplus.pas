@@ -12,6 +12,11 @@
 { E-mail: jfaul@gmx.de                                                        }
 { http://jfaul.de/atl                                                         }
 {                                                                             }
+{ Version 1.8 (20 August 2003) by Madah                                       }
+{   - Will now read files with different samplerates correctly                }
+{   - Also changed GetProfileID() for this to work                            }
+{   - Added the ability to determine encoder used                             }
+{                                                                             }
 { Version 1.7 (7 June 2003) by Gambit                                         }
 {   - --quality 0 to 10 detection (all profiles)                              }
 {   - Stream Version 7.1 detected and supported                               }
@@ -61,11 +66,11 @@ const
   MPP_PROFILE_QUALITY9 = 7;               { '--quality 9' (excellent) quality }
   MPP_PROFILE_QUALITY10 = 8;             { '--quality 10' (excellent) quality }
   MPP_PROFILE_UNKNOWN = 0;                                  { Unknown profile }
-
+  MPP_PROFILE_EXPERIMENTAL = 12;
   { Profile names }
-  MPP_PROFILE: array [0..11] of string =
+  MPP_PROFILE: array [0..12] of string =
     ('Unknown', 'Thumb', 'Radio', 'Standard', 'Xtreme', 'Insane', 'BrainDead',
-     '--quality 9', '--quality 10', '--quality 0', '--quality 1', 'Telephone');
+     '--quality 9', '--quality 10', '--quality 0', '--quality 1', 'Telephone', 'Experimental');
 
 type
   { Class TMPEGplus }
@@ -76,12 +81,14 @@ type
       FChannelModeID: Byte;
       FFileSize: Integer;
       FFrameCount: Integer;
+      FSampleRate: Integer;
       FBitRate: Word;
       FStreamVersion: Byte;
       FProfileID: Byte;
       FID3v1: TID3v1;
       FID3v2: TID3v2;
       FAPEtag: TAPEtag;
+      FEncoder : string;
       procedure FResetData;
       function FGetChannelMode: string;
       function FGetBitRate: Word;
@@ -100,6 +107,7 @@ type
       property FrameCount: Integer read FFrameCount;       { Number of frames }
       property BitRate: Word read FGetBitRate;                     { Bit rate }
       property StreamVersion: Byte read FStreamVersion;      { Stream version }
+      property SampleRate: Integer read FSampleRate;
       property ProfileID: Byte read FProfileID;                { Profile code }
       property Profile: string read FGetProfile;               { Profile name }
       property ID3v1: TID3v1 read FID3v1;                    { ID3v1 tag data }
@@ -107,6 +115,7 @@ type
       property APEtag: TAPEtag read FAPEtag;                   { APE tag data }
       property Duration: Double read FGetDuration;       { Duration (seconds) }
       property Corrupted: Boolean read FIsCorrupted; { True if file corrupted }
+      property Encoder: string read FEncoder;                  { Encoder used }
   end;
 
 implementation
@@ -119,8 +128,8 @@ const
 type
   { File header data - for internal use }
   HeaderRecord = record
-    ByteArray: array [1..12] of Byte;                    { Data as byte array }
-    IntegerArray: array [1..3] of Integer;            { Data as integer array }
+    ByteArray: array [1..32] of Byte;                    { Data as byte array }
+    IntegerArray: array [1..8] of Integer;            { Data as integer array }
     FileSize: Integer;                                            { File size }
     ID3v2Size: Integer;                              { ID3v2 tag size (bytes) }
   end;
@@ -140,11 +149,11 @@ begin
     Reset(SourceFile, 1);
     Seek(SourceFile, Header.ID3v2Size);
     { Read header and get file size }
-    BlockRead(SourceFile, Header, 12, Transferred);
+    BlockRead(SourceFile, Header, 32, Transferred);
     Header.FileSize := FileSize(SourceFile);
     CloseFile(SourceFile);
     { if transfer is not complete }
-    if Transferred < 12 then Result := false
+    if Transferred < 32 then Result := false
     else Move(Header.ByteArray, Header.IntegerArray, SizeOf(Header.ByteArray));
   except
     { Error }
@@ -170,6 +179,32 @@ begin
     end;
 end;
 
+{ --------------------------------------------------------------------------- }
+
+function GetSampleRate(const Header: HeaderRecord): Integer;
+const mpp_samplerates : array[0..3] of integer = ( 44100, 48000, 37800, 32000 );
+begin
+   (* get samplerate from header
+      note: this is the same byte where profile is stored
+   *)
+   Result := mpp_samplerates[Header.ByteArray[11] and 3];
+end;
+
+function GetEncoder(const Header: HeaderRecord): string;
+var   EncoderID : integer;
+begin
+   EncoderID := Header.ByteArray[11+2+15];
+   Result := '';
+   if EncoderID = 0 then begin
+      //FEncoder := 'Buschmann 1.7.0...9, Klemm 0.90...1.05';
+   end else begin
+      case ( EncoderID mod 10 ) of
+         0:        Result := format('Release %u.%u',     [EncoderID div 100, (EncoderID div 10) mod 10]);
+         2,4,6,8 : Result := format('Beta %u.%.2u',      [EncoderID div 100, EncoderID mod 100] );
+         else      Result := format('--Alpha-- %u.%.2u', [EncoderID div 100, EncoderID mod 100] );
+      end;
+   end;
+end;
 { --------------------------------------------------------------------------- }
 
 function GetChannelModeID(const Header: HeaderRecord): Byte;
@@ -214,18 +249,20 @@ begin
   Result := MPP_PROFILE_UNKNOWN;
   { Get MPEGplus profile (exists for stream version 7 only) }
   if (GetStreamVersion(Header) = 7) or (GetStreamVersion(Header) = 71) then
-    case Header.ByteArray[11] of
-       80: Result := MPP_PROFILE_QUALITY0;
-       96: Result := MPP_PROFILE_QUALITY1;
-      112: Result := MPP_PROFILE_TELEPHONE;
-      128: Result := MPP_PROFILE_THUMB;
-      144: Result := MPP_PROFILE_RADIO;
-      160: Result := MPP_PROFILE_STANDARD;
-      176: Result := MPP_PROFILE_XTREME;
-      192: Result := MPP_PROFILE_INSANE;
-      208: Result := MPP_PROFILE_BRAINDEAD;
-      224: Result := MPP_PROFILE_QUALITY9;
-      240: Result := MPP_PROFILE_QUALITY10;
+    // ((and $F0) shr 4) is needed because samplerate is stored in the same byte!
+    case ((Header.ByteArray[11] and $F0) shr 4) of
+        1: Result := MPP_PROFILE_EXPERIMENTAL;
+        5: Result := MPP_PROFILE_QUALITY0;
+        6: Result := MPP_PROFILE_QUALITY1;
+        7: Result := MPP_PROFILE_TELEPHONE;
+        8: Result := MPP_PROFILE_THUMB;
+        9: Result := MPP_PROFILE_RADIO;
+       10: Result := MPP_PROFILE_STANDARD;
+       11: Result := MPP_PROFILE_XTREME;
+       12: Result := MPP_PROFILE_INSANE;
+       13: Result := MPP_PROFILE_BRAINDEAD;
+       14: Result := MPP_PROFILE_QUALITY9;
+       15: Result := MPP_PROFILE_QUALITY10;
     end;
 end;
 
@@ -239,6 +276,8 @@ begin
   FFrameCount := 0;
   FBitRate := 0;
   FStreamVersion := 0;
+  FSampleRate := 0;
+  FEncoder := '';
   FProfileID := MPP_PROFILE_UNKNOWN;
   FID3v1.ResetData;
   FID3v2.ResetData;
@@ -263,7 +302,7 @@ begin
   CompressedSize := FFileSize - FID3v2.Size - FAPEtag.Size;
   if FID3v1.Exists then Dec(FFileSize, 128);
   if (Result = 0) and (FFrameCount > 0) then
-    Result := Round(CompressedSize * 8 * 44.1 / FFRameCount / 1152);
+    Result := Round(CompressedSize * 8 * (FSampleRate/1000) / FFRameCount / 1152);
 end;
 
 { --------------------------------------------------------------------------- }
@@ -278,7 +317,7 @@ end;
 function TMPEGplus.FGetDuration: Double;
 begin
   { Calculate duration time }
-  Result := FFRameCount * 1152 / 44100;
+  Result := FFRameCount * 1152 / FSampleRate;
 end;
 
 { --------------------------------------------------------------------------- }
@@ -327,12 +366,14 @@ begin
   begin
     FValid := true;
     { Fill properties with header data }
-    FChannelModeID := GetChannelModeID(Header);
-    FFileSize := Header.FileSize;
-    FFrameCount := GetFrameCount(Header);
-    FBitRate := GetBitRate(Header);
-    FStreamVersion := GetStreamVersion(Header);
-    FProfileID := GetProfileID(Header);
+    FSampleRate            := GetSampleRate(Header);
+    FChannelModeID         := GetChannelModeID(Header);
+    FFileSize              := Header.FileSize;
+    FFrameCount            := GetFrameCount(Header);
+    FBitRate               := GetBitRate(Header);
+    FStreamVersion         := GetStreamVersion(Header);
+    FProfileID             := GetProfileID(Header);
+    FEncoder               := GetEncoder(Header);
     FID3v1.ReadFromFile(FileName);
     FAPEtag.ReadFromFile(FileName);
   end;

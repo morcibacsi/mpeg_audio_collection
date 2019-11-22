@@ -23,7 +23,7 @@ var
 	AppTitle: string = 'MPEG Audio Collection';
   AppTitleShort: string = 'MAC';
 	////////////////////////////
-	AVersion: string = '2.91 alpha7';
+	AVersion: string = '2.91 alpha8';
   ADate: string = 'August 2003';
 	////////////////////////////
   AppCopyright: string = 'Freeware, copyright by Jurgen Faul && MAC Team';
@@ -53,6 +53,7 @@ var
   WMAExt: string = 'wma';
   OGGExt: string = 'ogg';
   WAVExt: string = 'wav';
+  WavPackExt: string = 'wv'; 
   FlacMask: string = '*.flac';
   FlacMaskObj: TMask;
   OfrMask: string = '*.ofr';
@@ -79,7 +80,7 @@ var
   '*.sgi;*.rgb;*.sid;*.swf;*.tga;*.tif;*.tiff;*.wbmp;*.wmf;*.xbm;*.xpm';
 
   SupportedExtension : String = '*.mpa;*.mp1;*.mp2;*.mp3;*.mp+;*.mpc;*.vqf;' +
-  '*.wma;*.ogg;*.wav;*.mac;*.ape;*.flac;*.ofr;*.aac';
+  '*.wma;*.ogg;*.wav;*.mac;*.ape;*.flac;*.ofr;*.aac;*.wv';
 
 	RootD: string;
   FirstDrive: integer;
@@ -661,7 +662,7 @@ begin
     4, 5, 6, 7, 71:
       begin
         Result := 'MPC SV ' + GetMPCVersion(Version);
-        if Layer in [1..11] then Result := Result + #32 + MPP_PROFILE[Layer];
+        if Layer in [1..12] then Result := Result + #32 + MPP_PROFILE[Layer];
       end;
     9: Result := 'PCM (' + IntToStr(Layer) + '-bit)';
     10: Result := 'Twin VQ';
@@ -672,6 +673,7 @@ begin
     40: Result := 'OptimFROG (' + IntToStr(Layer and $FF) + '-bit ' +
       OFR_COMPRESSION[Layer shr 11] + ')';
     45: Result := 'AAC';
+    50: Result := 'WavPack (' + IntToStr( Layer ) + '-bit)';
   else
     Result := '?';
   end;

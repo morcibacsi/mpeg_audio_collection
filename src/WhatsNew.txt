@@ -1,4 +1,11 @@
 
+MPEG Audio Collection 2.91 alpha 8 a.k.a. "Teh Madah Edition" (Aug-21-2003):
+ - WavPack support
+ - mpc fix: will now read files with different sample rates correctly
+ - mpc encoder detection
+ - reads Vendor info from Vorbis Comments (Ogg Vorbis, FLAC)
+ - French language file corrected and updated (thanks to zegilles)
+
 MPEG Audio Collection 2.91 alpha 7 (Aug-18-2003):
  - volume type detected and indicated by the icon
  - non-audio files are no longer added to playlist
@@ -11,18 +18,18 @@ MPEG Audio Collection 2.91 alpha 6 a.k.a. "The Futurama Edition" (Aug-15-2003):
  - search window position and size are now saved
  - right click menu added to the search window
  - added option to eject the cd after scanning
- - arabic language updated
+ - arabic language updated (thanks to M.A.A.D.)
 
 MPEG Audio Collection 2.91 alpha 5 (Jul-25-2003):
  - AAC support (not final yet)
  - new file info dialog window
  - different icons for different file types
  - yet another chapter in the never-ending-foobar-option story
- - updated Italian language file
+ - updated Italian language file (thanks to zegilles)
 
 MPEG Audio Collection 2.91 alpha 4 (Jul-11-2003):
  - OptimFROG support
- - updated Swedish, Spanish and French language files
+ - updated Swedish, Spanish (thanks to AngelGR) and French language files
 
 MPEG Audio Collection 2.91 alpha 3 (Jul-10-2003):
  - FLAC support

@@ -38,6 +38,7 @@ type
     property ValueI[Index: Integer]: WideString read GetValueI write SetValueI;
     property Count: Integer read FCommentCount;
     property Size: Integer read GetSize;
+    property Vendor: string read FVendor;
   end;
 
 implementation

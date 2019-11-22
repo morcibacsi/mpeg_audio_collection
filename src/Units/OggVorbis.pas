@@ -7,6 +7,10 @@
 { E-mail: jfaul@gmx.de                                                        }
 { http://jfaul.de/atl                                                         }
 {                                                                             }
+{ Version 1.7 (20 August 2003) by Madah                                       }
+{   - Minor fix: changed FSampleRate into Integer                             }
+{     ... so that samplerates>65535 works.                                    }
+{                                                                             }
 { Version 1.6 (2 October 2002)                                                }
 {   - Writing support for Vorbis tag                                          }
 {   - Changed several properties                                              }
@@ -48,7 +52,7 @@ type
       { Private declarations }
       FFileSize: Integer;
       FChannelModeID: Byte;
-      FSampleRate: Word;
+      FSampleRate: integer;
       FBitRateNominal: Word;
       FSamples: Integer;
       FID3v2Size: Integer;
@@ -76,7 +80,7 @@ type
       property FileSize: Integer read FFileSize;          { File size (bytes) }
       property ChannelModeID: Byte read FChannelModeID;   { Channel mode code }
       property ChannelMode: string read FGetChannelMode;  { Channel mode name }
-      property SampleRate: Word read FSampleRate;          { Sample rate (hz) }
+      property SampleRate: integer read FSampleRate;       { Sample rate (hz) }
       property BitRateNominal: Word read FBitRateNominal;  { Nominal bit rate }
       property Title: string read FTitle write FTitle;           { Song title }
       property Artist: string read FArtist write FArtist;       { Artist name }

@@ -17,7 +17,7 @@
 016Rechercher
 017Disque
 018Propriétés
-019Vignette
+019Tag
 020Doublons
 021Visualisation
 022Police
@@ -27,7 +27,7 @@
 026Barre de statut
 027Outils
 028Renommer le volume
-029Editeur de vignette
+029Editeur de Tag
 030Couverture de CD
 031Options
 032?
@@ -60,12 +60,12 @@
 059Lecture des informations
 060Construction de la collection
 061Mise à jour de la fenêtre
-062Mb
+062MB
 063
 064H:M:S
-065ABR
+065~
 066VBR
-067Kbit/s
+067kbps
 068Répertoire(s)
 069Fichier(s)
 070Hz
@@ -79,8 +79,8 @@
 078Sauvegarde
 079Veuillez patienter
 080Taille totale
-081Total durée
-082Bit rate Moyenne
+081Durée totale
+082Débit moyen
 083Nombre de volume(s)
 084Nombre de fichier(s)
 085Dernière modification
@@ -88,24 +88,24 @@
 087Heure(s)
 088Volume(s)
 089Source
-090Information sur la vignette
+090Informations du Tag
 091Sauvegarder
 092Enlever
 093Fermer
 094Ce fichier n'est pas valide
 095Ce fichier n'existe pas
-096Impossible d'écrire la vignette dans le fichier
-097Impossible de supprimer la vignette du fichier
+096Impossible d'écrire le Tag dans le fichier
+097Impossible de supprimer le Tag du fichier
 098Ne peut lire le disque sélectionné!
 099Le volume sélectionné existe déjà dans la collection. Voulez vous le mettre à jour?
-100La source ne contient aucun fichier MPEG audio.
+100La source ne contient aucun fichier audio.
 101Ajout
 102Parcourir
 103Volume
 104Répertoire
 105Fichier
-106Liste des Volumes
-107Il n'y à aucune chanson sélectionnée!
+106Liste des volumes
+107Il n'y a aucun objet sélectionné!
 108Suppression
 109Voulez-vous vraiment supprimer le(s) volume(s) selectionné(s)?
 110Suppression de la sélection
@@ -116,8 +116,8 @@
 115Importation
 116Chargement des informations
 117Copie des Informations
-118Vidage Tampons
-119L'importation s'est termineé avec succès.
+118Vidage Tampon
+119L'importation s'est terminée avec succès.
 120Nom
 121
 122Dans
@@ -125,16 +125,16 @@
 124Répertoires
 125Fichiers
 126Options
-127Respercter la casse
+127Respecter la casse
 128Recherche
 129
 130Termes
-131Bit rate
-132Sample rate
+131Débit
+132Echantillonage
 133Mode de canal
 134Version MPEG
 135Couche MPEG
-136Vignette valide
+136Tag valide
 137Présent
 138Non présent
 139Il n'y à rien de correspondant.
@@ -145,9 +145,9 @@
 144Restaurer les paramètres de la dernière fenêtre
 145Fichier de langue
 146Défaut
-147Langage par défaut restoré.
+147Langage par défaut restauré.
 148CBR
-149Selectionner
+149Sélectionné
 150Ne peut importer du fichier
 151Conversion informations
 152Jouer la sélection
@@ -156,8 +156,8 @@
 155Liste
 156Créer une playlist
 157Ne peut créer une playlist dans le fichier
-158Ne peut trouver la source de l'article sélectionné
-159Étiquette du support
+158Ne peut trouver la source de l'objet sélectionné
+159Etiquette du support
 160Numéro de série du support
 161Fichier Collection
 162Fichier Playlist
@@ -165,7 +165,7 @@
 164Désirez-vous vraiment supprimer ce volume?
 165Désirez-vous vraiment mettre ce volume à jour?
 166Objet
-167Format Rapport
+167Format du Rapport
 168Information
 169Texte
 170DIF pour Excel
@@ -174,7 +174,7 @@
 173Nombre de répertoire(s)
 174Date
 175Répertoire
-176MPEG version/layer
+176version MPEG/couche
 177ID3-Tag
 178Sauvegarder le rapport sous
 179Texte
@@ -233,9 +233,9 @@
 232Désirez-vous vraiment supprimer le(s) fichier(s) sélectionné(s)?
 233Impossible de supprimer le(s) fichier(s)
 234Largeur automatique
-235Utilser foobar2000 comme lecteur
+235Utiliser foobar2000 comme lecteur
 236Inclure tous les fichiers dans la collection
-237Copy To Clipboard
-238Where is foobar2000?
+237Copier
+238Où est foobar2000?
 >>>Translation by Guy Bouché
->>>Correction by Bernard DeGuire
+>>>Correction by Bernard DeGuire,zegilles

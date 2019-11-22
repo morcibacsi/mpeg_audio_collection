@@ -1,5 +1,6 @@
 [FileVersion]
 Version=7.0
+
 [Compiler]
 A=8
 B=0
@@ -79,6 +80,7 @@ PrivatePropAccessor=1
 UnsafeType=1
 UnsafeCode=1
 UnsafeCast=1
+
 [Linker]
 MapFile=0
 OutputObjs=0
@@ -89,6 +91,7 @@ MinStackSize=16384
 MaxStackSize=1048576
 ImageBase=4194304
 ExeDescription=
+
 [Directories]
 OutputDir=Data
 UnitOutputDir=DCU
@@ -99,23 +102,26 @@ Packages=Vcl50;Vclx50;VclSmp50;Vcldb50;vclado50;ibevnt50;Vclbde50;vcldbx50;Qrpt5
 Conditionals=
 DebugSourceDirs=
 UsePackages=0
+
 [Parameters]
 RunParams=
 HostApplication=
 Launcher=
 UseLauncher=0
 DebugCWD=
+
 [Language]
 ActiveLang=
 ProjectLang=$00000407
 RootDir=
+
 [Version Info]
 IncludeVerInfo=1
 AutoIncBuild=0
 MajorVer=2
 MinorVer=9
 Release=1
-Build=7
+Build=8
 Debug=0
 PreRelease=0
 Special=0
@@ -123,10 +129,11 @@ Private=0
 DLL=0
 Locale=1033
 CodePage=1252
+
 [Version Info Keys]
 CompanyName=Jurgen Faul & The MAC Team
 FileDescription=MPEG Audio Collection
-FileVersion=2.9.1.7
+FileVersion=2.9.1.8
 InternalName=MAC
 LegalCopyright=Copyright © 2003 by The MAC Team
 LegalTrademarks=Trademark ® 2000-2003 by Jurgen Faul & The MAC Team
@@ -134,17 +141,21 @@ OriginalFilename=mac.exe
 ProductName=MPEG Audio Collection
 ProductVersion=2.91 alpha
 Comments=Audio Manager
+
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
+
 [HistoryLists\hlSearchPath]
 Count=2
 Item0=C:\Documents and Settings\Administrator\My Documents\Delphi\MPEG Audio Collection\ID3v2
 Item1=DCU
+
 [HistoryLists\hlUnitOutputDirectory]
 Count=2
 Item0=DCU
 Item1=C:\Documents and Settings\Administrator\My Documents\Delphi\MPEG Audio Collection\DCU
+
 [HistoryLists\hlOutputDirectorry]
 Count=2
 Item0=Data

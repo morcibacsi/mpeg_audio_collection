@@ -46,7 +46,8 @@ uses
   FLACfile in 'Units\FLACfile.pas',
   VorbisComment in 'Units\VorbisComment.pas',
   WideStrings in 'Units\WideStrings.pas',
-  OptimFROG in 'Units\OptimFROG.pas';
+  OptimFROG in 'Units\OptimFROG.pas',
+  WAVPackFile in 'Units\WAVPackfile.pas';
 
 {$R *.RES}
 {$R Units\XPThemes.res}

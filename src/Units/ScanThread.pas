@@ -3,12 +3,12 @@ unit ScanThread;
 interface
 
 uses
-	Monkey, WAVfile, OggVorbis, TwinVQ, MPEGplus, ID3v2, MPEGaudio, WMAfile,
+	Monkey, WAVfile, OggVorbis, TwinVQ, MPEGplus, ID3v2, MPEGaudio, WMAfile, WavPackfile,
   FlacFile, OptimFROG, AACfile, Global, Classes, StdCtrls,ComCtrls, SysUtils,
   Masks;
 
 type
-	TScanThread = class(TThread)
+   TScanThread = class(TThread)
 	private
 		SourcePath: string;
 		UpdatedNode: TTreeNode;
@@ -28,6 +28,7 @@ type
     AACfile: TAACfile;
     Monkey: TMonkey;
     ID3v2: TID3v2;
+    WAVPackFile: TWAVPackFile;
 		VolumeData: DataArray;
 		function ScanDir(Root: TTreeNode; Path: string): DataArray;
 		procedure UpdateCollectionInfo(VolumeInfo: DataArray);
@@ -55,9 +56,7 @@ begin
   if AllFiles then
     FileList.Mask := '*.*'
   else
-	FileList.Mask := FileMask + ';' + MPPFileMask + ';*.' + VQFExt + ';*.' +
-                   WMAExt + ';*.' + OGGExt + ';*.' + WAVExt + ';' + MonkeyMask +
-                   ';' + FlacMask + ';' + OfrMask + ';' + AacMask;
+	  FileList.Mask := SupportedExtension;
 
 	MPEGFile := TMPEGaudio.Create;
   MPPFile := TMPEGplus.Create;
@@ -70,6 +69,7 @@ begin
   Monkey := TMonkey.Create;
   OfrFile := TOptimFROG.Create;
   ID3v2 := TID3v2.Create;
+  WAVPackFile := TWAVPackFile.Create;
 
 	inherited Create(false);
 end;
@@ -107,6 +107,7 @@ begin
   WAVFile.Free;
   ID3v2.Free;
   Monkey.Free;
+  WavPackfile.Free;
 
   if Terminated then exit;
 
@@ -270,7 +271,12 @@ begin
 					FileTag[6] := TextFilter(FlacFile.VorbisComment.Value['Comment'], 0);
         end;
 
-        if GuessedEncoder then FileTag[6] := 'FLAC';
+        if GuessedEncoder then begin
+            if FlacFile.VorbisComment.Vendor <> '' then
+               FileTag[6] := FlacFile.VorbisComment.Vendor
+            else
+               FileTag[6] := 'FLAC';
+        end;
       end
       else if ValidFiles then continue;
     end;
@@ -312,7 +318,7 @@ begin
 			if not MPPFile.Corrupted then
 			begin
 				FileData[2] := -Round(MPPFile.Duration);
-				FileData[3] := 4410;
+				FileData[3] := MPPFile.SampleRate div 10;
 				FileData[4] := MPPFile.ChannelModeID;
 				FileData[5] := MPPFile.StreamVersion;
 				FileData[6] := MPPFile.ProfileID;
@@ -333,7 +339,7 @@ begin
   			for Index2 := 1 to 6 do
           if FileTag[Index2] = '' then FileTag[Index2] := FileTag2[Index2];
 
-	      if GuessedEncoder then FileTag[6] := 'MPEGplus';
+	      if GuessedEncoder then FileTag[6] := MPPFile.Encoder;
 			end
    	  else if ValidFiles then continue;
     end;
@@ -409,7 +415,7 @@ begin
 				FileTag[5] := TextFilter(OGGFile.Date, 0);
 				FileTag[6] := TextFilter(OGGFile.Comment, 0);
 
-	      if GuessedEncoder then FileTag[6] := 'Ogg Vorbis';
+	      if GuessedEncoder then FileTag[6] := OGGFile.Vendor; //'Ogg Vorbis';
 			end
    	  else if ValidFiles then continue;
     end;
@@ -429,6 +435,42 @@ begin
 				FileData[6] := WAVFile.BitsPerSample;
 
 	      if GuessedEncoder then FileTag[6] := WAVFile.Format;
+			end
+   	  else if ValidFiles then continue;
+    end;
+
+    if Pos(LowerCase(ExtractFileExt(FileList.FileName)), '.' + WAVPackExt) > 0 then
+    begin
+    	WAVPackFile.ReadFromFile(FileList.FileName);
+			FileData[1] := WAVPackFile.FileSize div 1024;
+
+			if WAVPackFile.Valid then
+			begin
+				FileData[2] := -Round(WAVPackFile.Duration); // always variable bitrate
+				FileData[3] := WAVPackFile.SampleRate div 10;
+            if WAVPackFile.Channels = 1 then FileData[4] := 4;
+            if WAVPackFile.Channels = 2 then FileData[4] := 1;
+				FileData[5] := 50;
+				FileData[6] := WAVPackFile.Bits;
+
+      		if (WAVPackFile.ID3v1.Exists) or (WAVPackFile.ID3v2.Exists) then
+               FileTag2 := GetFileTag(FileList.FileName, 0, 0);
+
+				if WAVPackFile.APEtag.Exists then
+				begin
+					FileTag[1] := TextFilter(WAVPackFile.APEtag.Title, 0);
+					FileTag[2] := TextFilter(WAVPackFile.APEtag.Artist, 0);
+					FileTag[3] := TextFilter(WAVPackFile.APEtag.Album, 0);
+					if MPPFile.APEtag.Track in [1..99] then FileTag[4] := IntToStr(WAVPackFile.APEtag.Track);
+					FileTag[5] := TextFilter(WAVPackFile.APEtag.Year, 0);
+					FileTag[6] := TextFilter(WAVPackFile.APEtag.Comment, 0);
+				end;
+
+  			   for Index2 := 1 to 6 do
+               if FileTag[Index2] = '' then FileTag[Index2] := FileTag2[Index2];
+
+
+	      if GuessedEncoder then FileTag[6] := 'WavPack ' + inttostr(WAVPackFile.Version);
 			end
    	  else if ValidFiles then continue;
     end;
