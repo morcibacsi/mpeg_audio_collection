@@ -101,7 +101,7 @@ implementation
 
 {$R *.DFM}
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function FileRenamerDialog: string;
 begin
@@ -114,7 +114,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.Button1Click(Sender: TObject);
 begin
@@ -122,7 +122,7 @@ begin
 	Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.FormCreate(Sender: TObject);
 var
@@ -175,7 +175,7 @@ begin
   ListView1.AlphaSort;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.Button2Click(Sender: TObject);
 var
@@ -238,7 +238,7 @@ begin
   ListView1.AlphaSort;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.FormResize(Sender: TObject);
 begin
@@ -264,7 +264,7 @@ begin
   Image2.Top := (Button2.Top + GroupBox1.Top - Image2.Height) div 2;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.FolderTree1Change(Sender: TObject; Node: TTreeNode);
 var
@@ -323,7 +323,7 @@ begin
   Button3.Enabled := (Renamed > 0) and (ListView1.SelCount > 0);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.ListView1KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
@@ -337,7 +337,7 @@ begin
   if Key = VK_RETURN then ListView1DblClick(Self);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.ListView1Editing(Sender: TObject; Item: TListItem;
   var AllowEdit: Boolean);
@@ -345,7 +345,7 @@ begin
 	AllowEdit := true;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.ListView1Edited(Sender: TObject; Item: TListItem;
   var S: String);
@@ -389,14 +389,14 @@ begin
   Button3.Enabled := (Renamed > 0) and (ListView1.SelCount > 0);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.Edit1Change(Sender: TObject);
 begin
 	ListView1GetImageIndex(Self, nil);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.ListView1ColumnClick(Sender: TObject; Column: TListColumn);
 var
@@ -413,7 +413,7 @@ begin
   else ListView1.Columns[Column.Index].ImageIndex := 1;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.Button3Click(Sender: TObject);
 var
@@ -461,7 +461,7 @@ begin
   ListView1.AlphaSort;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.ListView1GetImageIndex(Sender: TObject; Item: TListItem);
 var
@@ -477,7 +477,7 @@ begin
   Button5.Enabled := ListView1.SelCount > 0;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.PopupMenu1Popup(Sender: TObject);
 begin
@@ -492,7 +492,7 @@ begin
 // end MB
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.OnMenuClick(Index: byte);
 begin
@@ -500,56 +500,56 @@ begin
   	Edit1.Text := Edit1.Text + '%0' + IntToStr(Index);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.N11Click(Sender: TObject);
 begin
 	OnMenuClick(1);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.N21Click(Sender: TObject);
 begin
 	OnMenuClick(2);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.N31Click(Sender: TObject);
 begin
 	OnMenuClick(3);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.N41Click(Sender: TObject);
 begin
 	OnMenuClick(4);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.N51Click(Sender: TObject);
 begin
 	OnMenuClick(5);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.N61Click(Sender: TObject);
 begin
 	OnMenuClick(6);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.Button4Click(Sender: TObject);
 begin
 	SetFilter(ListView2);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmFileRenamer.LoadFilterOK(FileName: string): boolean;
 var
@@ -583,7 +583,7 @@ begin
 	  end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.LoadDefaultFilter;
 var
@@ -600,7 +600,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmFileRenamer.SaveFilter(FileName: string): boolean;
 var
@@ -623,7 +623,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -631,7 +631,7 @@ begin
 		Dialog(GetText(77) + ': ' + RootD + FilterFile, GetText(51), GetText(54), '', '', 1, 2);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.ListView1Compare(Sender: TObject; Item1,
   Item2: TListItem; Data: Integer; var Compare: Integer);
@@ -646,7 +646,7 @@ begin
   if Tag < 0 then Compare := -Compare;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.Button5Click(Sender: TObject);
 var
@@ -680,7 +680,7 @@ begin
 	ListView1GetImageIndex(Self, nil);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileRenamer.ListView1DblClick(Sender: TObject);
 begin
@@ -688,6 +688,6 @@ begin
   	ShellExecute(Handle, 'open', PChar(ListView1.ItemFocused.SubItems.Strings[6]), nil, nil, SW_SHOW);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 end.

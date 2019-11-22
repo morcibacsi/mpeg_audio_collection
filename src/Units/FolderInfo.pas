@@ -53,7 +53,7 @@ implementation
 
 {$R *.DFM}
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure ShowFolderInfo(const Node: TTreeNode);
 begin
@@ -64,14 +64,14 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFolderInfo.Button1Click(Sender: TObject);
 begin
 	Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFolderInfo.FormCreate(Sender: TObject);
 var
@@ -104,38 +104,44 @@ begin
   begin
   	if Tree.Items[Index].Level <= SelectedNode.Level then break;
     if Tree.Items[Index].HasChildren then continue;
-		Inc(FileCount);
 
 		NTag := ExtractTag(Tree.Items[Index].Text);
 		NData := ExtractData(Tree.Items[Index].Text);
 
-		SampleText := IntToStr(NData[3] * 10) + ' ' + GetText(70);
-		ModeText := GetChannelMode(NData[4]);
-		if (NData[5] <> 0) and (NData[6] <> 0) then TypeText := GetMPEGType(NData[5], NData[6])
-  	else TypeText := GetText(32);
-
-    if FileCount = 1 then
+    if (NData[5] <> 0) then
     begin
-		  Label22.Caption := NTag[2];
-  		Label23.Caption := NTag[3];
-  		Label24.Caption := NTag[5];
-  		Label25.Caption := NTag[6];
-      Label2.Caption  := NTag[7]; // MB add tag Genre
-  		Label26.Caption := SampleText;
-  		Label27.Caption := ModeText;
-  		Label28.Caption := TypeText;
-  		continue;
-    end;
+		  Inc(FileCount);
+		  SampleText := IntToStr(NData[3] * 10) + ' ' + GetText(70);
+		  ModeText := GetChannelMode(NData[4]);
+		  if (NData[5] <> 0) and (NData[6] <> 0) then TypeText := GetMPEGType(NData[5], NData[6])
+  	  else TypeText := GetText(32);
 
-    if LowerCase(Label22.Caption) <> LowerCase(NTag[2]) then Various[1] := true;
-    if LowerCase(Label23.Caption) <> LowerCase(NTag[3]) then Various[2] := true;
-    if LowerCase(Label24.Caption) <> LowerCase(NTag[5]) then Various[3] := true;
-    if LowerCase(Label25.Caption) <> LowerCase(NTag[6]) then Various[4] := true;
-    if LowerCase(Label2.Caption)  <> LowerCase(NTag[7]) then Various[8] := true; // MB 
-    if Label26.Caption <> SampleText then Various[5] := true;
-		if Label27.Caption <> ModeText then Various[6] := true;
-    if Label28.Caption <> TypeText then Various[7] := true;
+      if FileCount = 1 then
+      begin
+		    Label22.Caption := NTag[2];
+  		  Label23.Caption := NTag[3];
+    		Label24.Caption := NTag[5];
+    		Label25.Caption := NTag[6];
+        Label2.Caption  := NTag[7]; // MB add tag Genre
+  		  Label26.Caption := SampleText;
+    		Label27.Caption := ModeText;
+    		Label28.Caption := TypeText;
+  	  	continue;
+      end;
+
+      if LowerCase(Label22.Caption) <> LowerCase(NTag[2]) then Various[1] := true;
+      if LowerCase(Label23.Caption) <> LowerCase(NTag[3]) then Various[2] := true;
+      if LowerCase(Label24.Caption) <> LowerCase(NTag[5]) then Various[3] := true;
+      if LowerCase(Label25.Caption) <> LowerCase(NTag[6]) then Various[4] := true;
+      if LowerCase(Label2.Caption)  <> LowerCase(NTag[7]) then Various[8] := true; // MB
+      if Label26.Caption <> SampleText then Various[5] := true;
+  		if Label27.Caption <> ModeText then Various[6] := true;
+      if Label28.Caption <> TypeText then Various[7] := true;
+    end;
   end;
+
+  // because of 'R&B'
+  Label2.Caption  := StringReplace(Label2.Caption, '&', '&&', []);
 
   if Various[1] then Label22.Caption := GetText(216);
   if Various[2] then Label23.Caption := GetText(216);
@@ -164,6 +170,6 @@ begin
   CloseWaitWindow;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 end.

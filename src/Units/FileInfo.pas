@@ -79,7 +79,7 @@ uses
 
 {$R *.DFM}
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure ShowFileInfo(const Node: TTreeNode);
 begin
@@ -91,14 +91,14 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileInfo.Button1Click(Sender: TObject);
 begin
 	Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileInfo.FormCreate(Sender: TObject);
 begin
@@ -118,22 +118,49 @@ begin
   btnCopy.Caption := GetText(237);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileInfo.FormShow(Sender: TObject);
 var
 	NTag: TagArray;
+  FileInfoData: DataArray;
+  BitRate: LongInt;
+  BitrateText: String;
 begin
 	Caption := Caption + ':  ' + ExtractName(SelectedNode.Text);
 
   MemoClipboard.Lines.Append(ExtractName(SelectedNode.Text) + #13 + #10);
 
+{
   MemoInfo.Lines.Append(frmMain.ListView1.Selected.SubItems[5]);
   MemoInfo.Lines.Append(frmMain.ListView1.Selected.SubItems[2]);
   MemoInfo.Lines.Append(frmMain.ListView1.Selected.SubItems[3]);
   MemoInfo.Lines.Append(frmMain.ListView1.Selected.SubItems[4]);
   MemoInfo.Lines.Append(frmMain.ListView1.Selected.SubItems[1]);
   MemoInfo.Lines.Append(frmMain.ListView1.Selected.SubItems[0]);
+}
+
+  FileInfoData := ExtractData(SelectedNode.Text);
+
+  if FileInfoData[2] <> 0 then
+    BitRate := Trunc(FileInfoData[1] * 8 * 1.024 / Abs(FileInfoData[2]))
+  else
+    BitRate := 0;
+
+	if FileInfoData[2] < 0 then
+    BitrateText := FormatFloat('0', BitRate) + ' ' + GetText(67) + ' ' + GetText(66)
+	else
+	begin
+		BitRate := AlignedBitRate(BitRate, FileInfoData[3], FileInfoData[4], FileInfoData[5], FileInfoData[6]);
+    BitrateText := FormatFloat('0', BitRate) + ' ' + GetText(67) + ' ' + GetText(148);
+	end;
+
+  MemoInfo.Lines.Append(GetMPEGType(FileInfoData[5], FileInfoData[6]));
+  MemoInfo.Lines.Append(BitrateText);
+  MemoInfo.Lines.Append(IntToStr(FileInfoData[3] * 10) + ' ' + GetText(70));
+  MemoInfo.Lines.Append(GetChannelMode(FileInfoData[4]));
+  MemoInfo.Lines.Append(DurationToShortStr(Abs(FileInfoData[2])));
+  MemoInfo.Lines.Append(FloatToStrF(FileInfoData[1] / 1024, ffFixed, 15, 2) + ' ' + GetText(62));
 
   NTag := ExtractTag(SelectedNode.Text);
 
@@ -217,7 +244,7 @@ begin
     imgFileType.Picture := imgWavPack.Picture;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileInfo.btnCopyClick(Sender: TObject);
 begin
@@ -225,7 +252,7 @@ begin
   MemoClipboard.CopyToClipboard;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileInfo.Panel2MouseMove(Sender: TObject; Shift: TShiftState;
   X, Y: Integer);
@@ -255,7 +282,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileInfo.edtCommentMouseMove(Sender: TObject;
   Shift: TShiftState; X, Y: Integer);
@@ -267,7 +294,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileInfo.edtCommentEnter(Sender: TObject);
 begin
@@ -275,7 +302,7 @@ begin
   TEdit(Sender).Tag := 2;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmFileInfo.edtCommentExit(Sender: TObject);
 begin
@@ -283,6 +310,6 @@ begin
   TEdit(Sender).Tag := 0;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 end.

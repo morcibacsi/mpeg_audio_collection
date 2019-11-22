@@ -1,9 +1,24 @@
+{ *************************************************************************** }
+{                                                                             }
+{ Audio Tools Library (Freeware)                                              }
+{ Class TVorbisComment - for manipulating with Vorbis Comments                }
+{                                                                             }
+{ Copyright (c) 2003 by Erik Stenborg                                         }
+{                                                                             }
+{ Version 1.0 (6 Jul 2003) Created                                            }
+{         1.1 (2 Oct 2003) Updated UTF-8 support to use Jcl Library           }
+{                                                                             }
+{ Todo: Fix array handling so that it allocates a longer array when inserting }
+{       a new tag field, or removing fields for that matter.                  }
+{                                                                             }
+{ *************************************************************************** }
+
 unit VorbisComment;
 
 interface
 
 uses
-  SysUtils, Classes, WideStrings;
+  SysUtils, Classes, JclUnicode;
 
 type
 
@@ -43,6 +58,8 @@ type
 
 implementation
 
+{ --------------------------------------------------------------------------- }
+
 function TVorbisComment.GetSize: Integer;
 var
   I: Integer;
@@ -52,14 +69,18 @@ begin
     Inc(Result, Length(FComments[I]));
 end;
 
+{ --------------------------------------------------------------------------- }
+
 function TVorbisComment.GetKey(Index: Integer): WideString;
 begin
   if FUpperCaseKeys then
-    Result := UpperCaseW(Copy(FComments[Index], 1,
+    Result := WideUpperCase(Copy(FComments[Index], 1,
       Pos('=', FComments[Index]) - 1))
   else
     Result := Copy(FComments[Index], 1, Pos('=', FComments[Index]) - 1);
 end;
+
+{ --------------------------------------------------------------------------- }
 
 procedure TVorbisComment.SetKey(Index: Integer; Value: WideString);
 begin
@@ -74,6 +95,8 @@ begin
     DeleteI(Index);
 end;
 
+{ --------------------------------------------------------------------------- }
+
 function TVorbisComment.GetValue(Index: WideString): WideString;
 var
   n: Integer;
@@ -84,6 +107,8 @@ begin
   else
     Result := '';
 end;
+
+{ --------------------------------------------------------------------------- }
 
 procedure TVorbisComment.SetValue(Index: WideString; Value: WideString);
 var
@@ -97,11 +122,13 @@ begin
     else if Value <> '' then
     begin
       FCommentCount := FCommentCount + 1;
-      FComments[FCommentCount - 1] := UpperCase(Index) + '=' +
+      FComments[FCommentCount - 1] := WideUpperCase(Index) + '=' +
         WideStringToUTF8(Value);
     end;
   end;
 end;
+
+{ --------------------------------------------------------------------------- }
 
 function TVorbisComment.GetValueI(Index: Integer): WideString;
 begin
@@ -111,6 +138,8 @@ begin
   else
     Result := Copy(FComments[Index], 1 + Pos('=', FComments[Index]), MaxInt);
 end;
+
+{ --------------------------------------------------------------------------- }
 
 procedure TVorbisComment.SetValueI(Index: Integer; Value: WideString);
 begin
@@ -125,6 +154,8 @@ begin
     DeleteI(Index);
 end;
 
+{ --------------------------------------------------------------------------- }
+
 constructor TVorbisComment.Create;
 begin
   inherited Create;
@@ -133,11 +164,15 @@ begin
   Clear;
 end;
 
+{ --------------------------------------------------------------------------- }
+
 destructor TVorbisComment.Destroy;
 begin
   Clear;
   inherited;
 end;
+
+{ --------------------------------------------------------------------------- }
 
 procedure TVorbisComment.Clear;
 begin
@@ -147,6 +182,8 @@ begin
   SetLength(FCommentLengths, 0);
   FCommentCount := 0;
 end;
+
+{ --------------------------------------------------------------------------- }
 
 procedure TVorbisComment.LoadFromStream(const Stream: TStream);
 var
@@ -166,6 +203,8 @@ begin
   end;
 end;
 
+{ --------------------------------------------------------------------------- }
+
 procedure TVorbisComment.SaveToStream(const Stream: TStream);
 var
   N, I: Integer;
@@ -182,10 +221,14 @@ begin
   end;
 end;
 
+{ --------------------------------------------------------------------------- }
+
 function TVorbisComment.Valid: Boolean;
 begin
   Result := (FVendorLength in [10..50]);
 end;
+
+{ --------------------------------------------------------------------------- }
 
 function TVorbisComment.GetIndexOf(Index: WideString): Integer;
 var
@@ -198,6 +241,8 @@ begin
   Result := -1;
 end;
 
+{ --------------------------------------------------------------------------- }
+
 procedure TVorbisComment.DeleteI(Index: Integer);
 begin
   if (Index >= 0) and (Index < Count) then
@@ -207,10 +252,13 @@ begin
   end;
 end;
 
+{ --------------------------------------------------------------------------- }
+
 procedure TVorbisComment.Delete(Index: WideString);
 begin
   DeleteI(GetIndexOf(Index));
 end;
 
-end.
+{ --------------------------------------------------------------------------- }
 
+end.

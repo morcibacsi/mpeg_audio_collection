@@ -41,7 +41,7 @@ implementation
 
 {$R *.DFM}
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function SelectVolumeAction(GD, HT: boolean): integer;
 begin
@@ -60,21 +60,21 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSelectVolume.Button2Click(Sender: TObject);
 begin
 	Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSelectVolume.Button1Click(Sender: TObject);
 begin
 	OnButtonClick(109, 1);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSelectVolume.FormCreate(Sender: TObject);
 var
@@ -114,7 +114,7 @@ begin
     ListItem.SubItems.Add(FloatToStrF(FileData[1] / 1024, ffFixed, 15, 2) + ' ' + GetText(62));
     ListItem.SubItems.Add(DurationToStr(FileData[2]));
 		if FileData[2] <= 0 then Line := ''
-    else Line := FormatFloat('000', Trunc(FileData[1] * 8 * 1.024 / FileData[2])) + ' ' + GetText(67) + ' ' + GetText(65);
+    else Line := GetText(65) + ' ' + FormatFloat('000', Trunc(FileData[1] * 8 * 1.024 / FileData[2])) + ' ' + GetText(67);
     ListItem.SubItems.Add(Line);
 
 		Child := Child.GetNextSibling;
@@ -125,7 +125,7 @@ begin
   if ListView1.Tag <= 0 then ListView1.StateImages := nil;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSelectVolume.ListView1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
@@ -139,7 +139,7 @@ begin
   if Key = VK_RETURN then ListView1DblClick(Self);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSelectVolume.FormResize(Sender: TObject);
 begin
@@ -158,7 +158,7 @@ begin
   Image1.Top := (Button1.Top + GroupBox1.Top - Image1.Height) div 2;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSelectVolume.ListView1ColumnClick(Sender: TObject; Column: TListColumn);
 var
@@ -175,7 +175,7 @@ begin
   else ListView1.Columns[Column.Index].ImageIndex := 2;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSelectVolume.ListView1Compare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
 var
@@ -200,7 +200,7 @@ begin
   if Tag < 0 then Compare := -Compare;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSelectVolume.ListView1DblClick(Sender: TObject);
 begin
@@ -208,7 +208,7 @@ begin
   	TTreeNode(TTreeNode(ListView1.Selected.Data).Data).Selected := true;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSelectVolume.OnButtonClick(MIndex: integer; AIndex: integer);
 var
@@ -228,14 +228,14 @@ begin
   else Dialog(GetText(107), GetText(53), GetText(54), '', '', 2, 4);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSelectVolume.Button3Click(Sender: TObject);
 begin
 	OnButtonClick(223, 2);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSelectVolume.ListView1Change(Sender: TObject; Item: TListItem;
   Change: TItemChange);
@@ -251,6 +251,6 @@ begin
 	Button3.Enabled := Count > 1;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 end.

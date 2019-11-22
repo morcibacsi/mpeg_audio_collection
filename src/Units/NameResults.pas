@@ -24,6 +24,7 @@ type
     Playlist1: TMenuItem;
     N4: TMenuItem;
     Information1: TMenuItem;
+    OpenDir: TMenuItem;
 		procedure Button6Click(Sender: TObject);
     procedure ListView1DblClick(Sender: TObject);
     procedure Button4Click(Sender: TObject);
@@ -40,6 +41,7 @@ type
     procedure Play1Click(Sender: TObject);
     procedure Enqueue1Click(Sender: TObject);
     procedure Playlist1Click(Sender: TObject);
+    procedure OpenDirClick(Sender: TObject);
 	private
   	FindItem: TTreeNode;
     SourcePath: string;
@@ -56,7 +58,7 @@ uses Main;
 
 {$R *.DFM}
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function ShowNameResults(SPath: string; GD, HT: boolean): TTreeNode;
 var
@@ -132,7 +134,7 @@ begin
 		    if FileData[2] <> 0 then BitRate := Trunc(FileData[1] * 8 * 1.024 / Abs(FileData[2]))
 				else BitRate := 0;
 				if Item.HasChildren then
-					ItemText := FormatFloat('000', BitRate) + ' ' + GetText(67) + ' ' + GetText(65)
+					ItemText := GetText(65) + ' ' + FormatFloat('000', BitRate) + ' ' + GetText(67)
 				else
 	 				if FileData[2] < 0 then
       			ItemText := FormatFloat('000', BitRate) + ' ' + GetText(67) + ' ' + GetText(66)
@@ -156,14 +158,14 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.Button6Click(Sender: TObject);
 begin
 	Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.ListView1DblClick(Sender: TObject);
 begin
@@ -174,7 +176,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.Button4Click(Sender: TObject);
 begin
@@ -201,7 +203,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmNameResults.SaveFoundItemsOK(FName: string): boolean;
 var
@@ -234,7 +236,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.Button5Click(Sender: TObject);
 begin
@@ -242,7 +244,7 @@ begin
 	Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.ListView1KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
@@ -250,7 +252,7 @@ begin
 	if Key = VK_RETURN then ListView1DblClick(Self);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.FormResize(Sender: TObject);
 begin
@@ -269,7 +271,7 @@ begin
   Image1.Top := (Button4.Top + Panel1.Top - Image1.Height) div 2;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.ListView1ColumnClick(Sender: TObject; Column: TListColumn);
 var
@@ -286,7 +288,7 @@ begin
   else ListView1.Columns[Column.Index].ImageIndex := 2;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.ListView1Compare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
 var
@@ -310,7 +312,7 @@ begin
   if Tag < 0 then Compare := -Compare;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.FormCreate(Sender: TObject);
 begin
@@ -326,9 +328,10 @@ end;
 	Enqueue1.Caption := GetText(153);
 	Playlist1.Caption := GetText(154);
   Information1.Caption := GetText(52);
+  OpenDir.Caption := GetText(242);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.FormClose(Sender: TObject;
   var Action: TCloseAction);
@@ -339,7 +342,7 @@ begin
 	SearchWidth := Width;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmNameResults.GetSelectedNode: TTreeNode;
 var
@@ -358,7 +361,7 @@ begin
      	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.pmnSearchPopup(Sender: TObject);
 var
@@ -373,11 +376,18 @@ begin
 		Enqueue1.Visible := true;
 		N4.Visible := true;
     //if frmMain.ListBox4.Items.Count = 1 then Information1.Visible := true;
-    if (SelNode.HasChildren) or (frmMain.ListBox4.Items.Count > 1) then Playlist1.Visible := true;
+    if (SelNode.HasChildren) or (frmMain.ListBox4.Items.Count > 1) then
+      Playlist1.Visible := true
+    else
+      Playlist1.Visible := False;
+    if frmMain.ListBox4.Items.Count = 1 then
+      OpenDir.Visible := True
+    else
+      OpenDir.Visible := False;
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.Play1Click(Sender: TObject);
 var
@@ -408,7 +418,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.Enqueue1Click(Sender: TObject);
 var
@@ -439,7 +449,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmNameResults.Playlist1Click(Sender: TObject);
 var
@@ -497,6 +507,29 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmNameResults.OpenDirClick(Sender: TObject);
+var
+	SelectedNode: TTreeNode;
+  SelectedItemPath: String;
+begin
+  SelectedNode := GetSelectedNode;
+
+  if SelectedNode <> nil then
+  begin
+    if SelectedNode.HasChildren then
+      SelectedItemPath := GetSelectedPath(SelectedNode)
+    else
+      SelectedItemPath := ExtractFilePath(GetSelectedPath(SelectedNode));
+
+    if DirectoryExists(SelectedItemPath) then
+      ShellExecute(Handle, 'open', PChar(SelectedItemPath), nil, nil, SW_SHOW)
+    else
+      Dialog(GetText(158) + ': ' + #13 + #10 + SelectedItemPath, GetText(51), GetText(54), '', '', 1, 2);
+  end;
+end;
+
+{ --------------------------------------------------------------------------- }
 
 end.

@@ -366,6 +366,10 @@ object frmPropertyResults: TfrmPropertyResults
       Visible = False
       OnClick = Playlist1Click
     end
+    object OpenDir: TMenuItem
+      Caption = '_OpenDir'
+      OnClick = OpenDirClick
+    end
     object N4: TMenuItem
       Caption = '-'
       Visible = False

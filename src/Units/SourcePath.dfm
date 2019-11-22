@@ -157,7 +157,7 @@ object frmSourcePath: TfrmSourcePath
   object ChckBxEject: TCheckBox
     Left = 306
     Top = 230
-    Width = 75
+    Width = 90
     Height = 17
     Hint = 'Check this if you want the CD to be ejected after scanning'
     Caption = '_Eject'

@@ -40,7 +40,7 @@ type
 
 implementation
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 constructor TScanThread.Create(SPath: string; UNode: TTreeNode; UInfo: boolean; Label1, Label2, Label3: TLabel);
 begin
@@ -74,7 +74,7 @@ begin
 	inherited Create(false);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TScanThread.Execute;
 var
@@ -128,7 +128,7 @@ begin
 		Tree.Items.Delete(VolumeNode);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TScanThread.UpdateCollectionInfo(VolumeInfo: DataArray);
 var
@@ -158,7 +158,7 @@ begin
 			Tree.Items[0].Text := Tree.Items[0].Text + IntToStr(CollectionInfo[Index])+ Chr(Index + 1);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TScanThread.ScanDir(Root: TTreeNode; Path: string): DataArray;
 var
@@ -273,7 +273,7 @@ begin
           FileTag[1] := TextFilter(FlacFile.VorbisComment.Value['Title'], 0);
 					FileTag[2] := TextFilter(FlacFile.VorbisComment.Value['Artist'], 0);
 					FileTag[3] := TextFilter(FlacFile.VorbisComment.Value['Album'], 0);
-					FileTag[4] := TextFilter(FlacFile.VorbisComment.Value['Track'], 0);
+          FileTag[4] := TextFilter(FlacFile.VorbisComment.Value['TrackNumber'], 0);
 					FileTag[5] := TextFilter(FlacFile.VorbisComment.Value['Date'], 0);
 					FileTag[6] := TextFilter(FlacFile.VorbisComment.Value['Comment'], 0);
           FileTag[7] := TextFilter(FlacFile.VorbisComment.Value['Genre'], 0);
@@ -339,7 +339,10 @@ begin
 					FileTag[1] := TextFilter(MPPFile.APEtag.Title, 0);
 					FileTag[2] := TextFilter(MPPFile.APEtag.Artist, 0);
 					FileTag[3] := TextFilter(MPPFile.APEtag.Album, 0);
-					if MPPFile.APEtag.Track in [1..99] then FileTag[4] := IntToStr(MPPFile.APEtag.Track);
+          // Gambit - changed, check it again
+{					if MPPFile.APEtag.Track in [1..99] then
+            FileTag[4] := IntToStr(MPPFile.APEtag.Track);    }
+          FileTag[4] := IntToStr(MPPFile.APEtag.Track);
 					FileTag[5] := TextFilter(MPPFile.APEtag.Year, 0);
 					FileTag[6] := TextFilter(MPPFile.APEtag.Comment, 0);
           FileTag[7] := TextFilter(MPPFile.APEtag.Genre, 0); //MB
@@ -473,7 +476,9 @@ begin
 					FileTag[1] := TextFilter(WAVPackFile.APEtag.Title, 0);
 					FileTag[2] := TextFilter(WAVPackFile.APEtag.Artist, 0);
 					FileTag[3] := TextFilter(WAVPackFile.APEtag.Album, 0);
-					if MPPFile.APEtag.Track in [1..99] then FileTag[4] := IntToStr(WAVPackFile.APEtag.Track);
+          // Gambit - changed, check it again
+{					if MPPFile.APEtag.Track in [1..99] then FileTag[4] := IntToStr(WAVPackFile.APEtag.Track);  }
+          FileTag[4] := IntToStr(WAVPackFile.APEtag.Track);
 					FileTag[5] := TextFilter(WAVPackFile.APEtag.Year, 0);
 					FileTag[6] := TextFilter(WAVPackFile.APEtag.Comment, 0);
           FileTag[7] := TextFilter(WAVPackFile.APEtag.Genre, 0); // MB
@@ -510,8 +515,10 @@ begin
 					FileTag[1] := TextFilter(OfrFile.APEtag.Title, 0);
 					FileTag[2] := TextFilter(OfrFile.APEtag.Artist, 0);
 					FileTag[3] := TextFilter(OfrFile.APEtag.Album, 0);
-					if Monkey.APEtag.Track in [1..99] then FileTag[4] :=
-            IntToStr(OfrFile.APEtag.Track);
+          // Gambit - changed, check it again
+{					if Monkey.APEtag.Track in [1..99] then FileTag[4] :=
+            IntToStr(OfrFile.APEtag.Track);                    }
+					FileTag[4] := IntToStr(OfrFile.APEtag.Track);
 					FileTag[5] := TextFilter(OfrFile.APEtag.Year, 0);
 					FileTag[6] := TextFilter(OfrFile.APEtag.Comment, 0);
           FileTag[7] := TextFilter(OfrFile.APEtag.Genre, 0);
@@ -547,7 +554,9 @@ begin
 					FileTag[1] := TextFilter(Monkey.APEtag.Title, 0);
 					FileTag[2] := TextFilter(Monkey.APEtag.Artist, 0);
 					FileTag[3] := TextFilter(Monkey.APEtag.Album, 0);
-					if Monkey.APEtag.Track in [1..99] then FileTag[4] := IntToStr(Monkey.APEtag.Track);
+          // Gambit - changed, check it again
+{					if Monkey.APEtag.Track in [1..99] then FileTag[4] := IntToStr(Monkey.APEtag.Track);  }
+          FileTag[4] := IntToStr(Monkey.APEtag.Track);
 					FileTag[5] := TextFilter(Monkey.APEtag.Year, 0);
 					FileTag[6] := TextFilter(Monkey.APEtag.Comment, 0);
           FileTag[7] := TextFilter(Monkey.APEtag.Genre, 0); // MB
@@ -621,6 +630,6 @@ begin
 	FLabel.Caption := FLabel.Hint;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 end.

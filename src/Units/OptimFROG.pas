@@ -26,7 +26,7 @@ unit OptimFROG;
 interface
 
 uses
-  Classes, SysUtils, ID3v1, ID3v2, APEtag, WideStrings;
+  Classes, SysUtils, ID3v1, ID3v2, APEtag, JclUnicode;
 
 const
   OFR_COMPRESSION: array [0..9] of String = ('fast', 'normal', 'high', 'extra',
@@ -164,7 +164,10 @@ end;
 function TOptimFrog.FGetDuration: Double;
 begin
   { Get song duration }
-  Result := FGetSamples / FHeader.SampleRate;
+  if FHeader.SampleRate > 0 then
+    Result := FGetSamples / FHeader.SampleRate
+  else
+    Result := 0;
 end;
 
 { --------------------------------------------------------------------------- }
@@ -213,7 +216,8 @@ end;
 
 function TOptimFrog.ReadFromFile(const FileName: WideString): Boolean;
 var
-  Source: TFileStreamW;
+//  Source: TFileStreamW;
+  Source: TFileStream;
 begin
   Result := False;
   Source := nil;
@@ -224,7 +228,8 @@ begin
     FID3v2.ReadFromFile(FileName);
     FAPEtag.ReadFromFile(FileName);
     { Set read-access, open file and get file length }
-    Source := TFileStreamW.Create(FileName, fmOpenRead);
+//    Source := TFileStreamW.Create(FileName, fmOpenRead);
+    Source := TFileStream.Create(FileName, fmOpenRead or fmShareDenyNone);
     FFileLength := Source.Size;
     { Read header data }
     Source.Seek(ID3v2.Size, soFromBeginning);

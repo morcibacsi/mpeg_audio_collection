@@ -71,8 +71,7 @@ type
 
 implementation
 
-uses
-  WideStrings;
+uses JclUnicode;
 
 { ********************** Private functions & procedures ********************* }
 
@@ -106,7 +105,7 @@ end;
 function TFLACfile.FGetDuration: Double;
 begin
   { Get song duration }
-  if FIsValid then
+  if (FIsValid) and (FSampleRate > 0) then
     Result := FSamples / FSampleRate
   else
     Result := 0;
@@ -150,7 +149,8 @@ end;
 
 function TFLACfile.ReadFromFile(const FileName: WideString): Boolean;
 var
-  Source: TFileStreamW;
+//  Source: TFileStreamW;
+  Source: TFileStream;
   Header: TFlacHeader;
   MetaDataBlockHeader: array[1..4] of Byte;
   BlockLength: Integer;
@@ -161,7 +161,8 @@ begin
   Result := false;
   try
     { Set read-access and open file }
-    Source := TFileStreamW.Create(FileName, fmOpenRead);
+//    Source := TFileStreamW.Create(FileName, fmOpenRead);
+    Source := TFileStream.Create(FileName, fmOpenRead);
     { Read header data }
     Source.Read(Header, SizeOf(Header));
     FFileLength := Source.Size;
@@ -197,6 +198,8 @@ begin
     Result := false;
   end;
 end;
+
+{ --------------------------------------------------------------------------- }
 
 end.
 

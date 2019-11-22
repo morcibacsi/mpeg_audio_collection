@@ -1,54 +1,21 @@
-MPEG Audio Collection: license
+MPEG Audio Collection
 
-
-Copyright notice:
------------------
+http://mac.sourceforge.net/
+macteam@users.sourceforge.net
 
 Copyright (c) 2000-2002 by Jurgen Faul
-All rights reserved by the author.
-This program is freeware for all purposes (unlimited distribution).
+Copyright (c) 2003 by The MAC Team
 
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
 
-Contact info:
--------------
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
 
-E-mail: jfaul@gmx.de
-Spoken languages: English, German, Russian
-
-If you are interested for a new version look at
-http://www.jfaul.de
-
-Support is available only through the address written above.
-No other contact methods are possible. Remember this is a freeware
-project, therefore I cannot dedicate too much time and efforts to it.
-I will do my best to respond to any mail regarding this subject.
-You are welcome to send comments and suggestions to the author.
-You are also welcome to support the author by donation of literature,
-tools, software or money, but it is not reqired.
-
-Please write me if you find any bugs in the program.
-
-
-Thanks for support:
-------------------
-
-  - Joerg Walther                  - Antti Kallio
-  - Predrag Supurovic              - John Chatzistavrakis
-  - Ashwin Soekhoe                 - Kovacs Peter
-  - Andrey V. Sorokin              - Tomas Gudauskas
-  - Kambiz R. Khojasteh            - Steinar Hagen
-  - Alexey G. Popov                - Sidney Gomes
-  - Tomasz Waraksa                 - Sebastian Diaconu
-  - Santiago Azanon                - Ivan Vujic
-  - Guy Bouche                     - Jan Bielik
-  - Mikael Keto                    - Miran Zeleznik
-  - Giulio Fronterotta             - Jonas Eklund
-  - Dale Krueger                   - Sergiy Morgaylik
-  - Mohammad Atiyeh Deeb           - Aivars Zavadskis
-  - Ricard Manin                   - Maris Nartiss
-  - Raivo Kaljuve                  - Kemal Secer
-  - Pablo Fernandez Estevez
-
-Special thanks to Lenny Carpenter (imlenyxx@hotmail.com) for writing
-and designing the MAC help documentation. Please feel free to send
-Lenny any comments regarding this help file.
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA

@@ -15,19 +15,19 @@ type
 	TagArray = array [1..7] of string; // MB
 	PropertyArray = array [1..6] of array [1..3] of byte;
 	MatchArray = array [1..6] of boolean;
-	RowColArray = array [1..20] of boolean;
-  RowColIndexArray = array [1..16] of integer;
+	RowColArray = array [1..21] of boolean;
+  RowColIndexArray = array [1..17] of integer;
 
 var
 	AuthorName: string = 'MAC Team';
 	AppTitle: string = 'MPEG Audio Collection';
   AppTitleShort: string = 'MAC';
 	////////////////////////////
-	AVersion: string = '2.91 beta';
-  ADate: string = 'September 2003';
+	AVersion: string = '2.92';
+  ADate: string = 'October 2003';
 	////////////////////////////
-  AppCopyright: string = 'Freeware, copyright by Jurgen Faul && MAC Team';
-	Homepage: string = 'http://sourceforge.net/projects/mac';
+  AppCopyright: string = 'Freeware, copyright by J. Faul && The MAC Team';
+	Homepage: string = 'http://mac.sourceforge.net/';
 	EMail: string = 'macteam@users.sourceforge.net';
   MACHelpFile: string = 'mac.hlp';
 	InfoFile: string = 'info.txt';
@@ -74,7 +74,7 @@ var
   HtmlMask: string = '*.htm;*.html';
   VideoMask: String = '*.avi;*.ogm;*.mkv;*.wmv;*.wmp;*.wm;*.asf;*.mpg;*.mpeg;' +
   '*.mpe;*.m1v;*.m2v;*.mpv2;*.mp2v;*.vob;*.ivf;*.rm;*.ram;*.rmvb;*.rpm;*.rt;' +
-  '*.rp;*.smi;*.smil;*.mov;*.qt';
+  '*.rp;*.smi;*.smil;*.mov;*.qt;*.asx;*.dat';
 
   ImageMask: string = '*.ani;*.b3d;*.bmp;*.dib;*.cam;*.clp;*.crw;*.cur;*.dcm;' +
   '*.acr;*.dcx;*.djvu;*.iw44;*.ecw;*.emf;*.eps;*.fpx;*.fsh;*.g3;*.gif;*.icl;' +
@@ -121,8 +121,8 @@ var
 	UseWindowSettings: boolean = true;
 	LangName: string = '';
 
-	RowCol: RowColArray = (false, false, true, false, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true);
-	RowColIndex: RowColIndexArray = (1, 2, 3, 13, 14, 15, 16, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+	RowCol: RowColArray = (false, false, true, false, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, true, false);
+	RowColIndex: RowColIndexArray = (1, 2, 3, 13, 14, 15, 16, 4, 5, 6, 7, 8, 9, 10, 11, 12, 17);
 	RFormat: integer = 1;
   RScanning: integer = 1;
 	LastReportFile: string = '';
@@ -194,6 +194,7 @@ var
   AllFiles: boolean = false;
 
   PreferTag: integer = 1;
+  MP3TagWrite: Integer;
 
   ColumnAutoSize: boolean = false;
 
@@ -271,11 +272,14 @@ function GetVolumeLabel(Drive: Char): String;
 
 // Gambit
 function GetMPCVersion(VersionNumber: Integer): String;
+function GetSelectedPath(SelectedNode: TTreeNode): String;
 
 
 implementation
 
-// -----------------------------------------------------------------------------
+uses Main;
+
+{ --------------------------------------------------------------------------- }
 
 function GetText(Index: integer): string;
 var
@@ -291,7 +295,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function DurationToStr(Duration: longint): string;
 var
@@ -310,7 +314,7 @@ begin
 	else Result := Result + '0' + IntToStr(Param[3]);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function DurationToShortStr(Duration: longint): string;
 var
@@ -332,14 +336,14 @@ begin
 	else Result := Result + '0' + IntToStr(Param[3]);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function ExtractName(Source: string): string;
 begin
 	Result := Copy(Source, 1, Pos(#1, Source) - 1);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function ExtractData(Source: string): DataArray;
 var
@@ -359,7 +363,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function ExtractTag(Source: string): TagArray;
 var
@@ -374,7 +378,7 @@ begin
 // end MB
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function AlignedBitRate(FBitRate, FSampleRate, FMode, FVersion, FLayer: integer): integer;
 const
@@ -443,7 +447,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function PropertyOK(NItem: TTreeNode; NProp: PropertyArray; var Match: MatchArray): boolean;
 var
@@ -561,7 +565,7 @@ begin
 	for Index := 1 to 6 do if Match[Index] then Result := true;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function ExtractOldData(Info: string): DataArray;
 var
@@ -577,7 +581,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function ShortFileNameOK(FileName: string; var SFName: string; var DName: string): boolean;
 var
@@ -599,7 +603,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TreeSorting(Node1, Node2: TTreeNode; Data: longint): integer; stdcall;
 begin
@@ -610,7 +614,7 @@ begin
 		else Result := 1;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function GetChannelMode(Mode: longint): string;
 begin
@@ -624,7 +628,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function GetMPEGVersion(Version: longint): string;
 begin
@@ -637,7 +641,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function GetVolumePath(Source: string): string;
 begin
@@ -646,7 +650,7 @@ begin
   	Result := Copy(Source, Pos('\', Source) + 1, Length(Source) - Pos('\', Source));
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TextFilter(Source: string; Limit: integer): string;
 var
@@ -665,7 +669,7 @@ begin
   Result := Trim(Result);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function GetMPEGType(Version, Layer: integer): string;
 begin
@@ -721,7 +725,7 @@ begin
 }
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function GetNewFileName(const OldName: string; Tag: TagArray; Macro: string; Filter: TListView): string;
 var
@@ -771,7 +775,7 @@ begin
   else Result := Folder + '\' + Trim(NewName) + Ext;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function GetFileTag(const FileName: string; LengthLimit: integer; Number: integer): TagArray;
 var
@@ -867,7 +871,7 @@ begin
   APEtag.Free;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function VolumeDataOK(Drive: Char; var VLabel: string; var VSerial: longint; var VType: Integer): boolean;
 var
@@ -905,7 +909,7 @@ begin
 	else Result := false;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function GetVolumeLabel(Drive: Char): String;
 var
@@ -935,7 +939,7 @@ begin
 	{$ENDIF}
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function GetMPCVersion(VersionNumber: Integer): String;
 begin
@@ -950,7 +954,44 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
+
+function GetSelectedPath(SelectedNode: TTreeNode): String;
+var
+  SelectedFilePath, SelectedDriveLabel, SLabel: String;
+  SelectedVData: DataArray;
+  Index, SSerial: LongInt;
+  SType: Integer;
+  //DriveExists: Boolean;
+begin
+  SelectedFilePath := ExtractName(SelectedNode.Text);
+
+  while SelectedNode.Level > 1 do
+  begin
+		SelectedNode := SelectedNode.Parent;
+	  SelectedFilePath := ExtractName(SelectedNode.Text) + '\' + SelectedFilePath;
+  end;
+
+  SelectedDriveLabel := '';
+	if Pos('\', SelectedFilePath) > 0 then
+    SelectedDriveLabel := Copy(SelectedFilePath, 1, Pos('\', SelectedFilePath) - 1)
+	else
+    SelectedDriveLabel := SelectedFilePath;
+  SelectedFilePath := GetVolumePath(SelectedFilePath);
+
+	SelectedVData := ExtractData(SelectedNode.Text);
+
+	for Index := FirstDrive to frmMain.DriveComboBox1.Items.Count - 1 do
+		if (VolumeDataOK(frmMain.DriveComboBox1.Items.Strings[Index][1], SLabel, SSerial, SType)) and
+	    ((SelectedVData[6] = SSerial) or ((SelectedVData[6] = 0) and (CompareText(SelectedDriveLabel, SLabel) = 0))) then
+		begin
+			//DriveExists := true;
+			SelectedFilePath := frmMain.DriveComboBox1.Items.Strings[Index][1] + ':\' + SelectedFilePath;
+    end;
+  Result := SelectedFilePath;
+end;
+
+{ --------------------------------------------------------------------------- }
 
 begin
   FlacMaskObj := TMask.Create(FlacMask);

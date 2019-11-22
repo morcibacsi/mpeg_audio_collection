@@ -1,6 +1,38 @@
 MPEG Audio Collection: history
 
 
+(05. October 2003) 2.92
+-----------------------
+ - FLAC support
+ - WavPack support
+ - OptimFROG support
+ - AAC support
+ - support for files encoded with Monkey's Audio 3.98
+ - mpc support for SV 7.1 and all profiles
+ - mpc fix: will now read files with different sample rates correctly
+ - mpc encoder detection
+ - genre tag support (thanks to Maurizio Belvisi)
+ - new powerful tagger and renamer
+ - freedb support in the tag editor
+ - the tag editor now supports writting of ID3v1, ID3v2, APEv2 and Vorbis Comment tags
+ - volume type detected and indicated by the icon
+ - option to include all files to collection
+ - different icons for different file types (thanks to SacRat, Jan S. and M. Blake)
+ - search window position and size are now saved
+ - added option to open directory in explorer
+ - right click menu added to the search window
+ - added option to eject the CD after scanning
+ - new file info dialog window
+ - reads Vendor info from Vorbis Comments (Ogg Vorbis, FLAC)
+ - reads ape tags from mp3 files
+ - option to use foobar2000 for playing
+ - double-clicking unsupported files launches their associated program
+ - updated Swedish, Slovak, German (thanks to Joerg Walther), Spanish (thanks to AngelGR), Arabic (thanks to M.A.A.D.), Russian (thanks to Infector), Italian and French (thanks to zegilles) language files
+ - some text corrections (see todo_translate.txt)
+ - XP Themes support
+ - fixed bugs
+ - MAC is now released under the GNU LGPL license
+
 (05/01/02) 2.90
 ---------------
 added: Thai language pack

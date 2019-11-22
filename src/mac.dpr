@@ -45,9 +45,20 @@ uses
   CDAtrack in 'Units\CDAtrack.pas',
   FLACfile in 'Units\FLACfile.pas',
   VorbisComment in 'Units\VorbisComment.pas',
-  WideStrings in 'Units\WideStrings.pas',
   OptimFROG in 'Units\OptimFROG.pas',
-  WAVPackFile in 'Units\WAVPackfile.pas';
+  WAVPackFile in 'Units\WAVPackfile.pas',
+  TagPreview in 'Units\TagPreview.pas' {frmPreview},
+  RemTags in 'Units\RemTags.pas' {frmRemTags},
+  FilenameToTag in 'Units\FilenameToTag.pas' {frmFilenameToTag},
+  AutoNumber in 'Units\AutoNumber.pas' {frmAutoNumber},
+  RepTagDialog in 'Units\RepTagDialog.pas' {frmReplTag},
+  JclUnicode in 'Units\JclUnicode.pas',
+  wnaspi32 in 'Units\wnaspi32.pas',
+  AspiCD in 'Units\AspiCD.pas',
+  Freedb in 'Units\Freedb.pas' {frmFreedb},
+  SptiCD in 'Units\SptiCD.pas',
+  CDROMIOCTL in 'Units\CDROMIOCTL.PAS',
+  scsidefs in 'Units\scsidefs.pas';
 
 {$R *.RES}
 {$R Units\XPThemes.res}
@@ -56,5 +67,11 @@ begin
   Application.Initialize;
   Application.Title := '';
   Application.CreateForm(TfrmMain, frmMain);
+  Application.CreateForm(TfrmPreview, frmPreview);
+  Application.CreateForm(TfrmRemTags, frmRemTags);
+  Application.CreateForm(TfrmFilenameToTag, frmFilenameToTag);
+  Application.CreateForm(TfrmAutoNumber, frmAutoNumber);
+  Application.CreateForm(TfrmReplTag, frmReplTag);
+  Application.CreateForm(TfrmFreedb, frmFreedb);
   Application.Run;
 end.

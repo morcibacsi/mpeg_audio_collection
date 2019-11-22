@@ -141,6 +141,7 @@ type
     ToolButton4: TToolButton;
     Copy1: TMenuItem;
     Image1: TImage;
+    OpenDir: TMenuItem;
 		procedure Toolbar1Click(Sender: TObject);
 		procedure Statusbar1Click(Sender: TObject);
 		procedure Gridlines1Click(Sender: TObject);
@@ -208,6 +209,7 @@ type
     procedure FormPaint(Sender: TObject);
 
     function CreatePlayList(SNode: TTreeNode; PlayList: TListBox): string;
+    procedure OpenDirClick(Sender: TObject);
 
 	private
     function GetSelectedNode: TTreeNode;
@@ -258,7 +260,7 @@ implementation
 
 {$R *.DFM}
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.WriteSettings;
 var
@@ -281,8 +283,8 @@ begin
 			for Index := 1 to numTag do Reg.WriteString('TagText' + IntToStr(Index), TagText[Index]); // MB
 			Reg.WriteBool('AutoOpen', AutoOpen);
 			Reg.WriteBool('UseWindowSettings', UseWindowSettings);
-			for Index := 1 to 20 do Reg.WriteBool('ReportItems' + IntToStr(Index), RowCol[Index]);
-      for Index := 1 to 16 do Reg.WriteInteger('ReportItemsIndex' + IntToStr(Index), RowColIndex[Index]);
+			for Index := 1 to 21 do Reg.WriteBool('ReportItems' + IntToStr(Index), RowCol[Index]);
+      for Index := 1 to 17 do Reg.WriteInteger('ReportItemsIndex' + IntToStr(Index), RowColIndex[Index]);
 			Reg.WriteInteger('ReportFormat', RFormat);
       Reg.WriteInteger('ReportScanning', RScanning);
 			Reg.WriteString('LastReportFile', LastReportFile);
@@ -376,7 +378,7 @@ begin
 	Reg.Free;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.ReadSettings;
 var
@@ -401,8 +403,8 @@ begin
 			for Index := 1 to numTag do TagText[Index] := Reg.ReadString('TagText' + IntToStr(Index)); // MB
 			AutoOpen := Reg.ReadBool('AutoOpen');
 			UseWindowSettings := Reg.ReadBool('UseWindowSettings');
-			for Index := 1 to 20 do RowCol[Index] := Reg.ReadBool('ReportItems' + IntToStr(Index));
-      for Index := 1 to 16 do RowColIndex[Index] := Reg.ReadInteger('ReportItemsIndex' + IntToStr(Index));
+			for Index := 1 to 21 do RowCol[Index] := Reg.ReadBool('ReportItems' + IntToStr(Index));
+      for Index := 1 to 17 do RowColIndex[Index] := Reg.ReadInteger('ReportItemsIndex' + IntToStr(Index));
 			RFormat := Reg.ReadInteger('ReportFormat');
       RScanning := Reg.ReadInteger('ReportScanning');
 			LastReportFile := Reg.ReadString('LastReportFile');
@@ -515,7 +517,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Toolbar1Click(Sender: TObject);
 begin
@@ -523,7 +525,7 @@ begin
 	Toolbar2.Visible := Toolbar1.Checked;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Statusbar1Click(Sender: TObject);
 begin
@@ -531,7 +533,7 @@ begin
 	Statusbar2.Visible := Statusbar1.Checked;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Gridlines1Click(Sender: TObject);
 begin
@@ -540,7 +542,7 @@ begin
   ListView1.RowSelect := ListView1.GridLines;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Hottrack1Click(Sender: TObject);
 begin
@@ -549,7 +551,7 @@ begin
 	ListView1.HotTrack := Hottrack1.Checked;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.SetCaptions;
 begin
@@ -606,6 +608,7 @@ begin
 	ToolButton20.Hint := About1.Caption;
 	Play1.Caption := GetText(152);
 	Enqueue1.Caption := GetText(153);
+  OpenDir.Caption := GetText(242);
 	Update1.Caption := Update2.Caption;
 	Delete2.Caption := GetText(13);
   Rename1.Caption := Rename2.Caption;
@@ -615,7 +618,7 @@ begin
   StatusBar2.Hint := GetText(52);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.SetColumns;
 var
@@ -670,7 +673,7 @@ begin
   UpdateListView;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
@@ -717,7 +720,7 @@ begin
 
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.ShowTextFile(FileName: string);
 begin
@@ -729,35 +732,35 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Info1Click(Sender: TObject);
 begin
 	ShowTextFile(RootD + MACHelpFile);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.History1Click(Sender: TObject);
 begin
 	ShowTextFile(RootD + HistoryFile);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.License1Click(Sender: TObject);
 begin
 	ShowTextFile(RootD + LicenseFile);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Homepage1Click(Sender: TObject);
 begin
 	ShellExecute(Handle, 'open', PChar(Homepage), nil, nil, SW_SHOW);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Feedback1Click(Sender: TObject);
 var
@@ -768,7 +771,7 @@ begin
 	ShellExecute(Handle, 'open', PChar(Command), nil, nil, SW_SHOW);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.QuestionForSaveCollection: byte;
 begin
@@ -777,7 +780,7 @@ begin
 	if Result = 1 then OnSaveCollection(CurrentCollection, GetText(5));
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.UpdateListView;
 var
@@ -860,7 +863,7 @@ begin
 								else BitRate := 0;
 
 								if Child.HasChildren then
-									ItemText := FormatFloat('0', BitRate) + ' ' + GetText(67) + ' ' + GetText(65)
+									ItemText := GetText(65) + ' ' + FormatFloat('0', BitRate) + ' ' + GetText(67)
 								else
 							 		if FileData[2] < 0 then ItemText := FormatFloat('0', BitRate) + ' ' + GetText(67) + ' ' + GetText(66)
 									else
@@ -906,7 +909,7 @@ begin
 	if ListView1.Items.Count > 0 then ListView1.ItemFocused := ListView1.Items[0];
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.GetSelectedNode: TTreeNode;
 var
@@ -932,7 +935,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.GetDate(Node: TTreeNode): string;
 var
@@ -946,7 +949,7 @@ begin
   Result := FormatDateTime('dd/mm/yyyy', NodeData[5]);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.UpdateInformation;
 var
@@ -978,10 +981,15 @@ begin
 			Line := SelectedItem.Text;
 			FileData := ExtractData(Line);
 
-			Inc(SumSize, FileData[1]);
-      Inc(SumDur, Abs(FileData[2]));
-      if SelectedItem.HasChildren then Inc(SumFold, 1)
-      else Inc(SumFiles, 1);
+      if FileData[5] <> 0 then
+      begin
+			  Inc(SumSize, FileData[1]);
+        Inc(SumDur, Abs(FileData[2]));
+        if SelectedItem.HasChildren then
+          Inc(SumFold, 1)
+        else
+          Inc(SumFiles, 1);
+      end;
 	  end;
 
     if SumSize < 1000000 then
@@ -1012,6 +1020,7 @@ begin
 
 	if SelectedItem.HasChildren then
 	begin
+    // shows the average bitrate for folders and volumes
 		Statusbar2.Panels[2].Text := GetText(65) + ' ' + IntToStr(BitRate) + ' ' + GetText(67);
 		Statusbar2.Panels[3].Text := IntToStr(FileData[3]) + ' ' + GetText(68);
 		Statusbar2.Panels[4].Text := IntToStr(FileData[4]) + ' ' + GetText(69);
@@ -1032,7 +1041,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.UpdateControls;
 begin
@@ -1075,7 +1084,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.UpdateTreeView;
 var
@@ -1137,7 +1146,7 @@ begin
   else TreeView1.Selected := nil;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.OpenCollectionOK(FileName: string): boolean;
 var
@@ -1203,7 +1212,7 @@ begin
 	Result := true;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.OpenFile(FileName: string);
 begin
@@ -1216,7 +1225,7 @@ begin
     	if TreeView1.CanFocus then TreeView1.SetFocus;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Open1Click(Sender: TObject);
 begin
@@ -1229,7 +1238,7 @@ begin
 	if OpenDialog1.Execute then OpenFile(OpenDialog1.FileName);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.TreeView1GetSelectedIndex(Sender: TObject;	Node: TTreeNode);
 begin
@@ -1246,7 +1255,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.ListView1SelectItem(Sender: TObject; Item: TListItem;
   Selected: Boolean);
@@ -1254,7 +1263,7 @@ begin
 	UpdateInformation;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.About1Click(Sender: TObject);
 begin
@@ -1262,7 +1271,7 @@ begin
 	ShowAbout;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.SaveCollectionOK(FileName: string): boolean;
 var
@@ -1330,7 +1339,7 @@ begin
 	Caption := AppTitle + ' - ' + CurrentCollection;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.OnSaveCollection(FileName, WindowTitle: string);
 var
@@ -1365,7 +1374,7 @@ begin
 		Dialog(GetText(77) + ': ' + FName, GetText(51), GetText(54), '', '', 1, 2);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Save1Click(Sender: TObject);
 begin
@@ -1373,14 +1382,14 @@ begin
 	OnSaveCollection(CurrentCollection, GetText(5));
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Saveas1Click(Sender: TObject);
 begin
 	OnSaveCollection('', GetText(5));
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.OpenListViewItem;
 var
@@ -1409,7 +1418,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.ListView1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
@@ -1428,14 +1437,14 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.ListView1DblClick(Sender: TObject);
 begin
 	OpenListViewItem;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.NewCollection;
 begin
@@ -1457,7 +1466,7 @@ begin
 	UpdateControls;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Statistic1Click(Sender: TObject);
 begin
@@ -1465,7 +1474,7 @@ begin
 	ShowStatistic;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Tageditor1Click(Sender: TObject);
 begin
@@ -1473,7 +1482,7 @@ begin
 	ShowTagEditor;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.UpdateVolume(SourcePath: string; UpdatedNode: TTreeNode);
 var
@@ -1512,7 +1521,7 @@ begin
 		if Tree.Items.Count > ItemCount then Tree.Items.Delete(Tree.Items[UpdatedNode.StateIndex]);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Add1Click(Sender: TObject);
 var
@@ -1577,7 +1586,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.DeleteSelectedVolume;
 var
@@ -1632,7 +1641,7 @@ begin
 	CloseWaitWindow;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.MergeSelectedVolume;
 var
@@ -1706,7 +1715,7 @@ begin
   Rename1Click(Self);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Delete1Click(Sender: TObject);
 var
@@ -1721,7 +1730,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Sort1Click(Sender: TObject);
 var
@@ -1752,7 +1761,7 @@ begin
 	if SortOK then Dialog(GetText(114), GetText(52), GetText(54), '', '', 1, 3);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
@@ -1768,7 +1777,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.New1Click(Sender: TObject);
 begin
@@ -1777,14 +1786,14 @@ begin
 		NewCollection;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Exit1Click(Sender: TObject);
 begin
 	Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.ConvertOK(FileName: string): boolean;
 var
@@ -1876,7 +1885,7 @@ begin
 	TempList.Clear;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.ImportDataOK(FileName: string): boolean;
 var
@@ -1956,7 +1965,7 @@ begin
 	Result := true;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Import1Click(Sender: TObject);
 begin
@@ -1979,7 +1988,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.ShowNode(Node: TTreeNode);
 var
@@ -2010,7 +2019,7 @@ begin
 	UpdateInformation;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.SetLanguage(var FileName: string);
 var
@@ -2078,7 +2087,7 @@ begin
   SetColumns;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Options1Click(Sender: TObject);
 var
@@ -2088,14 +2097,14 @@ begin
 	if (OptionsOK) and (LangName <> FileName) then SetLanguage(LangName);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.PopupMenu1Popup(Sender: TObject);
 var
 	Index: longint;
 	SelNode: TTreeNode;
 begin
-	for Index := 0 to 9 do PopupMenu1.Items[Index].Visible := false;
+	for Index := 0 to 10 do PopupMenu1.Items[Index].Visible := false;
 
 	SelNode := GetSelectedNode;
 
@@ -2103,6 +2112,7 @@ begin
 	begin
 		Play1.Visible := true;
 		Enqueue1.Visible := true;
+    if ListBox4.Items.Count = 1 then OpenDir.Visible := True;
 		N3.Visible := true;
     Select1.Visible := true;
     if ListBox4.Items.Count = 1 then Information1.Visible := true;
@@ -2119,7 +2129,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Delete2Click(Sender: TObject);
 var
@@ -2135,14 +2145,14 @@ begin
 		end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.TreeView1Change(Sender: TObject; Node: TTreeNode);
 begin
 	Tag := 1;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.CreatePlayList(SNode: TTreeNode; PlayList: TListBox): string;
 	procedure ScanTreeNode(Node: TTreeNode; FPath: string);
@@ -2246,7 +2256,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Play1Click(Sender: TObject);
 var
@@ -2266,7 +2276,7 @@ begin
      	try
        	TempList.Items.SaveToFile(RootD + PlaylistFile);
 
-        if Pos(LowerCase(ExtractFileExt(ExtractName(SelectedNode.Text))), SupportedExtension) > 0 then
+        if (Pos(LowerCase(ExtractFileExt(ExtractName(SelectedNode.Text))), SupportedExtension) > 0) or (SelectedNode.HasChildren) then
         begin
           if (UseFoobar) and (FileExists(FoobarPath + '\foobar2000.exe')) then
             ShellExecute(Handle, nil, PChar('"' + FoobarPath + '\foobar2000.exe"'), PChar('"' + RootD + PlaylistFile + '"'), nil, SW_SHOW)
@@ -2274,7 +2284,7 @@ begin
             ShellExecute(Handle, 'open', PChar(RootD + PlaylistFile), nil, nil, SW_SHOW);
         end
         else
-          ShellExecute(Handle, 'open', PChar(ExtractName(SelectedNode.Text)), nil, nil, SW_SHOW);;
+          ShellExecute(Handle, 'open', PChar(GetSelectedPath(SelectedNode)), nil, nil, SW_SHOW);
 
       except
        	Dialog(GetText(157) + ': ' + RootD + PlaylistFile, GetText(51), GetText(54), '', '', 1, 2);
@@ -2284,7 +2294,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Enqueue1Click(Sender: TObject);
 var
@@ -2315,7 +2325,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Playlist1Click(Sender: TObject);
 var
@@ -2373,7 +2383,30 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmMain.OpenDirClick(Sender: TObject);
+var
+	SelectedNode: TTreeNode;
+  SelectedItemPath: String;
+begin
+  SelectedNode := GetSelectedNode;
+
+  if SelectedNode <> nil then
+  begin
+    if SelectedNode.HasChildren then
+      SelectedItemPath := GetSelectedPath(SelectedNode)
+    else
+      SelectedItemPath := ExtractFilePath(GetSelectedPath(SelectedNode));
+
+    if DirectoryExists(SelectedItemPath) then
+      ShellExecute(Handle, 'open', PChar(SelectedItemPath), nil, nil, SW_SHOW)
+    else
+      Dialog(GetText(158) + ': ' + #13 + #10 + SelectedItemPath, GetText(51), GetText(54), '', '', 1, 2);
+  end;
+end;
+
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Update1Click(Sender: TObject);
 var
@@ -2408,7 +2441,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Report1Click(Sender: TObject);
 var
@@ -2474,7 +2507,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.FormResize(Sender: TObject);
 var
@@ -2485,7 +2518,7 @@ begin
 	for Index := 0 to Count - 1 do Statusbar2.Panels[Index].Width := PWidth;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.FindDuplicatesOK(FItem: longint): boolean;
 var
@@ -2554,7 +2587,7 @@ begin
 	if TempList.Items.Count > 1 then Result := true;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.FindDuplicates(FirstItem: longint; SPath: string): TTreeNode;
 begin
@@ -2566,7 +2599,7 @@ begin
     	TempList.Tag := 1;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.FindNameOK(FItem: longint): boolean;
 var
@@ -2625,7 +2658,7 @@ begin
 	if TempList.Items.Count > 0 then Result := true;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.FindName(FirstItem: longint; SPath: string): TTreeNode;
 begin
@@ -2637,7 +2670,7 @@ begin
     	TempList.Tag := 1;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.FindTagOK(FItem: longint): boolean;
 var
@@ -2673,7 +2706,7 @@ begin
 	if TempList.Items.Count > 0 then Result := true;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.FindTag(FirstItem: longint; SPath: string): TTreeNode;
 begin
@@ -2685,7 +2718,7 @@ begin
     	TempList.Tag := 1;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.FindPropertyOK(FItem: longint): boolean;
 var
@@ -2711,7 +2744,7 @@ begin
 	if TempList.Items.Count > 0 then Result := true;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmMain.FindProperty(FirstItem: longint; SPath: string): TTreeNode;
 begin
@@ -2723,7 +2756,7 @@ begin
     	TempList.Tag := 1;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.CDcover1Click(Sender: TObject);
 begin
@@ -2731,14 +2764,14 @@ begin
 	ShowPrintCover;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.OnPopupClick(Sender: TObject);
 begin
 	if Sender is TMenuItem then OpenFile(LastCol[(Sender as TMenuItem).Tag]);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.OnClearPopup(Sender: TObject);
 var
@@ -2747,7 +2780,7 @@ begin
 	if Sender is TMenuItem then for Index := 1 to 5 do LastCol[Index] := '';
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.PopupMenu2Popup(Sender: TObject);
 var
@@ -2785,7 +2818,7 @@ begin
   PopupMenu2.Items.RethinkHotkeys;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.AddToPopup(FileName: string);
 var
@@ -2806,7 +2839,7 @@ begin
   for Index := 1 to 5 do LastCol[Index] := LastColTemp[Index];
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.MarkUp(Node: TTreeNode; Marked: boolean);
 var
@@ -2852,7 +2885,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.MarkDown(Node: TTreeNode; Marked: boolean);
 var
@@ -2883,7 +2916,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Select1Click(Sender: TObject);
 var
@@ -2916,14 +2949,14 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.TreeView1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
 	if Button = mbRight then TreeView1.Selected := TreeView1.GetNodeAt(X, Y);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.OnSearch;
 var
@@ -2978,7 +3011,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Search1Click(Sender: TObject);
 begin
@@ -2991,7 +3024,7 @@ begin
   until TempList.Tag = 0;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Rename1Click(Sender: TObject);
 var
@@ -3032,7 +3065,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.ListView1ColumnClick(Sender: TObject; Column: TListColumn);
 var
@@ -3050,7 +3083,7 @@ begin
   else ListView1.Columns[Column.Index].ImageIndex := 5;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.ListView1Compare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
 var
@@ -3081,7 +3114,7 @@ begin
   if ColumnToSorting < 0 then Compare := -Compare;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Font1Click(Sender: TObject);
 var
@@ -3099,7 +3132,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Edit1Click(Sender: TObject);
 var
@@ -3111,7 +3144,7 @@ begin
   Rename2.Enabled := (SelectedNode <> nil) and (SelectedNode.Level = 1);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Columns1Click(Sender: TObject);
 var
@@ -3127,7 +3160,7 @@ begin
 	if ColumnsDialogOK then SetColumns;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Collection1Click(Sender: TObject);
 var
@@ -3166,7 +3199,7 @@ begin
   else Reopen1.Enabled := false;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Information1Click(Sender: TObject);
 var
@@ -3179,7 +3212,7 @@ begin
       else ShowFileInfo(SelectedNode);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Fileextensions1Click(Sender: TObject);
 begin
@@ -3189,7 +3222,7 @@ begin
   UpdateInformation;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Cheat1Click(Sender: TObject);
 begin
@@ -3197,7 +3230,7 @@ begin
   Dialog(CheatModeWarning, GetText(53), GetText(54), '', '', 1, 4);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.ListView1Editing(Sender: TObject; Item: TListItem;
   var AllowEdit: Boolean);
@@ -3205,7 +3238,7 @@ begin
 	AllowEdit := CheatMode;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.ListView1Edited(Sender: TObject; Item: TListItem;
   var S: String);
@@ -3234,7 +3267,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Fullpath1Click(Sender: TObject);
 var
@@ -3257,7 +3290,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Selection1Click(Sender: TObject);
 var
@@ -3268,7 +3301,7 @@ begin
     	ListView1.Items[Index].Selected := true;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Filerenamer1Click(Sender: TObject);
 begin
@@ -3276,7 +3309,7 @@ begin
 	FileRenamerDialog;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Copy1Click(Sender: TObject);
 var
@@ -3297,7 +3330,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmMain.FormPaint(Sender: TObject);
 var
@@ -3317,6 +3350,6 @@ begin
   Bm2.Free;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 end.

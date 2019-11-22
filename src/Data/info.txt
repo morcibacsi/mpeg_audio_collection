@@ -1,38 +1,35 @@
-MPEG Audio Collection: info
+MPEG Audio Collection: Info
 
 
 An ultimate freeware utility for Windows 95/98/NT/2000/ME/XP
 
 It is designed to organize your audio file collection.
-It is fast and easy to use, scans selected drives for supported audio
-files and lists them in an Explorer-style tree-view interface.
-You can retrieve all information about your audio collection and
-you can play files as well.
+It is fast and easy to use, scans selected drives for supported audio files and lists them in an Explorer-style tree-view interface.
+You can retrieve all information about your audio collection and you can play files as well.
 
 Features:
 ---------
 
-- Scanning for *.mp?, *.wav, *.vqf, *.ogg, *.mac, *.ape, *.wma files
-- Support for MPEG Audio, MPEGplus, WAV, TwinVQ, Ogg Vorbis,
-  Monkey's Audio and Windows Media Audio files
+- Support for MPEG Audio, MPEGplus, WAV, TwinVQ, Ogg Vorbis, Windows Media Audio, AAC, Monkey's Audio, WavPack, FLAC and OptimFROG files
+- Option to include all (even non-audio) files in collection
 - File info: size, length, bit rate, sample rate, mode, version, layer
-- Including ID3-tags (versions 1.0, 1.1, 2.2, 2.3, 2.4)
+- Reads all types of tags (ID3, APE, Vorbis Comment...)
 - Collection, volume and folder information
-- Searching for name, property, ID3-tag or duplicates
+- Quick searching for file name, property, Tag or duplicates
 - Searching in collection or on a drive
 - Saving search results
 - Playing file(s) with its associated application
-- Creating playlists
-- ID3-tag editor (ID3-tags version 1.1 only)
+- Creating playlists for volumes and folders
+- Tag editor
 - Support Xing & FhG VBR
 - Auto open last collection option 
-- Importing from another collection
-- Support for very big collections
-- Updating volumes
+- Importing from another collection (COL file)
+- Support for very big collections (300 CD's and more)
+- Updating existing volumes
 - Several collection reports (TXT, HTML, DIF)
-- Multilingual interface
+- Multilingual interface - 33 languages implemented 
 - Printing CD-covers
-- File Rename utility
+- File Rename utility - easy and powerful, using tags
 
 
 Description:

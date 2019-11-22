@@ -1,3 +1,14 @@
+{ *************************************************************************** }
+{                                                                             }
+{ Audio Tools Library (Freeware)                                              }
+{ Class TWAVPackFile - for manipulating with WAVPack Files                    }
+{                                                                             }
+{ Copyright (c) 2003 by Mattias Dahlberg                                      }
+{                                                                             }
+{ Version 1.0 (August 2003)                                                   }
+{                                                                             }
+{ *************************************************************************** }
+
 unit WAVPackFile;
 
 interface
@@ -161,7 +172,7 @@ begin
          // start reading RIFF data
 			if (f.Read(chunk, sizeof(chunk))=sizeof(chunk)) and (StrLComp(chunk.id, 'RIFF',4)=0) then begin
 				if (f.Read(wavchunk, sizeof(wavchunk))=sizeof(wavchunk)) and (StrLComp(wavchunk,'WAVE',4)=0) then begin
-					
+
 					// start looking for chunks 
 				 	fillchar(chunk,sizeof(chunk),0);
 				 	while (f.Position < f.Size) do begin

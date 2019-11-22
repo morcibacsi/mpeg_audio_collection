@@ -240,5 +240,57 @@
 239Genre
 240Eject CD
 241Check this if you want the CD to be ejected after scanning
+242Open in Explorer
+243Capitalize
+244Don't change
+245Every Word
+246First word
+247lowercase
+248UPPERCASE
+249Replace
+250Use replacement-filter
+251Wizards
+252Filename > Tag
+253Numberation
+254Remove Tags
+255Write only in existing tag-formats
+256Exceptions
+257<delete>
+258Clear all fields
+259Tagging...
+260Tag preview
+261Remove all tag-formats
+262Remove only specified tag-formats:
+263Tag-formats
+264ID3v1
+265ID3v2
+266APE
+267Tag version
+268Filename To Tag
+269Guess tag from filename
+270Use own scheme:
+271Disregard
+272Preview
+273Start with number:
+274Skip numbers (seperate with ; ):
+275Preview
+276Use only for specified tags
+277Select
+278Various Artists
+279Edit-mode:
+280Set value
+281Move up
+2821) Search-source
+2832) Album-selection
+2843) Set information
+285Calculate from CD:
+286Calculate from files (all tracks in correct order needed)
+287Enter ID manually:
+288Web-search:
+289Search in
+290Rest
+291Move down
+292ID
+293Freedb
 >>>Traducere de Sebastian DIACONU
 >>>sebastid@yahoo.com

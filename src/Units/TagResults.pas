@@ -24,6 +24,7 @@ type
     Playlist1: TMenuItem;
     N4: TMenuItem;
     Information1: TMenuItem;
+    OpenDir: TMenuItem;
 		procedure Button1Click(Sender: TObject);
     procedure ListView1DblClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -40,6 +41,7 @@ type
     procedure Play1Click(Sender: TObject);
     procedure Enqueue1Click(Sender: TObject);
     procedure Playlist1Click(Sender: TObject);
+    procedure OpenDirClick(Sender: TObject);
 	private
   	FindItem: TTreeNode;
     SourcePath: string;
@@ -57,7 +59,7 @@ uses
 
 {$R *.DFM}
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function ShowTagResults(SPath: string; GD, HT: boolean): TTreeNode;
 var
@@ -150,14 +152,14 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.Button1Click(Sender: TObject);
 begin
 	Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.ListView1DblClick(Sender: TObject);
 begin
@@ -168,7 +170,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.Button2Click(Sender: TObject);
 begin
@@ -195,7 +197,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmTagResults.SaveFoundItemsOK(FName: string): boolean;
 var
@@ -228,7 +230,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.Button3Click(Sender: TObject);
 begin
@@ -236,7 +238,7 @@ begin
   Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.ListView1KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
@@ -244,7 +246,7 @@ begin
 	if Key = VK_RETURN then ListView1DblClick(Self);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.FormResize(Sender: TObject);
 begin
@@ -263,7 +265,7 @@ begin
   Image1.Top := (Button2.Top + Panel1.Top - Image1.Height) div 2;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.ListView1ColumnClick(Sender: TObject; Column: TListColumn);
 var
@@ -280,7 +282,7 @@ begin
   else ListView1.Columns[Column.Index].ImageIndex := 1;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.ListView1Compare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
 begin
@@ -290,7 +292,7 @@ begin
   if Tag < 0 then Compare := -Compare;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.FormCreate(Sender: TObject);
 begin
@@ -306,9 +308,10 @@ end;
 	Enqueue1.Caption := GetText(153);
 	Playlist1.Caption := GetText(154);
   Information1.Caption := GetText(52);
+  OpenDir.Caption := GetText(242);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.FormClose(Sender: TObject;
   var Action: TCloseAction);
@@ -319,7 +322,7 @@ begin
 	SearchWidth := Width;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TfrmTagResults.GetSelectedNode: TTreeNode;
 var
@@ -338,7 +341,7 @@ begin
      	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.pmnSearchPopup(Sender: TObject);
 var
@@ -353,11 +356,18 @@ begin
 		Enqueue1.Visible := true;
 		N4.Visible := true;
     //if frmMain.ListBox4.Items.Count = 1 then Information1.Visible := true;
-    //if (SelNode.HasChildren) or (frmMain.ListBox4.Items.Count > 1) then Playlist1.Visible := true;
+    if (SelNode.HasChildren) or (frmMain.ListBox4.Items.Count > 1) then
+      Playlist1.Visible := true
+    else
+      Playlist1.Visible := False;
+    if frmMain.ListBox4.Items.Count = 1 then
+      OpenDir.Visible := True
+    else
+      OpenDir.Visible := False;
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.Play1Click(Sender: TObject);
 var
@@ -388,7 +398,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.Enqueue1Click(Sender: TObject);
 var
@@ -419,7 +429,7 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmTagResults.Playlist1Click(Sender: TObject);
 var
@@ -477,6 +487,29 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmTagResults.OpenDirClick(Sender: TObject);
+var
+	SelectedNode: TTreeNode;
+  SelectedItemPath: String;
+begin
+  SelectedNode := GetSelectedNode;
+
+  if SelectedNode <> nil then
+  begin
+    if SelectedNode.HasChildren then
+      SelectedItemPath := GetSelectedPath(SelectedNode)
+    else
+      SelectedItemPath := ExtractFilePath(GetSelectedPath(SelectedNode));
+
+    if DirectoryExists(SelectedItemPath) then
+      ShellExecute(Handle, 'open', PChar(SelectedItemPath), nil, nil, SW_SHOW)
+    else
+      Dialog(GetText(158) + ': ' + #13 + #10 + SelectedItemPath, GetText(51), GetText(54), '', '', 1, 2);
+  end;
+end;
+
+{ --------------------------------------------------------------------------- }
 
 end.

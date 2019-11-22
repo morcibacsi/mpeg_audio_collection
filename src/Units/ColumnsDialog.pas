@@ -39,7 +39,7 @@ implementation
 
 {$R *.DFM}
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function ColumnsDialogOK: boolean;
 begin
@@ -54,7 +54,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmColumnsDialog.FormCreate(Sender: TObject);
 var
@@ -95,14 +95,14 @@ begin
 	Button4.Caption := GetText(194);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmColumnsDialog.Button2Click(Sender: TObject);
 begin
 	Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmColumnsDialog.Button1Click(Sender: TObject);
 var
@@ -120,7 +120,7 @@ begin
 	Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmColumnsDialog.Button3Click(Sender: TObject);
 var
@@ -135,7 +135,7 @@ begin
     end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmColumnsDialog.Button4Click(Sender: TObject);
 var
@@ -150,14 +150,14 @@ begin
     end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmColumnsDialog.CheckListBox1EndDrag(Sender, Target: TObject; X, Y: Integer);
 begin
 	CheckListBox1.Tag := -1;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmColumnsDialog.CheckListBox1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
@@ -168,7 +168,7 @@ begin
   CheckListBox1.Tag := CheckListBox1.ItemAtPos(Point, true);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmColumnsDialog.CheckListBox1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
 var
@@ -194,6 +194,6 @@ begin
 	  Accept := false;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 end.

@@ -39,7 +39,7 @@ implementation
 
 {$R *.DFM}
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function SourcePathOK(WTitle: string; var SPath, SLabel:  string; var SSerial: longint; var SType: Integer): boolean;
 begin
@@ -62,7 +62,7 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function SourcePathOKfoobar(WTitle: string; var SPath, SLabel:  string; var SSerial: longint): boolean;
 var
@@ -76,6 +76,7 @@ begin
 			SourceOK := false;
 
       GroupBox2.Visible := False;
+      ChckBxEject.Visible := False;
       GroupBox1.Height := GroupBox1.Height + 72;
       FolderTree1.Height := FolderTree1.Height + 72;
 
@@ -95,14 +96,14 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSourcePath.Button2Click(Sender: TObject);
 begin
 	Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSourcePath.Button1Click(Sender: TObject);
 begin
@@ -128,7 +129,7 @@ begin
 		Dialog(GetText(98), GetText(51), GetText(54), '', '', 1, 2);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSourcePath.FormCreate(Sender: TObject);
 var
@@ -154,7 +155,7 @@ begin
   ChckBxEject.Checked := EjectCD;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSourcePath.DrawLabel;
 var
@@ -173,14 +174,14 @@ begin
   	Edit1.Text := '';
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSourcePath.FolderTree1Change(Sender: TObject; Node: TTreeNode);
 begin
 	DrawLabel;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmSourcePath.Edit1KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
@@ -188,6 +189,6 @@ begin
 	if Key = VK_RETURN then Button1Click(Self);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 end.

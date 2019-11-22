@@ -12,6 +12,9 @@
 { E-mail: jfaul@gmx.de                                                        }
 { http://jfaul.de/atl                                                         }
 {                                                                             }
+{ Version 1.81 (27 September 2003)                                            }
+{   - changed minimal allowed bitrate to '3' (e.g. encoded digital silence)   }
+{                                                                             }
 { Version 1.8 (20 August 2003) by Madah                                       }
 {   - Will now read files with different samplerates correctly                }
 {   - Also changed GetProfileID() for this to work                            }
@@ -317,7 +320,9 @@ end;
 function TMPEGplus.FGetDuration: Double;
 begin
   { Calculate duration time }
-  Result := FFRameCount * 1152 / FSampleRate;
+  if FSampleRate > 0 then
+    Result := FFRameCount * 1152 / FSampleRate
+  else Result := 0;
 end;
 
 { --------------------------------------------------------------------------- }
@@ -325,7 +330,7 @@ end;
 function TMPEGplus.FIsCorrupted: Boolean;
 begin
   { Check for file corruption }
-  Result := (FValid) and ((FGetBitRate < 16) or (FGetBitRate > 480));
+  Result := (FValid) and ((FGetBitRate < 3) or (FGetBitRate > 480));
 end;
 
 { ********************** Public functions & procedures ********************** }

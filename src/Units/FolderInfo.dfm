@@ -117,8 +117,8 @@ object frmFolderInfo: TfrmFolderInfo
     object Image13: TImage
       Left = 16
       Top = 16
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -326,8 +326,8 @@ object frmFolderInfo: TfrmFolderInfo
     object Image7: TImage
       Left = 16
       Top = 136
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -379,8 +379,8 @@ object frmFolderInfo: TfrmFolderInfo
     object Image8: TImage
       Left = 16
       Top = 160
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -432,8 +432,8 @@ object frmFolderInfo: TfrmFolderInfo
     object Image9: TImage
       Left = 16
       Top = 184
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000

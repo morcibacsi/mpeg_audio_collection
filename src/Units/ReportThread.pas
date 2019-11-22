@@ -10,7 +10,7 @@ type
 	private
 		PLabel, OLabel: TLabel;
 		Progress: TProgressBar;
-		CSize: array [0..16] of longint;
+		CSize: array [0..17] of longint;
 		Header1, Header2, Foot: string;
     SumSize, SumDuration, SumFolder, SumFile: longint;
 		function CopyObjectsOK: boolean;
@@ -23,15 +23,15 @@ type
 		constructor Create(Label1, Label2: TLabel; ProgressBar1: TProgressBar);
 	end;
 
-	ReportArray = array [0..16] of string;
+	ReportArray = array [0..17] of string;
 
 const
 	SHFT = 13;
- 	SnapToLeft: array [1..16] of boolean = (false, false, true, false, true, true, true, true, true, true, true, true, false, false, true, true);
+ 	SnapToLeft: array [1..17] of boolean = (false, false, true, false, true, true, true, true, true, true, true, true, false, false, true, true, true);
 
 implementation
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 constructor TReportThread.Create(Label1, Label2: TLabel; ProgressBar1: TProgressBar);
 begin
@@ -42,7 +42,7 @@ begin
 	inherited Create(false);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TReportThread.Execute;
 begin
@@ -81,7 +81,7 @@ begin
 	TempTree.Items.Clear;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TReportThread.CopyObjectsOK: boolean;
 	function GetHeader: string;
@@ -89,7 +89,7 @@ function TReportThread.CopyObjectsOK: boolean;
 		Index: longint;
 		RData: ReportArray;
 	begin
-		for Index := 0 to 16 do RData[Index] := '';
+		for Index := 0 to 17 do RData[Index] := '';
 
 		RData[0] := GetText(41);
 		if RowCol[5] then RData[1] := GetText(62);
@@ -102,21 +102,23 @@ function TReportThread.CopyObjectsOK: boolean;
 		if RowCol[8] then RData[4] := GetText(70);
 		if RowCol[9] then RData[5] := GetText(133);
 		if RowCol[10] then RData[6] := GetText(211);
+
 		if RowCol[11] then RData[7] := GetText(42);
     if RowCol[12] then RData[8] := GetText(43);
     if RowCol[13] then RData[9] := GetText(44);
     if RowCol[14] then RData[10] := GetText(45);
     if RowCol[15] then RData[11] := GetText(46);
     if RowCol[16] then RData[12] := GetText(47);
+    if RowCol[21] then RData[17] := GetText(lngGenre);
 
-		for Index := 0 to 16 do CSize[Index] := Length(RData[Index]);
+		for Index := 0 to 17 do CSize[Index] := Length(RData[Index]);
 
 		Result := RData[0] + #1;
-		for Index := 1 to 16 do Result := Result + RData[Index] + Chr(Index + SHFT);
+		for Index := 1 to 17 do Result := Result + RData[Index] + Chr(Index + SHFT);
 	end;
 var
 	Index, Index2, Level: longint;
-	Info: array [0..16] of string;
+	Info: array [0..17] of string;
 	TreeNode: TTreeNode;
 	ReportNode: array [0..99] of TTreeNode;
 	AddItem: boolean;
@@ -158,7 +160,7 @@ begin
 
 		if (TreeNode.HasChildren) and ((RowCol[1]) or (RowCol[2]) or (RowCol[3])) then
 		begin
-			for Index2 := 1 to 16 do Info[Index2] := Chr(Index2 + SHFT);
+			for Index2 := 1 to 17 do Info[Index2] := Chr(Index2 + SHFT);
 			if RowCol[5] then Info[1] := FloatToStrF(ItemData[1] / 1024, ffFixed, 15, 2) + Info[1];
 			DurStr := DurationToStr(Abs(ItemData[2]));
 			if RowCol[6] then Info[2] := DurStr + Info[2];
@@ -203,7 +205,7 @@ begin
 		begin
       if (not FileExtensions) and (Pos('.', Info[0]) > 0) then Info[0] := Copy(Info[0], 1, LastDelimiter('.', Info[0]) - 1);
 
-			for Index2 := 1 to 16 do Info[Index2] := Chr(Index2 + SHFT);
+			for Index2 := 1 to 17 do Info[Index2] := Chr(Index2 + SHFT);
 
 			if RowCol[5] then Info[1] := FloatToStrF(ItemData[1] / 1024, ffFixed, 15, 2) + Info[1];
 			if RFormat = 2 then DurStr := DurationToStr(Abs(ItemData[2]))
@@ -225,6 +227,7 @@ begin
       ItemTag := ExtractTag(TreeNode.Text);
       for Index2 := 1 to 6 do
       	if RowCol[Index2 + 10] then Info[Index2 + 6] := ItemTag[Index2] + Info[Index2 + 6];
+        if RowCol[21] then Info[17] := ItemTag[7] + Info[17];
 
 			if RowCol[3] then Levels[4] := TreeNode.Level - 1
 			else Levels[4] := 1;
@@ -244,11 +247,11 @@ begin
 		begin
 			Info[0] := Info[0] + #1;
 
-			for Index2 := 0 to 16 do
+			for Index2 := 0 to 17 do
 				if CSize[Index2] < (Length(Info[Index2]) - 1) then CSize[Index2] := Length(Info[Index2]) - 1;
 			if CSize[0] < (Length(Info[0]) + Level - 2) then CSize[0] := Length(Info[0]) + Level - 2;
 
-			for Index2 := 1 to 16 do Info[0] := Info[0] + Info[Index2];
+			for Index2 := 1 to 17 do Info[0] := Info[0] + Info[Index2];
 			ReportNode[Level] := TempTree.Items.AddChild(ReportNode[Level - 1], Info[0]);
       ReportNode[Level].Data := TreeNode;
 
@@ -263,22 +266,22 @@ begin
 	Result := true;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function ExtractRData(Source: string): ReportArray;
 var
-	CharPos: array [0..16] of integer;
+	CharPos: array [0..17] of integer;
 	Index: longint;
 begin
 	CharPos[0] := Pos(#1, Source);
-	for Index := 1 to 16 do CharPos[Index] := Pos(Chr(Index + SHFT), Source);
+	for Index := 1 to 17 do CharPos[Index] := Pos(Chr(Index + SHFT), Source);
 
 	Result[0] := Copy(Source, 1, CharPos[0] - 1);
-	for Index := 0 to 15 do
+	for Index := 0 to 16 do
 		Result[Index + 1] := Copy(Source, CharPos[Index] + 1, CharPos[Index + 1] - CharPos[Index] - 1);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TReportThread.FolderInfoOK: boolean;
 var
@@ -288,8 +291,8 @@ var
   TagData: TagArray;
   RNode, Child: TTreeNode;
   BitRate: integer;
-  VBR, CBR, SRateOK, CModeOK, MVersionOK, ArtistOK, AlbumOK, YearOK, CommentOK: boolean;
-  TextItem, SRate, CMode, MVersion, Artist, Album, Year, Comment, DString: string;
+  VBR, CBR, SRateOK, CModeOK, MVersionOK, ArtistOK, AlbumOK, YearOK, CommentOK, GenreOK: boolean;
+  TextItem, SRate, CMode, MVersion, Artist, Album, Year, Comment, Genre, DString: string;
 begin
 	Result := false;
 
@@ -322,6 +325,8 @@ begin
       YearOK := true;
       Comment := '';
       CommentOK := true;
+      Genre := '';
+      GenreOK := true;
 
 			Child := RNode.GetFirstChild;
 		  while Child <> nil do
@@ -382,6 +387,11 @@ begin
         	if Comment = '' then Comment := TagData[6]
           else if Comment <> TagData[6] then CommentOK := false;
         end;
+        if GenreOK then
+        begin
+        	if Genre = '' then Genre := TagData[7]
+          else if Genre <> TagData[7] then GenreOK := false;
+        end;
 
 			  Child := Child.GetNextSibling;
 		  end;
@@ -430,6 +440,11 @@ begin
         	Insert(Comment, TextItem, Pos(Chr(12 + SHFT), TextItem));
           if CSize[12] < Length(Comment) then CSize[12] := Length(Comment);
         end;
+        if (GenreOK) and (Genre <> '') then
+        begin
+        	Insert(Genre, TextItem, Pos(Chr(17 + SHFT), TextItem));
+          if CSize[17] < Length(Genre) then CSize[17] := Length(Genre);
+        end;
 
         TempTree.Items[Index].Text := TextItem;
       end;
@@ -440,7 +455,7 @@ begin
 	Result := true;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function TReportThread.CreateReportOK: boolean;
 
@@ -454,7 +469,7 @@ function TReportThread.CreateReportOK: boolean;
 	    if (isHeader) or (isFoot) then Result := Result + StringOfChar(#32, Length(IntToStr(Progress.Max)) + 1)
   	  else Result := IntToStr(Progress.Position) + StringOfChar(#32, Length(IntToStr(Progress.Max)) - Length(IntToStr(Progress.Position)) + 1) + Result;
 
-		for Index := 1 to 16 do
+		for Index := 1 to 17 do
 			if (RowCol[RowColIndex[Index] + 4]) and (CSize[RowColIndex[Index]] > 0) then
       	if (SnapToLeft[RowColIndex[Index]]) or (IsHeader) then
         	Result := Result + #32 + ReportData[RowColIndex[Index]] + StringOfChar(#32, CSize[RowColIndex[Index]] - Length(ReportData[RowColIndex[Index]]))
@@ -468,7 +483,7 @@ function TReportThread.CreateReportOK: boolean;
 	begin
 		Result := 'BOT' + #13#10 + '1,0' + #13#10 + '"' + StringOfChar(#32, (Level - 1) * 3) + ReportData[0] + '"' + #13#10;
 
-		for Index := 1 to 16 do
+		for Index := 1 to 17 do
 			if (RowCol[RowColIndex[Index] + 4]) and (CSize[RowColIndex[Index]] > 0) then
       	if (SnapToLeft[RowColIndex[Index]]) or (IsHeader) then
         	Result := Result + '1,0' + #13#10 + '"' + ReportData[RowColIndex[Index]] + '"' + #13#10
@@ -513,7 +528,7 @@ function TReportThread.CreateReportOK: boolean;
     else
 	    Result := Result + '<' + ColTAG + ' ALIGN=left NOWRAP>' + StringOfChar(#46, (Level - 1) * 2) + ReportData[0] + '</' + ColTag + '>';
 
-		for Index := 1 to 16 do
+		for Index := 1 to 17 do
 			if (RowCol[RowColIndex[Index] + 4]) and (CSize[RowColIndex[Index]] > 0) then
       	if (SnapToLeft[RowColIndex[Index]]) or (IsHeader) then
         	Result := Result + '<' + ColTAG + ' ALIGN=left NOWRAP>' + ReportData[RowColIndex[Index]] + '</' + ColTag + '>'
@@ -529,7 +544,7 @@ var
 begin
 	Result := false;
 
-	for Index := 0 to 16 do
+	for Index := 0 to 17 do
   begin
   	SData[Index] := '';
     AData[Index] := '';
@@ -541,7 +556,7 @@ begin
   SData[13] := IntToStr(SumFolder);
   SData[14] := IntToStr(SumFile);
 
-	for Index := 0 to 16 do
+	for Index := 0 to 17 do
    	if CSize[Index] < Length(SData[Index]) then CSize[Index] := Length(SData[Index]);
 
 	Progress.Max := TempTree.Items.Count - 1;
@@ -554,7 +569,7 @@ begin
     OLabel.Caption := OLabel.Hint + RData[0];
 
     if ReportSummary then
-    	for Index2 := 0 to 16 do
+    	for Index2 := 0 to 17 do
 		    if Index = 1 then AData[Index2] := RData[Index2]
 	    	else if AData[Index2] <> RData[Index2] then AData[Index2] := '';
 
@@ -565,7 +580,7 @@ begin
 		end;
 	end;
 
-	for Index := 0 to 16 do
+	for Index := 0 to 17 do
 		if not (Index in [0, 1, 2, 3, 13, 14]) then SData[Index] := AData[Index];
 
 	RData := ExtractRData(TempTree.Items[0].Text);
@@ -599,7 +614,7 @@ begin
 	Result := true;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TReportThread.WriteReport;
 var
@@ -634,6 +649,6 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 end.

@@ -7,7 +7,7 @@ Copyright notice:
 -----------------
 
 Copyright (c) 2000-2002 by Jurgen Faul
-Copyright (c) 2003 by The MAC Team (ErikS & Gambit)
+Copyright (c) 2003 by The MAC Team
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public

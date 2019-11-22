@@ -67,7 +67,7 @@ implementation
 
 {$R *.DFM}
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 function ReportDialogOK: boolean;
 begin
@@ -82,14 +82,14 @@ begin
 	end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmReportDialog.UpdateControls;
 begin
 	Button1.Enabled := (CheckBox1.Checked) or (CheckBox2.Checked) or (CheckBox3.Checked) or (CheckBox4.Checked);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmReportDialog.FormCreate(Sender: TObject);
 var
@@ -123,7 +123,7 @@ begin
   CheckBox6.Checked := ItemNumeration;
   CheckBox7.Checked := ReportSummary;
 
-  for Index := 1 to 16 do
+  for Index := 1 to 17 do
   begin
   	case RowColIndex[Index] of
     	1: CheckListBox1.Items.Add(GetText(171));
@@ -142,6 +142,7 @@ begin
       14: CheckListBox1.Items.Add(GetText(84));
       15: CheckListBox1.Items.Add(GetText(174));
       16: CheckListBox1.Items.Add(GetText(103));
+      17: CheckListBox1.Items.Add(GetText(177) + ': ' + GetText(lngGenre));
     end;
     CheckListBox1.Items.Objects[CheckListBox1.Items.Count - 1] := TObject(RowColIndex[Index]);
     CheckListBox1.Checked[CheckListBox1.Items.Count - 1] := RowCol[RowColIndex[Index] + 4];
@@ -164,14 +165,14 @@ begin
 	UpdateControls;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmReportDialog.Button2Click(Sender: TObject);
 begin
 	Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmReportDialog.Button1Click(Sender: TObject);
 var
@@ -186,7 +187,7 @@ begin
   ItemNumeration := CheckBox6.Checked;
   ReportSummary := CheckBox7.Checked;
 
-  for Index := 0 to 15 do
+  for Index := 0 to 16 do
   begin
   	RowColIndex[Index + 1] := Integer(CheckListBox1.Items.Objects[Index]);
     RowCol[RowColIndex[Index + 1] + 4] := CheckListBox1.Checked[Index];
@@ -203,14 +204,14 @@ begin
 	Close;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmReportDialog.CheckBox1Click(Sender: TObject);
 begin
 	UpdateControls;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmReportDialog.Button3Click(Sender: TObject);
 var
@@ -225,7 +226,7 @@ begin
     end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmReportDialog.Button4Click(Sender: TObject);
 var
@@ -240,14 +241,14 @@ begin
     end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmReportDialog.CheckListBox1EndDrag(Sender, Target: TObject; X, Y: Integer);
 begin
 	CheckListBox1.Tag := -1;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmReportDialog.CheckListBox1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
@@ -258,7 +259,7 @@ begin
   CheckListBox1.Tag := CheckListBox1.ItemAtPos(Point, true);
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmReportDialog.CheckListBox1DragOver(Sender, Source: TObject; X, Y: Integer; State: TDragState; var Accept: Boolean);
 var
@@ -284,7 +285,7 @@ begin
 	  Accept := false;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 procedure TfrmReportDialog.RadioButton2Click(Sender: TObject);
 begin
@@ -297,6 +298,6 @@ begin
   end;
 end;
 
-// -----------------------------------------------------------------------------
+{ --------------------------------------------------------------------------- }
 
 end.
