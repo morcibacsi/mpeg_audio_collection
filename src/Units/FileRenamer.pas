@@ -52,6 +52,12 @@ type
     ListView2: TListView;
     ListBox1: TListBox;
     Button5: TButton;
+// begin MB
+    Image1: TImage;
+    Label7: TLabel;
+    Label14: TLabel;
+    N71: TMenuItem;
+// end MB
 		procedure Button1Click(Sender: TObject);
 		procedure FormCreate(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -132,6 +138,9 @@ begin
   ListView1.Columns[4].Caption := GetText(45);
   ListView1.Columns[5].Caption := GetText(46);
   ListView1.Columns[6].Caption := GetText(47);
+// begin MB
+  ListView1.Columns[7].Caption := GetText(lngGenre);
+// end MB
 	Button1.Caption := GetText(93);
   Button2.Caption := GetText(226);
   Button3.Caption := GetText(228);
@@ -143,6 +152,9 @@ begin
   Label11.Caption := GetText(45);
   Label12.Caption := GetText(46);
   Label13.Caption := GetText(47);
+// begin MB
+  Label7.Caption := GetText(lngGenre);
+// end MB
 
   FileListBox1.Mask := FileMask + ';' + MPPFileMask;
 
@@ -185,8 +197,9 @@ begin
       	if Dialog(GetText(95) + ': ' + Path, GetText(51), GetText(54), GetText(57), '', 1, 2) = 2 then exit
 	      else continue;
 
-      for Index2 := 1 to 6 do TagInfo[Index2] := Item.SubItems[Index2 - 1];
-
+// begin MB
+      for Index2 := 1 to numTag do TagInfo[Index2] := Item.SubItems[Index2 - 1];
+// end MB
 			NewName := GetNewFileName(Path, TagInfo, LastMacro, ListView2);
       if LowerCase(NewName) = LowerCase(Path) then
       begin
@@ -281,8 +294,9 @@ begin
       	Item.Caption := FileListBox1.Items.Strings[Index - 1];
 
         FileTag := GetFileTag(Path + Item.Caption, 0, Index);
-        for Index2 := 1 to 6 do Item.SubItems.Add(FileTag[Index2]);
-
+// begin MB
+        for Index2 := 1 to numTag do Item.SubItems.Add(FileTag[Index2]);
+// end MB
         Item.SubItems.Add(Path + Item.Caption);
         Item.SubItems.Add('');
         Item.SubItems.Add(Chr(Index));
@@ -473,6 +487,9 @@ begin
   PopupMenu1.Items[3].Caption := Label11.Caption;
   PopupMenu1.Items[4].Caption := Label12.Caption;
   PopupMenu1.Items[5].Caption := Label13.Caption;
+// begin MB  
+  PopupMenu1.Items[6].Caption := Label7.Caption;
+// end MB
 end;
 
 // -----------------------------------------------------------------------------

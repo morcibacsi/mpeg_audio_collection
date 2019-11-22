@@ -1,4 +1,10 @@
 
+MPEG Audio Collection 2.91 beta (Sep-08-2003):
+ - genre tag support (thanks to Maurizio Belvisi)
+ - support for files encoded with Monkey's Audio 3.98
+ - double-clicking unsupported files launches their associated program
+ - some minor stuff I forgot :)
+
 MPEG Audio Collection 2.91 alpha 8 a.k.a. "Teh Madah Edition" (Aug-21-2003):
  - WavPack support
  - mpc fix: will now read files with different sample rates correctly

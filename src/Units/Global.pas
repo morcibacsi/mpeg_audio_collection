@@ -12,7 +12,7 @@ type
   // because of the volume type info
 	DataArray = array [1..7] of int64;
 
-	TagArray = array [1..6] of string;
+	TagArray = array [1..7] of string; // MB
 	PropertyArray = array [1..6] of array [1..3] of byte;
 	MatchArray = array [1..6] of boolean;
 	RowColArray = array [1..20] of boolean;
@@ -23,8 +23,8 @@ var
 	AppTitle: string = 'MPEG Audio Collection';
   AppTitleShort: string = 'MAC';
 	////////////////////////////
-	AVersion: string = '2.91 alpha8';
-  ADate: string = 'August 2003';
+	AVersion: string = '2.91 beta';
+  ADate: string = 'September 2003';
 	////////////////////////////
   AppCopyright: string = 'Freeware, copyright by Jurgen Faul && MAC Team';
 	Homepage: string = 'http://sourceforge.net/projects/mac';
@@ -53,7 +53,7 @@ var
   WMAExt: string = 'wma';
   OGGExt: string = 'ogg';
   WAVExt: string = 'wav';
-  WavPackExt: string = 'wv'; 
+  WavPackExt: string = 'wv';
   FlacMask: string = '*.flac';
   FlacMaskObj: TMask;
   OfrMask: string = '*.ofr';
@@ -64,7 +64,7 @@ var
 	PlaylistFile: string = 'mac.m3u';
   CueFile: string = '.cue';
   PlaylistMask: string = '*.fpl;*.m3u8;*.m3u;*.pls';
-  TextMask: string = '*.txt;*.nfo;*.log';
+  TextMask: string = '*.txt;*.nfo;*.log;*.doc;*.rtf';
   ExeMask: string = '*.exe;*.com';
   ComprMask: string = '*.001;*.7z;*.ace;*.arj;*.bz;*.bz2;*.cab;*.cpio;*.deb;' +
   '*.gz;*.jar;*.lha;*.lzh;*.rar;*.rpm;*.tar;*.tbz;*.tbz2;*.tgz;*.uu;*.uue;*.xxe;*.zip';
@@ -72,6 +72,10 @@ var
   IniMask: string = '*.inf;*.ini;*.cfg';
   BatMask: string = '*.bat';
   HtmlMask: string = '*.htm;*.html';
+  VideoMask: String = '*.avi;*.ogm;*.mkv;*.wmv;*.wmp;*.wm;*.asf;*.mpg;*.mpeg;' +
+  '*.mpe;*.m1v;*.m2v;*.mpv2;*.mp2v;*.vob;*.ivf;*.rm;*.ram;*.rmvb;*.rpm;*.rt;' +
+  '*.rp;*.smi;*.smil;*.mov;*.qt';
+
   ImageMask: string = '*.ani;*.b3d;*.bmp;*.dib;*.cam;*.clp;*.crw;*.cur;*.dcm;' +
   '*.acr;*.dcx;*.djvu;*.iw44;*.ecw;*.emf;*.eps;*.fpx;*.fsh;*.g3;*.gif;*.icl;' +
   '*.ico;*.ics;*.ids;*.iff;*.lbm;*.img;*.jp2;*.jpc;*.j2k;*.jpf;*.jpg;*.jpeg;' +
@@ -109,7 +113,7 @@ var
 													(1, 0, 2),
 													(0, 0, 0));
 
-	TagText: TagArray = ('', '', '', '', '', '');
+	TagText: TagArray = ('', '', '', '', '', '', ''); // MB
 
   DuplicateArea: integer = 1;
 
@@ -146,7 +150,7 @@ var
 
   ColumnToSorting: integer = 1;
 
-  TagField: array [1..6] of boolean = (true, true, true, true, true, true);
+  TagField: array [1..7] of boolean = (true, true, true, true, true, true, true); // MB
 
   AutoBackup: boolean = false;
 
@@ -165,7 +169,7 @@ var
 
   ValidFiles: boolean = false;
 
-  InfoCol: array [0..12] of longint = (1000250, -3010080, -3020080, -3030100, -3040100, -1050100, -1060100, 1070100, 1080100, 1090100, 1100070, 1110070, 1120100);
+  InfoCol: array [0..13] of longint = (1000250, -3010080, -3020080, -3030100, -3040100, -1050100, -1060100, 1070100, 1080100, 1090100, 1100070, 1110070, 1120100, 1130100); // MB add column genre
 
   CheatMode: boolean = false;
 
@@ -196,6 +200,12 @@ var
   EjectCD: Boolean = False;
 
 const
+  // MB
+  InfoCol_nCols = 13; // numero di colonne per infoCol, ho aggiunto il "Genere" (originale 12)
+  numTag        = 7;  // numero di tag gestiti dal programma (originale 6)
+  // labels language
+  lngGenre = 239;
+
   { Volume type IDs }
   VOLUME_TYPE_REMOVABLE = 1;                                         { Floppy }
   VOLUME_TYPE_FIXED = 2;                                                { HDD }
@@ -353,12 +363,15 @@ end;
 
 function ExtractTag(Source: string): TagArray;
 var
-	CharPos: array [1..7] of integer;
+	CharPos: array [1..numTag+1] of integer; // MB
 	Index: integer;
 begin
-	for Index := 1 to 7 do CharPos[Index] := Pos(Chr(Index + 20), Source);
+	
+// begin MB
+	for Index := 1 to numTag+1 do CharPos[Index] := Pos(Chr(Index + 20), Source);
 
-	for Index := 1 to 6 do Result[Index] := Copy(Source, CharPos[Index] + 1, CharPos[Index + 1] - CharPos[Index] - 1);
+	for Index := 1 to numTag do Result[Index] := Copy(Source, CharPos[Index] + 1, CharPos[Index + 1] - CharPos[Index] - 1);
+// end MB
 end;
 
 // -----------------------------------------------------------------------------
@@ -534,13 +547,13 @@ begin
 			0:
 			begin
 				Match[6] := false;
-					for Index := 1 to 6 do
+					for Index := 1 to numTag do // MB
 						if (NTag[Index] <> '') then Match[6] := true;
 			end;
 			1:
 			begin
 				Match[6] := true;
-					for Index := 1 to 6 do
+					for Index := 1 to numTag do // MB
 						if (NTag[Index] <> '') then Match[6] := false;
 			end;
 		end;
@@ -737,6 +750,7 @@ begin
         4: NewName := NewName + Tag[4];
         5: NewName := NewName + Tag[5];
         6: NewName := NewName + Tag[6];
+        7: NewName := NewName + Tag[7]; // MB
       end;
 
       Inc(Index, 3);
@@ -772,7 +786,7 @@ begin
   // Gambit - adds ape tag reading from mp3
   APEtag := TAPEtag.Create;
 
-  for Index := 1 to 6 do
+  for Index := 1 to numTag do // MB
   begin
   	Tag[Index] := '';
     Tag2[Index] := '';
@@ -790,6 +804,7 @@ begin
       Tag[4] := IntToStr(ID3v1.Track);
       Tag[5] := TextFilter(ID3v1.Year, LengthLimit);
       Tag[6] := TextFilter(ID3v1.Comment, LengthLimit);
+      Tag[7] := TextFilter(ID3v1.Genre, LengthLimit); // MB
     end;
 
     APEtag.ReadFromFile(FileName);
@@ -801,6 +816,7 @@ begin
       Tag3[4] := IntToStr(APEtag.Track);
       Tag3[5] := TextFilter(APEtag.Year, LengthLimit);
       Tag3[6] := TextFilter(APEtag.Comment, LengthLimit);
+      Tag3[7] := TextFilter(APEtag.Genre, LengthLimit); // MB
     end;
 
     ID3v2.ReadFromFile(FileName);
@@ -812,9 +828,10 @@ begin
       Tag2[4] := IntToStr(ID3v2.Track);
       Tag2[5] := TextFilter(ID3v2.Year, LengthLimit);
       Tag2[6] := TextFilter(ID3v2.Comment, LengthLimit);
+      Tag2[7] := TextFilter(ID3v2.Genre, LengthLimit); // MB
     end;
 
-		for Index := 1 to 6 do
+		for Index := 1 to numTag do // MB
 		begin
      	Tag2[Index] := TextFilter(Tag2[Index], LengthLimit);
       Tag3[Index] := TextFilter(Tag3[Index], LengthLimit);
@@ -843,7 +860,7 @@ begin
     if Track in [10..99] then Tag[4] := IntToStr(Track);
 	end;
 
-  for Index := 1 to 6 do Result[Index] := Tag[Index];
+  for Index := 1 to numTag do Result[Index] := Tag[Index]; // MB
 
   ID3v1.Free;
   ID3v2.Free;

@@ -1,6 +1,6 @@
 object frmTagResults: TfrmTagResults
-  Left = 421
-  Top = 354
+  Left = 174
+  Top = 144
   ActiveControl = Button1
   AutoScroll = False
   BorderIcons = [biSystemMenu, biMaximize]
@@ -147,6 +147,9 @@ object frmTagResults: TfrmTagResults
         item
           Caption = '_Comments'
           Width = 150
+        end
+        item
+          Caption = '_Genre'
         end>
       IconOptions.WrapText = False
       MultiSelect = True

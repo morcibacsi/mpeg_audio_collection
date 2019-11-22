@@ -52,7 +52,8 @@ function ShowPropertyResults(SPath: string; GD, HT: boolean): TTreeNode;
 
 implementation
 
-uses Main;
+uses
+  Main;
 
 {$R *.DFM}
 
@@ -152,7 +153,7 @@ begin
         if Prop[6, 1] = 1 then
         begin
  	       Line := GetText(138);
-  	      for Index2 := 1 to 6 do
+  	      for Index2 := 1 to numTag do // MB
     	    	if FileTag[Index2] <> '' then
       	    begin
         	  	Line := GetText(137);

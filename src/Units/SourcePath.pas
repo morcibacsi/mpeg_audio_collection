@@ -138,6 +138,8 @@ begin
   GroupBox2.Caption := GetText(103);
 	Button1.Caption := GetText(54);
 	Button2.Caption := GetText(57);
+  ChckBxEject.Caption := GetText(240);
+  ChckBxEject.Hint := GetText(241);
 
 	if FolderTree1.GetPath(FolderTree1.Items[2]) = 'A:\' then
   begin

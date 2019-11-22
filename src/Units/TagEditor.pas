@@ -36,6 +36,11 @@ type
     CheckBox4: TCheckBox;
     CheckBox5: TCheckBox;
     CheckBox6: TCheckBox;
+// begin MB    
+    Image8: TImage;
+    CheckBox7: TCheckBox;
+    Edit7: TEdit;
+// end MB
     procedure Button3Click(Sender: TObject);
     procedure DriveComboBox1Change(Sender: TObject);
     procedure FileListBox1Change(Sender: TObject);
@@ -91,9 +96,14 @@ begin
   Edit6.Enabled := CheckBox4.Checked;
   if Edit6.Enabled then Edit6.Color := FileListBox1.Color
   else Edit6.Color := Color;
+// begin MB
+  Edit7.Enabled := CheckBox7.Checked;
+  if Edit7.Enabled then Edit7.Color := FileListBox1.Color
+  else Edit7.Color := Color;
+// end MB
 
   Button1.Enabled := CheckBox1.Checked or CheckBox2.Checked or CheckBox3.Checked
-  	or CheckBox4.Checked or CheckBox5.Checked or CheckBox6.Checked;
+  	or CheckBox4.Checked or CheckBox5.Checked or CheckBox6.Checked or CheckBox7.Checked; // MB 
 end;
 
 // -----------------------------------------------------------------------------
@@ -109,6 +119,7 @@ begin
 	CheckBox4.Caption := GetText(45);
 	CheckBox5.Caption := GetText(46);
 	CheckBox6.Caption := GetText(47);
+  CheckBox7.Caption := GetText(lngGenre); // MB
 	Button1.Caption := GetText(91);
 	Button2.Caption := GetText(92);
 	Button3.Caption := GetText(93);
@@ -119,6 +130,7 @@ begin
   CheckBox4.Checked := TagField[4];
   CheckBox5.Checked := TagField[5];
   CheckBox6.Checked := TagField[6];
+  CheckBox7.Checked := TagField[7]; // MB
 
   FileListBox1.Mask := FileMask + ';' + MPPFileMask;
   UpdateControls;
@@ -136,6 +148,7 @@ begin
   TagField[4] := CheckBox4.Checked;
   TagField[5] := CheckBox5.Checked;
   TagField[6] := CheckBox6.Checked;
+  TagField[7] := CheckBox7.Checked; // MB
 
   ID3.Free;
 end;

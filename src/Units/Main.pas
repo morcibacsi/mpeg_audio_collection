@@ -1,11 +1,26 @@
 { *************************************************************************** }
 {                                                                             }
-{ MPEG Audio Collection (Freeware)                                            }
+{ MPEG Audio Collection                                                       }
+{                                                                             }
+{ http://sourceforge.net/projects/mac                                         }
+{ e-mail: macteam@users.sourceforge.net                                       }
 {                                                                             }
 { Copyright (c) 2000-2002 by Jurgen Faul                                      }
-{ Copyright (c) 2003 by The MAC Team (ErikS & Gambit)                         }
-{ E-mail: macteam@users.sourceforge.net                                       }
-{ http://sourceforge.net/projects/mac                                         }
+{ Copyright (c) 2003 by The MAC Team                                          }
+{                                                                             }
+{ This library is free software; you can redistribute it and/or               }
+{ modify it under the terms of the GNU Lesser General Public                  }
+{ License as published by the Free Software Foundation; either                }
+{ version 2.1 of the License, or (at your option) any later version.          }
+{                                                                             }
+{ This library is distributed in the hope that it will be useful,             }
+{ but WITHOUT ANY WARRANTY; without even the implied warranty of              }
+{ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU           }
+{ Lesser General Public License for more details.                             }
+{                                                                             }
+{ You should have received a copy of the GNU Lesser General Public            }
+{ License along with this library; if not, write to the Free Software         }
+{ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA   }
 {                                                                             }
 { *************************************************************************** }
 
@@ -263,7 +278,7 @@ begin
 			Reg.WriteInteger('NameArea', NameArea);
 			Reg.WriteBool('NameCase', NameCase);
 			for Index := 0 to 17 do Reg.WriteInteger('Property' + IntToStr(Index), Prop[(Index div 3) + 1, (Index mod 3) + 1]);
-			for Index := 1 to 6 do Reg.WriteString('TagText' + IntToStr(Index), TagText[Index]);
+			for Index := 1 to numTag do Reg.WriteString('TagText' + IntToStr(Index), TagText[Index]); // MB
 			Reg.WriteBool('AutoOpen', AutoOpen);
 			Reg.WriteBool('UseWindowSettings', UseWindowSettings);
 			for Index := 1 to 20 do Reg.WriteBool('ReportItems' + IntToStr(Index), RowCol[Index]);
@@ -304,7 +319,7 @@ begin
       Reg.WriteInteger('DuplicateArea', DuplicateArea);
       Reg.WriteInteger('ColumnToSorting', ColumnToSorting);
 
-      for Index := 1 to 6 do Reg.WriteBool('TagField' + IntToStr(Index), TagField[Index]);
+      for Index := 1 to numTag do Reg.WriteBool('TagField' + IntToStr(Index), TagField[Index]); // MB
 
       Reg.WriteBool('AutoBackup', AutoBackup);
       Reg.WriteBool('Numeration', Numeration);
@@ -333,7 +348,7 @@ begin
         Value := (Value div 1000) * 1000 + ListView1.Columns[Index].Width;
         InfoCol[ListView1.Columns[Index].Tag] := Value;
       end;
-      for Index := 0 to 12 do Reg.WriteInteger('InfoCol' + IntToStr(Index), InfoCol[Index]);
+      for Index := 0 to InfoCol_nCols do Reg.WriteInteger('InfoCol' + IntToStr(Index), InfoCol[Index]); // MB
 
 			Reg.WriteBool('FileExtensions', Fileextensions1.Checked);
       Reg.WriteBool('ItemNumeration', ItemNumeration);
@@ -383,7 +398,7 @@ begin
 			NameArea := Reg.ReadInteger('NameArea');
 			NameCase := Reg.ReadBool('NameCase');
 			for Index := 0 to 17 do Prop[(Index div 3) + 1, (Index mod 3) + 1] := Reg.ReadInteger('Property' + IntToStr(Index));
-			for Index := 1 to 6 do TagText[Index] := Reg.ReadString('TagText' + IntToStr(Index));
+			for Index := 1 to numTag do TagText[Index] := Reg.ReadString('TagText' + IntToStr(Index)); // MB
 			AutoOpen := Reg.ReadBool('AutoOpen');
 			UseWindowSettings := Reg.ReadBool('UseWindowSettings');
 			for Index := 1 to 20 do RowCol[Index] := Reg.ReadBool('ReportItems' + IntToStr(Index));
@@ -429,7 +444,7 @@ begin
       DuplicateArea := Reg.ReadInteger('DuplicateArea');
       ColumnToSorting := Reg.ReadInteger('ColumnToSorting');
 
-      for Index := 1 to 6 do TagField[Index] := Reg.ReadBool('TagField' + IntToStr(Index));
+      for Index := 1 to numTag do TagField[Index] := Reg.ReadBool('TagField' + IntToStr(Index)); // MB
 
       AutoBackup := Reg.ReadBool('AutoBackup');
       Numeration := Reg.ReadBool('Numeration');
@@ -452,7 +467,7 @@ begin
       AddSize := Reg.ReadBool('AddSize');
       ValidFiles := Reg.ReadBool('ValidFiles');
       CompareTag := Reg.ReadBool('CompareTag');
-      for Index := 0 to 12 do InfoCol[Index] := Reg.ReadInteger('InfoCol' + IntToStr(Index));
+      for Index := 0 to InfoCol_nCols do InfoCol[Index] := Reg.ReadInteger('InfoCol' + IntToStr(Index)); // MB
 
       Fileextensions1.Checked := Reg.ReadBool('FileExtensions');
       FileExtensions := Fileextensions1.Checked;
@@ -610,7 +625,7 @@ begin
 	ListView1.Items.Clear;
 	while ListView1.Columns.Count > 0 do ListView1.Columns.Delete(0);
 
-  for Index := 0 to 12 do
+  for Index := 0 to InfoCol_nCols do // MB
 	  if InfoCol[Index] > 0 then
 	  begin
   	  LColumn := ListView1.Columns.Add;
@@ -628,7 +643,8 @@ begin
   			9: LColumn.Caption := GetText(44);
 	  		10: LColumn.Caption := GetText(45);
   			11: LColumn.Caption := GetText(46);
-  			12: LColumn.Caption := GetText(47);
+  			12: LColumn.Caption := GetText(47); 
+        13: LColumn.Caption := GetText(lngGenre); // MB
 	    end;
 
       case InfoCol[Index] div 1000000 of
@@ -766,7 +782,7 @@ end;
 procedure TfrmMain.UpdateListView;
 var
 	Index, BitRate: longint;
-	Line, ItemText, ItemExtension : string;
+	Line, ItemText, ItemExtension : String;
 	ListItem: TListItem;
 	Child: TTreeNode;
 	FileTag: TagArray;
@@ -825,6 +841,8 @@ begin
           ListItem.ImageIndex := 16
         else if Pos(ItemExtension, HtmlMask) > 0 then
           ListItem.ImageIndex := 23
+        else if Pos(ItemExtension, VideoMask) > 0 then
+          ListItem.ImageIndex := 24
         else
           ListItem.ImageIndex := 8;
       end;
@@ -854,7 +872,16 @@ begin
 	  			4: if not Child.HasChildren then ItemText := IntToStr(FileData[3] * 10) + ' ' + GetText(70);
   				5: if not Child.HasChildren then ItemText := GetChannelMode(FileData[4]);
 	  			6: if Child.HasChildren then ItemText := GetText(175)
-		         else ItemText := GetMPEGType(FileData[5], FileData[6]);
+		         else
+             begin
+             if FileData[5] = 0 then
+             begin
+              Delete(ItemExtension, 1, 1);
+              ItemText := UpperCase(ItemExtension) + ' File';
+             end
+             else
+              ItemText := GetMPEGType(FileData[5], FileData[6]);
+             end;
   				7: ItemText := FileTag[1];
 	  			8: ItemText := FileTag[2];
   				9: ItemText := FileTag[3];
@@ -865,6 +892,7 @@ begin
           		end;
   				11: ItemText := FileTag[5];
   				12: ItemText := FileTag[6];
+          13: ItemText := FileTag[7]; // MB
 		    end;
 
 				ListItem.SubItems.Add(ItemText);
@@ -1089,7 +1117,7 @@ begin
         else
           Dir[0].ImageIndex := 1;
         end;
-        
+
       end
 			else
 			begin
@@ -2237,10 +2265,17 @@ begin
     if ErrorMsg = '' then
      	try
        	TempList.Items.SaveToFile(RootD + PlaylistFile);
-        if (UseFoobar) and (FileExists(FoobarPath + '\foobar2000.exe')) then
-          ShellExecute(Handle, nil, PChar('"' + FoobarPath + '\foobar2000.exe"'), PChar('"' + RootD + PlaylistFile + '"'), nil, SW_SHOW)
+
+        if Pos(LowerCase(ExtractFileExt(ExtractName(SelectedNode.Text))), SupportedExtension) > 0 then
+        begin
+          if (UseFoobar) and (FileExists(FoobarPath + '\foobar2000.exe')) then
+            ShellExecute(Handle, nil, PChar('"' + FoobarPath + '\foobar2000.exe"'), PChar('"' + RootD + PlaylistFile + '"'), nil, SW_SHOW)
+          else
+            ShellExecute(Handle, 'open', PChar(RootD + PlaylistFile), nil, nil, SW_SHOW);
+        end
         else
-          ShellExecute(Handle, 'open', PChar(RootD + PlaylistFile), nil, nil, SW_SHOW);
+          ShellExecute(Handle, 'open', PChar(ExtractName(SelectedNode.Text)), nil, nil, SW_SHOW);;
+
       except
        	Dialog(GetText(157) + ': ' + RootD + PlaylistFile, GetText(51), GetText(54), '', '', 1, 2);
       end
@@ -2625,7 +2660,8 @@ begin
 				((Trim(TagText[3]) = '') or (Pos(AnsiLowerCase(TagText[3]), AnsiLowerCase(TagInfo[3])) > 0)) and
         ((Trim(TagText[4]) = '') or (Pos(AnsiLowerCase(TagText[4]), AnsiLowerCase(TagInfo[4])) > 0)) and
         ((Trim(TagText[5]) = '') or (Pos(AnsiLowerCase(TagText[5]), AnsiLowerCase(TagInfo[5])) > 0)) and
-				((Trim(TagText[6]) = '') or (Pos(AnsiLowerCase(TagText[6]), AnsiLowerCase(TagInfo[6])) > 0)) then
+				((Trim(TagText[6]) = '') or (Pos(AnsiLowerCase(TagText[6]), AnsiLowerCase(TagInfo[6])) > 0)) and
+        ((Trim(TagText[7]) = '') or (Pos(AnsiLowerCase(TagText[7]), AnsiLowerCase(TagInfo[7])) > 0)) then // MB add condition for new tag
       begin
 				Index2 := TempList.Items.Add(IntToStr(Index));
         TempList.Items.Objects[Index2] := Tree.Items[Index];

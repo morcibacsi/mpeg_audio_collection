@@ -52,7 +52,8 @@ function ShowTagResults(SPath: string; GD, HT: boolean): TTreeNode;
 
 implementation
 
-uses Main;
+uses
+  Main;
 
 {$R *.DFM}
 
@@ -88,6 +89,7 @@ begin
 			ListView1.Columns.Items[5].Caption := GetText(45);
 			ListView1.Columns.Items[6].Caption := GetText(46);
 			ListView1.Columns.Items[7].Caption := GetText(47);
+      ListView1.Columns.Items[8].Caption := GetText(lngGenre); // MB
 
 			ShowProgressWindow(GetText(141));
 
@@ -124,7 +126,7 @@ begin
         if (Length(Path) > 0) and (Path[Length(Path)] = '\') then Delete(Path, Length(Path), 1);
 				ListItem.SubItems.Add(Path);
 
-				for Index2 := 1 to 6 do
+				for Index2 := 1 to numTag do // MB
 					if Trim(TagText[Index2]) <> '' then
           begin
           	TagInfo[Index2] := Trim(TagInfo[Index2]);
@@ -133,7 +135,7 @@ begin
           end;
 			end;
 
-      for Index := 6 downto 1 do
+      for Index := numTag downto 1 do // MB
       	if Trim(TagText[Index]) = '' then ListView1.Columns.Delete(Index + 1);
 
 			ListView1.Selected := ListView1.Items[0];
@@ -207,7 +209,7 @@ begin
 		Rewrite(RFile);
     Writeln(RFile, Caption);
 		Writeln(RFile, '');
-    for Index := 1 to 6 do
+    for Index := 1 to numTag do // MB
     	if Trim(TagText[Index]) <> '' then
       	Writeln(RFile, GetText(Index + 41) + ': ' + TagText[Index]);
     Writeln(RFile, '');

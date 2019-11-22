@@ -224,14 +224,20 @@ begin
 		FileList.ItemIndex := Index;
 		CurrentItem := Trim(FileList.Items.Strings[Index]);
 		FLabel.Caption := FLabel.Hint + CurrentItem;
-    
 
+
+// begin MB
 		for Index2 := 1 to 6 do
 		begin
 			FileData[Index2] := 0;
+		end;
+
+		for Index2 := 1 to numTag do
+		begin
 			FileTag[Index2] := '';
       FileTag2[Index2] := '';
 		end;
+// end MB
 
     // File size for non-audio files
     if Pos(LowerCase(ExtractFileExt(FileList.FileName)), SupportedExtension) = 0 then
@@ -246,6 +252,7 @@ begin
         CloseFile(FileUnknown);
       end;
       FileData[1] := SizeUnknown div 1024;
+      FileData[5] := 0;
     end;
 
     if FlacMaskObj.Matches(FileList.FileName) then
@@ -269,6 +276,7 @@ begin
 					FileTag[4] := TextFilter(FlacFile.VorbisComment.Value['Track'], 0);
 					FileTag[5] := TextFilter(FlacFile.VorbisComment.Value['Date'], 0);
 					FileTag[6] := TextFilter(FlacFile.VorbisComment.Value['Comment'], 0);
+          FileTag[7] := TextFilter(FlacFile.VorbisComment.Value['Genre'], 0);
         end;
 
         if GuessedEncoder then begin
@@ -334,9 +342,10 @@ begin
 					if MPPFile.APEtag.Track in [1..99] then FileTag[4] := IntToStr(MPPFile.APEtag.Track);
 					FileTag[5] := TextFilter(MPPFile.APEtag.Year, 0);
 					FileTag[6] := TextFilter(MPPFile.APEtag.Comment, 0);
+          FileTag[7] := TextFilter(MPPFile.APEtag.Genre, 0); //MB
 				end;
 
-  			for Index2 := 1 to 6 do
+  			for Index2 := 1 to numTag do // MB
           if FileTag[Index2] = '' then FileTag[Index2] := FileTag2[Index2];
 
 	      if GuessedEncoder then FileTag[6] := MPPFile.Encoder;
@@ -362,6 +371,7 @@ begin
 				FileTag[2] := TextFilter(VQFFile.Author, 0);
         FileTag[3] := TextFilter(VQFFile.Album, 0);
 				FileTag[6] := TextFilter(VQFFile.Comment, 0);
+        FileTag[7] := ''; // MB no tag Genre
 
 	      if GuessedEncoder then FileTag[6] := 'TwinVQ';
 			end
@@ -388,6 +398,7 @@ begin
         if WMAFile.Track in [1..99] then FileTag[4] := IntToStr(WMAFile.Track);
         FileTag[5] := TextFilter(WMAFile.Year, 0);
 				FileTag[6] := TextFilter(WMAFile.Comment, 0);
+        FileTag[7] := TextFilter(WMAFile.Genre, 0); // MB
 
 	      if GuessedEncoder then FileTag[6] := 'WMA';
 			end
@@ -414,6 +425,7 @@ begin
         if OGGFile.Track in [1..99] then FileTag[4] := IntToStr(OGGFile.Track);
 				FileTag[5] := TextFilter(OGGFile.Date, 0);
 				FileTag[6] := TextFilter(OGGFile.Comment, 0);
+        FileTag[7] := TextFilter(OGGFile.Genre, 0); // MB
 
 	      if GuessedEncoder then FileTag[6] := OGGFile.Vendor; //'Ogg Vorbis';
 			end
@@ -464,9 +476,10 @@ begin
 					if MPPFile.APEtag.Track in [1..99] then FileTag[4] := IntToStr(WAVPackFile.APEtag.Track);
 					FileTag[5] := TextFilter(WAVPackFile.APEtag.Year, 0);
 					FileTag[6] := TextFilter(WAVPackFile.APEtag.Comment, 0);
+          FileTag[7] := TextFilter(WAVPackFile.APEtag.Genre, 0); // MB
 				end;
 
-  			   for Index2 := 1 to 6 do
+  			   for Index2 := 1 to numTag do // MB
                if FileTag[Index2] = '' then FileTag[Index2] := FileTag2[Index2];
 
 
@@ -501,9 +514,10 @@ begin
             IntToStr(OfrFile.APEtag.Track);
 					FileTag[5] := TextFilter(OfrFile.APEtag.Year, 0);
 					FileTag[6] := TextFilter(OfrFile.APEtag.Comment, 0);
+          FileTag[7] := TextFilter(OfrFile.APEtag.Genre, 0);
 				end;
 
-  			for Index2 := 1 to 6 do
+  			for Index2 := 1 to numTag do
           if FileTag[Index2] = '' then FileTag[Index2] := FileTag2[Index2];
 
 	      if GuessedEncoder then FileTag[6] := 'OptimFROG ' + OfrFile.Version;
@@ -514,14 +528,14 @@ begin
     if Pos(LowerCase(ExtractFileExt(FileList.FileName)), MonkeyMask) > 0 then
     begin
     	Monkey.ReadFromFile(FileList.FileName);
-			FileData[1] := Monkey.FileLength div 1024;
+			FileData[1] := Monkey.FileSize div 1024;
 
 			if Monkey.Valid then
 			begin
 				FileData[2] := -Round(Monkey.Duration);
-				FileData[3] := Monkey.Header.SampleRate div 10;
-        if Monkey.Header.Channels = 1 then FileData[4] := 4;
-        if Monkey.Header.Channels = 2 then FileData[4] := 1;
+				FileData[3] := Monkey.SampleRate div 10;
+        if Monkey.Channels = 1 then FileData[4] := 4;
+        if Monkey.Channels = 2 then FileData[4] := 1;
 				FileData[5] := 30;
 				FileData[6] := Monkey.Bits;
 
@@ -536,12 +550,15 @@ begin
 					if Monkey.APEtag.Track in [1..99] then FileTag[4] := IntToStr(Monkey.APEtag.Track);
 					FileTag[5] := TextFilter(Monkey.APEtag.Year, 0);
 					FileTag[6] := TextFilter(Monkey.APEtag.Comment, 0);
+          FileTag[7] := TextFilter(Monkey.APEtag.Genre, 0); // MB
 				end;
 
-  			for Index2 := 1 to 6 do
+  			for Index2 := 1 to numTag do
           if FileTag[Index2] = '' then FileTag[Index2] := FileTag2[Index2];
 
-	      if GuessedEncoder then FileTag[6] := 'Monkey' + #39 + 's Audio' + #32 + Monkey.Version;
+	      if GuessedEncoder then begin
+               FileTag[6] := 'Monkey' + #39 + 's Audio' + #32 + Monkey.VersionStr + ': ' + Monkey.CompressionModeStr;
+            end;
 			end
    	  else if ValidFiles then continue;
     end;
@@ -580,11 +597,16 @@ begin
 
 		TagString := #21;
     DataString := '';
+// begin MB
 		for Index2 := 1 to 6 do
 		begin
 			DataString := DataString + Chr(Index2) + IntToStr(FileData[Index2]);
+		end;
+		for Index2 := 1 to numTag do
+		begin
 			TagString := TagString + FileTag[Index2] + Chr(Index2 + 21);
 		end;
+// end MB
 
     // file info
     DataString := DataString + #7 + TagString;

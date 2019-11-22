@@ -175,7 +175,7 @@
 174Date
 175Folder
 176MPEG version/layer
-177ID3-Tag
+177Tag
 178Save report as
 179Text
 180Process
@@ -237,5 +237,8 @@
 236Include all files in collection
 237Copy To Clipboard
 238Where is foobar2000?
+239Genre
+240Eject CD
+241Check this if you want the CD to be ejected after scanning
 >>>Translation by Jurgen Faul
 >>>Correction by Joerg Walther

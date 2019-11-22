@@ -12,6 +12,10 @@
 { E-mail: jfaul@gmx.de                                                        }
 { http://jfaul.de/atl                                                         }
 {                                                                             }
+{ Version 1.5 (22 August 2003) by MaDah                                       }
+{   - Added support for Monkey's Audio 3.98                                   }
+{   - Added/changed/removed some stuff                                        }
+{                                                                             }
 { Version 1.4 (29 July 2002)                                                  }
 {   - Correction for calculating of duration                                  }
 {                                                                             }
@@ -35,214 +39,166 @@ uses
   Classes, SysUtils, ID3v1, ID3v2, APEtag;
 
 const
-  { Compression level codes }
-  MONKEY_COMPRESSION_FAST = 1000;                               { Fast (poor) }
-  MONKEY_COMPRESSION_NORMAL = 2000;                           { Normal (good) }
-  MONKEY_COMPRESSION_HIGH = 3000;                          { High (very good) }
-  MONKEY_COMPRESSION_EXTRA_HIGH = 4000;                   { Extra high (best) }
+   { Compression level codes }
+   MONKEY_COMPRESSION_FAST       = 1000;  { Fast (poor) }
+   MONKEY_COMPRESSION_NORMAL     = 2000;  { Normal (good) }
+   MONKEY_COMPRESSION_HIGH       = 3000;  { High (very good) }
+   MONKEY_COMPRESSION_EXTRA_HIGH = 4000;  { Extra high (best) }
+   MONKEY_COMPRESSION_INSANE     = 5000;  { Insane }
+   MONKEY_COMPRESSION_BRAINDEAD  = 6000;  { BrainDead }
+   { Compression level names }
+   MONKEY_COMPRESSION: array [0..6] of string =
+    ('Unknown', 'Fast', 'Normal', 'High', 'Extra High', 'Insane', 'BrainDead');
 
-  { Compression level names }
-  MONKEY_COMPRESSION: array [0..4] of string =
-    ('Unknown', 'Fast', 'Normal', 'High', 'Extra High');
-
-  { Format flags }
-  MONKEY_FLAG_8_BIT = 1;                                        { Audio 8-bit }
-  MONKEY_FLAG_CRC = 2;                            { New CRC32 error detection }
-  MONKEY_FLAG_PEAK_LEVEL = 4;                             { Peak level stored }
-  MONKEY_FLAG_24_BIT = 8;                                      { Audio 24-bit }
-  MONKEY_FLAG_SEEK_ELEMENTS = 16;            { Number of seek elements stored }
-  MONKEY_FLAG_WAV_NOT_STORED = 32;                    { WAV header not stored }
+   { Format flags, only for Monkey's Audio <= 3.97 }
+   MONKEY_FLAG_8_BIT          = 1;  // Audio 8-bit
+   MONKEY_FLAG_CRC            = 2;  // New CRC32 error detection
+   MONKEY_FLAG_PEAK_LEVEL     = 4;  // Peak level stored
+   MONKEY_FLAG_24_BIT         = 8;  // Audio 24-bit
+   MONKEY_FLAG_SEEK_ELEMENTS  = 16; // Number of seek elements stored
+   MONKEY_FLAG_WAV_NOT_STORED = 32; // WAV header not stored
 
   { Channel mode names }
   MONKEY_MODE: array [0..2] of string =
     ('Unknown', 'Mono', 'Stereo');
 
 type
-  { Real structure of Monkey's Audio header }
-  MonkeyHeader = record
-    ID: array [1..4] of Char;                                 { Always "MAC " }
-    VersionID: Word;                    { Version number * 1000 (3.91 = 3910) }
-    CompressionID: Word;                             { Compression level code }
-    Flags: Word;                                           { Any format flags }
-    Channels: Word;                                      { Number of channels }
-    SampleRate: Integer;                                   { Sample rate (hz) }
-    HeaderBytes: Integer;                 { Header length (without header ID) }
-    TerminatingBytes: Integer;                                { Extended data }
-    Frames: Integer;                           { Number of frames in the file }
-    FinalSamples: Integer;             { Number of samples in the final frame }
-    PeakLevel: Integer;                              { Peak level (if stored) }
-    SeekElements: Integer;              { Number of seek elements (if stored) }
-  end;
 
   { Class TMonkey }
-  TMonkey = class(TObject)
-    private
+TMonkey = class(TObject)
+   private
       { Private declarations }
-      FFileLength: Integer;
-      FHeader: MonkeyHeader;
-      FID3v1: TID3v1;
-      FID3v2: TID3v2;
-      FAPEtag: TAPEtag;
+		FValid     		      : boolean;
+      // Stuff loaded from the header:
+      FVersion             : integer;
+      FVersionStr          : string;
+		FChannels  		      : integer;
+		FSampleRate		      : integer;
+		FBits      		      : integer;
+      FPeakLevel           : longword;
+      FPeakLevelRatio      : double;
+      FTotalSamples        : int64;
+		FBitrate  		      : double;
+		FDuration		      : double;
+		FCompressionMode     : integer;
+      FCompressionModeStr  : string;
+      // FormatFlags, only used with Monkey's <= 3.97
+      FFormatFlags         : integer;
+      FHasPeakLevel        : boolean;
+      FHasSeekElements     : boolean;
+      FWavNotStored        : boolean;
+      // Tagging
+      FID3v1               : TID3v1;
+      FID3v2               : TID3v2;
+      FAPEtag              : TAPEtag;
+      //
+   	FFileSize  		      : int64;
+
       procedure FResetData;
-      function FGetValid: Boolean;
-      function FGetVersion: string;
-      function FGetCompression: string;
-      function FGetBits: Byte;
-      function FGetChannelMode: string;
-      function FGetPeak: Double;
-      function FGetSamplesPerFrame: Integer;
-      function FGetSamples: Integer;
-      function FGetDuration: Double;
-      function FGetRatio: Double;
+
     public
       { Public declarations }
       constructor Create;                                     { Create object }
       destructor Destroy; override;                          { Destroy object }
+
       function ReadFromFile(const FileName: string): Boolean;   { Load header }
-      property FileLength: Integer read FFileLength;    { File length (bytes) }
-      property Header: MonkeyHeader read FHeader;     { Monkey's Audio header }
+
+      property FileSize 	      : int64		read FFileSize;
+		property Valid     	      : boolean	read FValid;
+      property Version           : integer   read FVersion;
+      property VersionStr        : string    read FVersionStr;
+		property Channels  	      : integer	read FChannels;
+		property SampleRate	      : integer	read FSamplerate;
+		property Bits      	      : integer	read FBits;
+		property Bitrate  	      : double		read FBitrate;
+		property Duration		      : double		read FDuration;
+		property PeakLevel 	      : longword	read FPeakLevel;
+		property PeakLevelRatio    : double 	read FPeakLevelRatio;
+		property TotalSamples 	   : int64	   read FTotalSamples;
+		property CompressionMode 	: integer	read FCompressionMode;
+		property CompressionModeStr: string 	read FCompressionModeStr;
+      // FormatFlags, only used with Monkey's <= 3.97
+		property FormatFlags 	   : integer	read FFormatFlags;
+		property HasPeakLevel 	   : boolean	read FHasPeakLevel;
+		property HasSeekElements 	: boolean	read FHasSeekElements;
+		property WavNotStored 	   : boolean	read FWavNotStored;
+      // Tagging
       property ID3v1: TID3v1 read FID3v1;                    { ID3v1 tag data }
       property ID3v2: TID3v2 read FID3v2;                    { ID3v2 tag data }
       property APEtag: TAPEtag read FAPEtag;                   { APE tag data }
-      property Valid: Boolean read FGetValid;          { True if header valid }
-      property Version: string read FGetVersion;            { Encoder version }
-      property Compression: string read FGetCompression;  { Compression level }
-      property Bits: Byte read FGetBits;                    { Bits per sample }
-      property ChannelMode: string read FGetChannelMode;       { Channel mode }
-      property Peak: Double read FGetPeak;             { Peak level ratio (%) }
-      property Samples: Integer read FGetSamples;         { Number of samples }
-      property Duration: Double read FGetDuration;       { Duration (seconds) }
-      property Ratio: Double read FGetRatio;          { Compression ratio (%) }
   end;
 
 implementation
+
+type
+   { Real structure of Monkey's Audio header }
+   // common header for all versions
+   APE_HEADER = packed record
+      cID: array[0..3] of byte;        // should equal 'MAC '
+      nVersion : WORD;                 // version number * 1000 (3.81 = 3810)
+   end;
+   // old header for <= 3.97
+   APE_HEADER_OLD = packed record
+      nCompressionLevel,               // the compression level
+      nFormatFlags,                    // any format flags (for future use)
+      nChannels: word;                 // the number of channels (1 or 2)
+      nSampleRate,                     // the sample rate (typically 44100)
+      nHeaderBytes,                    // the bytes after the MAC header that compose the WAV header
+      nTerminatingBytes,               // the bytes after that raw data (for extended info)
+      nTotalFrames,                    // the number of frames in the file
+      nFinalFrameBlocks: longword;     // the number of samples in the final frame
+      nInt : integer;
+   end;
+   // new header for >= 3.98
+   APE_HEADER_NEW = packed record
+      nCompressionLevel : word;		   // the compression level (see defines I.E. COMPRESSION_LEVEL_FAST)
+      nFormatFlags      : word;			// any format flags (for future use) Note: NOT the same flags as the old header!
+      nBlocksPerFrame   : longword;		// the number of audio blocks in one frame
+      nFinalFrameBlocks : longword;		// the number of audio blocks in the final frame
+      nTotalFrames      : longword;		// the total number of frames
+      nBitsPerSample    : word;			// the bits per sample (typically 16)
+      nChannels         : word;			// the number of channels (1 or 2)
+      nSampleRate       : longword;		// the sample rate (typically 44100)
+   end;
+   // data descriptor for >= 3.98
+   APE_DESCRIPTOR = packed record
+      padded : Word;                   // padding/reserved (always empty)
+	   nDescriptorBytes,		            // the number of descriptor bytes (allows later expansion of this header)
+	   nHeaderBytes,			            // the number of header APE_HEADER bytes
+	   nSeekTableBytes,		            // the number of bytes of the seek table
+	   nHeaderDataBytes,		            // the number of header data bytes (from original file)
+	   nAPEFrameDataBytes,		         // the number of bytes of APE frame data
+	   nAPEFrameDataBytesHigh,	         // the high order number of APE frame data bytes
+	   nTerminatingDataBytes : longword;	// the terminating data of the file (not including tag data)
+      cFileMD5 : array[0..15] of Byte;	// the MD5 hash of the file (see notes for usage... it's a littly tricky)
+   end;
 
 { ********************** Private functions & procedures ********************* }
 
 procedure TMonkey.FResetData;
 begin
-  { Reset data }
-  FFileLength := 0;
-  FillChar(FHeader, SizeOf(FHeader), 0);
-  FID3v1.ResetData;
-  FID3v2.ResetData;
-  FAPEtag.ResetData;
-end;
-
-{ --------------------------------------------------------------------------- }
-
-function TMonkey.FGetValid: Boolean;
-begin
-  { Check for right Monkey's Audio file data }
-  Result :=
-    (FHeader.ID = 'MAC ') and
-    (FHeader.SampleRate > 0) and
-    (FHeader.Channels > 0);
-end;
-
-{ --------------------------------------------------------------------------- }
-
-function TMonkey.FGetVersion: string;
-begin
-  { Get encoder version }
-  if FHeader.VersionID = 0 then Result := ''
-  else Str(FHeader.VersionID / 1000 : 4 : 2, Result);
-end;
-
-{ --------------------------------------------------------------------------- }
-
-function TMonkey.FGetCompression: string;
-begin
-  { Get compression level }
-  Result := MONKEY_COMPRESSION[FHeader.CompressionID div 1000];
-end;
-
-{ --------------------------------------------------------------------------- }
-
-function TMonkey.FGetBits: Byte;
-begin
-  { Get number of bits per sample }
-  if FGetValid then
-  begin
-    Result := 16;
-    if FHeader.Flags and MONKEY_FLAG_8_BIT > 0 then Result := 8;
-    if FHeader.Flags and MONKEY_FLAG_24_BIT > 0 then Result := 24;
-  end
-  else
-    Result := 0;
-end;
-
-{ --------------------------------------------------------------------------- }
-
-function TMonkey.FGetChannelMode: string;
-begin
-  { Get channel mode }
-  Result := MONKEY_MODE[FHeader.Channels];
-end;
-
-{ --------------------------------------------------------------------------- }
-
-function TMonkey.FGetPeak: Double;
-begin
-  { Get peak level ratio }
-  if (FGetValid) and (FHeader.Flags and MONKEY_FLAG_PEAK_LEVEL > 0) then
-    case FGetBits of
-      16: Result := FHeader.PeakLevel / 32768 * 100;
-      24: Result := FHeader.PeakLevel / 8388608 * 100;
-      else Result := FHeader.PeakLevel / 128 * 100;
-    end
-  else
-    Result := 0;
-end;
-
-{ --------------------------------------------------------------------------- }
-
-function TMonkey.FGetSamplesPerFrame: Integer;
-begin
-  { Get number of samples in a frame }
-  if FGetValid then
-    if (FHeader.VersionID >= 3950) then
-      Result := 9216 * 32
-    else if (FHeader.VersionID >= 3900) or
-      ((FHeader.VersionID >= 3800) and
-      (FHeader.CompressionID = MONKEY_COMPRESSION_EXTRA_HIGH)) then
-      Result := 9216 * 8
-    else
-      Result := 9216
-  else
-    Result := 0;
-end;
-
-{ --------------------------------------------------------------------------- }
-
-function TMonkey.FGetSamples: Integer;
-begin
-  { Get number of samples }
-  if FGetValid then
-    Result := (FHeader.Frames - 1) * FGetSamplesPerFrame + FHeader.FinalSamples
-  else
-    Result := 0;
-end;
-
-{ --------------------------------------------------------------------------- }
-
-function TMonkey.FGetDuration: Double;
-begin
-  { Get song duration }
-  if FGetValid then Result := FGetSamples / FHeader.SampleRate
-  else Result := 0;
-end;
-
-{ --------------------------------------------------------------------------- }
-
-function TMonkey.FGetRatio: Double;
-begin
-  { Get compression ratio }
-  if FGetValid then
-    Result := FFileLength /
-      (FGetSamples * FHeader.Channels * FGetBits / 8 + 44) * 100
-  else
-    Result := 0;
+   { Reset data }
+	FValid     		      := false;
+   FVersion             := 0;
+   FVersionStr          := '';
+	FChannels  		      := 0;
+	FSampleRate		      := 0;
+	FBits      		      := 0;
+   FPeakLevel           := 0;
+   FPeakLevelRatio      := 0.0;
+   FTotalSamples        := 0;
+	FBitrate  		      := 0.0;
+   FDuration		      := 0.0;
+	FCompressionMode     := 0;
+   FCompressionModeStr  := '';
+   FFormatFlags         := 0;
+   FHasPeakLevel        := false;
+   FHasSeekElements     := false;
+   FWavNotStored        := false;
+ 	FFileSize  		      := 0;
+   FID3v1.ResetData;
+   FID3v2.ResetData;
+   FAPEtag.ResetData;
 end;
 
 { ********************** Public functions & procedures ********************** }
@@ -272,32 +228,122 @@ end;
 
 function TMonkey.ReadFromFile(const FileName: string): Boolean;
 var
-  SourceFile: file;
+   f              : TFileStream;
+   APE            : APE_HEADER;     // common header
+   APE_OLD        : APE_HEADER_OLD; // old header   <= 3.97
+   APE_NEW        : APE_HEADER_NEW; // new header   >= 3.98
+   APE_DESC       : APE_DESCRIPTOR; // extra header >= 3.98
+   BlocksPerFrame : integer;
+   LoadSuccess    : boolean;
+   TagSize        : integer;
 begin
-  try
-    { Reset data and search for file tag }
-    FResetData;
-    if (not FID3v1.ReadFromFile(FileName)) or
-      (not FID3v2.ReadFromFile(FileName)) or
-      (not FAPEtag.ReadFromFile(FileName)) then raise Exception.Create('');
-    { Set read-access, open file and get file length }
-    AssignFile(SourceFile, FileName);
-    FileMode := 0;
-    Reset(SourceFile, 1);
-    FFileLength := FileSize(SourceFile);
-    { Read Monkey's Audio header data }
-    Seek(SourceFile, ID3v2.Size);
-    BlockRead(SourceFile, FHeader, SizeOf(FHeader));
-    if FHeader.Flags and MONKEY_FLAG_PEAK_LEVEL = 0 then
-      FHeader.PeakLevel := 0;
-    if FHeader.Flags and MONKEY_FLAG_SEEK_ELEMENTS = 0 then
-      FHeader.SeekElements := 0;
-    CloseFile(SourceFile);
-    Result := true;
-  except
-    FResetData;
-    Result := false;
-  end;
+   Result := FALSE;
+   FResetData;
+   // load tags first
+   FID3v2.ReadFromFile(FileName);
+   FID3v1.ReadFromFile(FileName);
+   FAPEtag.ReadFromFile(FileName);
+   // calculate total tag size
+   TagSize := 0;
+   if FID3v1.Exists  then inc(TagSize, 128);
+   if FID3v2.Exists  then inc(TagSize, FID3v2.Size);
+   if FAPEtag.Exists then inc(TagSize, FAPETag.Size);
+   // begin reading data from file
+   LoadSuccess := FALSE;
+   f:=nil;
+   try
+      try
+         f := TFileStream.create(FileName, fmOpenRead or fmShareDenyNone);
+         FFileSize := f.Size;
+         // seek past id3v2-tag
+         if FID3v2.Exists then begin
+            f.Seek(FID3v2.Size, soFromBeginning);
+         end;
+         // Read APE Format Header
+         fillchar(APE, sizeof(APE), 0);
+         if (f.Read(APE, sizeof(APE)) = sizeof(APE)) and ( StrLComp(@APE.cID[0],'MAC ',4)=0) then begin
+            FVersion       := APE.nVersion;
+            Str(FVersion / 1000 : 4 : 2, FVersionStr);
+            // Load New Monkey's Audio Header for version >= 3.98
+            if APE.nVersion >= 3980 then begin
+               fillchar(APE_DESC, sizeof(APE_DESC), 0);
+               if (f.Read(APE_DESC, sizeof(APE_DESC)) = sizeof(APE_DESC)) then begin
+                  // seek past description header
+                  if APE_DESC.nDescriptorBytes <> 52 then f.Seek(APE_DESC.nDescriptorBytes - 52, soFromCurrent);
+                  // load new ape_header
+                  if APE_DESC.nHeaderBytes > sizeof(APE_NEW) then APE_DESC.nHeaderBytes := sizeof(APE_NEW);
+                  fillchar(APE_NEW, sizeof(APE_NEW), 0);
+                  if (longword(f.Read(APE_NEW, APE_DESC.nHeaderBytes)) = APE_DESC.nHeaderBytes ) then begin
+                     // based on MAC SDK 3.98a1 (APEinfo.h)
+                     FSampleRate       := APE_NEW.nSampleRate;
+                     FChannels         := APE_NEW.nChannels;
+                     FFormatFlags      := APE_NEW.nFormatFlags;
+                     FBits             := APE_NEW.nBitsPerSample;
+                     FCompressionMode  := APE_NEW.nCompressionLevel;
+                     // calculate total uncompressed samples
+                     if APE_NEW.nTotalFrames>0 then begin
+                        FTotalSamples     := Int64(APE_NEW.nBlocksPerFrame) *
+                                             Int64(APE_NEW.nTotalFrames-1) +
+                                             Int64(APE_NEW.nFinalFrameBlocks);
+                     end;
+                     LoadSuccess := TRUE;
+                  end;
+               end;
+            end else begin
+               // Old Monkey <= 3.97
+               fillchar(APE_OLD, sizeof(APE_OLD), 0);
+               if (f.Read(APE_OLD, sizeof(APE_OLD)) = sizeof(APE_OLD) ) then begin
+                  FCompressionMode  := APE_OLD.nCompressionLevel;
+                  FSampleRate       := APE_OLD.nSampleRate;
+                  FChannels         := APE_OLD.nChannels;
+                  FFormatFlags      := APE_OLD.nFormatFlags;
+                  FBits := 16;
+                  if APE_OLD.nFormatFlags and MONKEY_FLAG_8_BIT  <>0 then FBits :=  8;
+                  if APE_OLD.nFormatFlags and MONKEY_FLAG_24_BIT <>0 then FBits := 24;
+                  FHasSeekElements  := APE_OLD.nFormatFlags and MONKEY_FLAG_PEAK_LEVEL    <>0;
+                  FWavNotStored     := APE_OLD.nFormatFlags and MONKEY_FLAG_SEEK_ELEMENTS <>0;
+                  FHasPeakLevel     := APE_OLD.nFormatFlags and MONKEY_FLAG_WAV_NOT_STORED<>0;
+                  if FHasPeakLevel then begin
+                     FPeakLevel        := APE_OLD.nInt;
+                     FPeakLevelRatio   := (FPeakLevel / (1 shl FBits) / 2.0) * 100.0;
+                  end;
+                  // based on MAC_SDK_397 (APEinfo.cpp)
+                  if (FVersion >= 3950) then
+                     BlocksPerFrame := 73728 * 4
+                  else if (FVersion >= 3900) or ((FVersion >= 3800) and (APE_OLD.nCompressionLevel = MONKEY_COMPRESSION_EXTRA_HIGH)) then
+                     BlocksPerFrame := 73728
+                  else
+                     BlocksPerFrame := 9216;
+                  // calculate total uncompressed samples
+                  if APE_OLD.nTotalFrames>0 then begin
+                     FTotalSamples :=  Int64(APE_OLD.nTotalFrames-1) *
+                                       Int64(BlocksPerFrame) +
+                                       Int64(APE_OLD.nFinalFrameBlocks);
+                  end;
+                  LoadSuccess := TRUE;
+               end;
+            end;
+            if LoadSuccess then begin
+               // compression profile name
+               if ((FCompressionMode mod 1000) = 0) and (FCompressionMode<=6000) then begin
+                  FCompressionModeStr := MONKEY_COMPRESSION[FCompressionMode div 1000];
+               end else begin
+                  FCompressionModeStr := IntToStr(FCompressionMode);
+               end;
+               // length
+               if FSampleRate>0 then FDuration := FTotalSamples / FSampleRate;
+               // average bitrate
+               if FDuration>0 then FBitrate := (FFileSize - Int64(TagSize))*8.0 / (FDuration/1000.0);
+               // some extra sanity checks
+               FValid   := (FBits>0) and (FSampleRate>0) and (FTotalSamples>0) and (FChannels>0);
+               Result   := FValid;
+            end;
+         end;
+      finally
+         f.free;
+      end;
+   except
+   end;
 end;
 
 end.

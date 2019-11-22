@@ -48,6 +48,12 @@ type
     imgPls: TImage;
     imgText: TImage;
     imgImage: TImage;
+// begin MB
+    lblGenre: TLabel;
+    imgGenre: TImage;
+    edtGenre: TEdit;
+    imgWavPack: TImage;
+// end MB
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -105,6 +111,9 @@ begin
 	lblTrack.Caption := GetText(45);
 	lblYear.Caption := GetText(46);
 	lblComment.Caption := GetText(47);
+// begin MB
+	lblGenre.Caption := GetText(lngGenre);
+// end MB
 
   btnCopy.Caption := GetText(237);
 end;
@@ -134,6 +143,9 @@ begin
   edtTrack.Text := NTag[4];
   edtYear.Text := NTag[5];
   edtComment.Text := NTag[6];
+// begin MB
+  edtGenre.Text := NTag[7];
+// end MB
 
   if edtTitle.Text = '' then edtTitle.Enabled := false else
     MemoClipboard.Lines.Append(lblTitle.Caption + ': ' + edtTitle.Text);
@@ -147,6 +159,8 @@ begin
     MemoClipboard.Lines.Append(lblYear.Caption + ': ' + edtYear.Text);
   if edtComment.Text = '' then edtComment.Enabled := false else
     MemoClipboard.Lines.Append(lblComment.Caption + ': ' + edtComment.Text);
+  if edtGenre.Text = '' then edtGenre.Enabled := false else
+    MemoClipboard.Lines.Append(lblGenre.Caption + ': ' + edtGenre.Text);
 
   if edtTitle.Text = '' then edtTitle.Text := GetText(138);
   if edtArtist.Text = '' then edtArtist.Text := GetText(138);
@@ -154,6 +168,7 @@ begin
   if edtTrack.Text = '' then edtTrack.Text := GetText(138);
   if edtYear.Text = '' then edtYear.Text := GetText(138);
   if edtComment.Text = '' then edtComment.Text := GetText(138);
+  if edtGenre.Text = '' then edtGenre.Text := GetText(138);
 
   //MessageDlg('Info', mtInformation, [mbOk], 0);
   if Pos(LowerCase(ExtractFileExt(ExtractName(SelectedNode.Text))), MPPFileMask) > 0 then
@@ -197,6 +212,9 @@ begin
 
   if Pos(LowerCase(ExtractFileExt(ExtractName(SelectedNode.Text))), ImageMask) > 0 then
     imgFileType.Picture := imgImage.Picture;
+
+  if Pos(LowerCase(ExtractFileExt(ExtractName(SelectedNode.Text))), '.' + WavPackExt) > 0 then
+    imgFileType.Picture := imgWavPack.Picture;
 end;
 
 // -----------------------------------------------------------------------------
@@ -229,7 +247,10 @@ begin
       edtYear.Color := clSilver;
     if edtComment.Tag <> 2 then
       edtComment.Color := clSilver;
-
+// begin MB
+    if edtGenre.Tag <> 2 then
+      edtGenre.Color := clSilver;
+// end MB
     Panel2.Tag := 0;
   end;
 end;

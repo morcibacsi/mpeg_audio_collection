@@ -1,6 +1,6 @@
 object frmFileRenamer: TfrmFileRenamer
-  Left = 454
-  Top = 222
+  Left = 153
+  Top = 130
   ActiveControl = Button1
   AutoScroll = False
   BorderIcons = [biSystemMenu, biMaximize]
@@ -159,7 +159,7 @@ object frmFileRenamer: TfrmFileRenamer
     TabOrder = 2
     object Label1: TLabel
       Left = 176
-      Top = 72
+      Top = 56
       Width = 25
       Height = 16
       Alignment = taRightJustify
@@ -169,7 +169,7 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Label2: TLabel
       Left = 176
-      Top = 96
+      Top = 80
       Width = 25
       Height = 16
       Alignment = taRightJustify
@@ -179,7 +179,7 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Label3: TLabel
       Left = 176
-      Top = 120
+      Top = 104
       Width = 25
       Height = 16
       Alignment = taRightJustify
@@ -189,7 +189,7 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Label4: TLabel
       Left = 176
-      Top = 144
+      Top = 128
       Width = 25
       Height = 16
       Alignment = taRightJustify
@@ -199,7 +199,7 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Label5: TLabel
       Left = 176
-      Top = 168
+      Top = 152
       Width = 25
       Height = 16
       Alignment = taRightJustify
@@ -209,7 +209,7 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Label6: TLabel
       Left = 176
-      Top = 192
+      Top = 176
       Width = 25
       Height = 16
       Alignment = taRightJustify
@@ -219,9 +219,9 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Image3: TImage
       Left = 16
-      Top = 72
-      Width = 32
-      Height = 32
+      Top = 56
+      Width = 16
+      Height = 16
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -272,9 +272,9 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Image4: TImage
       Left = 16
-      Top = 96
-      Width = 32
-      Height = 32
+      Top = 80
+      Width = 16
+      Height = 16
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -325,9 +325,9 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Image5: TImage
       Left = 16
-      Top = 120
-      Width = 32
-      Height = 32
+      Top = 104
+      Width = 16
+      Height = 16
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -378,9 +378,9 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Image6: TImage
       Left = 16
-      Top = 144
-      Width = 32
-      Height = 32
+      Top = 128
+      Width = 16
+      Height = 16
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -431,9 +431,9 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Image7: TImage
       Left = 16
-      Top = 168
-      Width = 32
-      Height = 32
+      Top = 152
+      Width = 16
+      Height = 16
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -484,9 +484,9 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Image8: TImage
       Left = 16
-      Top = 192
-      Width = 32
-      Height = 32
+      Top = 176
+      Width = 16
+      Height = 16
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -537,7 +537,7 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Label8: TLabel
       Left = 40
-      Top = 72
+      Top = 56
       Width = 128
       Height = 16
       AutoSize = False
@@ -545,7 +545,7 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Label9: TLabel
       Left = 40
-      Top = 96
+      Top = 80
       Width = 128
       Height = 16
       AutoSize = False
@@ -553,7 +553,7 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Label10: TLabel
       Left = 40
-      Top = 120
+      Top = 104
       Width = 128
       Height = 16
       AutoSize = False
@@ -561,7 +561,7 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Label11: TLabel
       Left = 40
-      Top = 144
+      Top = 128
       Width = 128
       Height = 16
       AutoSize = False
@@ -569,7 +569,7 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Label12: TLabel
       Left = 40
-      Top = 168
+      Top = 152
       Width = 128
       Height = 16
       AutoSize = False
@@ -577,10 +577,81 @@ object frmFileRenamer: TfrmFileRenamer
     end
     object Label13: TLabel
       Left = 40
-      Top = 192
+      Top = 176
       Width = 128
       Height = 16
       AutoSize = False
+      Layout = tlCenter
+    end
+    object Image1: TImage
+      Left = 16
+      Top = 200
+      Width = 16
+      Height = 16
+      AutoSize = True
+      Picture.Data = {
+        055449636F6E0000010001001010000001000800680500001600000028000000
+        1000000020000000010008000000000000010000000000000000000000010000
+        0001000000000000000080000080000000808000800000008000800080800000
+        C0C0C000C0DCC000F0CAA60000003E0000005D0000007C0000009B000000BA00
+        0000D9000000F0002424FF004848FF006C6CFF009090FF00B4B4FF0000143E00
+        001E5D0000287C0000329B00003CBA000046D9000055F000246DFF004885FF00
+        6C9DFF0090B5FF00B4CDFF00002A3E00003F5D0000547C0000699B00007EBA00
+        0093D90000AAF00024B6FF0048C2FF006CCEFF0090DAFF00B4E6FF00003E3E00
+        005D5D00007C7C00009B9B0000BABA0000D9D90000F0F00024FFFF0048FFFF00
+        6CFFFF0090FFFF00B4FFFF00003E2A00005D3F00007C5400009B690000BA7E00
+        00D9930000F0AA0024FFB60048FFC2006CFFCE0090FFDA00B4FFE600003E1400
+        005D1E00007C2800009B320000BA3C0000D9460000F0550024FF6D0048FF8500
+        6CFF9D0090FFB500B4FFCD00003E0000005D0000007C0000009B000000BA0000
+        00D9000000F0000024FF240048FF48006CFF6C0090FF9000B4FFB400143E0000
+        1E5D0000287C0000329B00003CBA000046D9000055F000006DFF240085FF4800
+        9DFF6C00B5FF9000CDFFB4002A3E00003F5D0000547C0000699B00007EBA0000
+        93D90000AAF00000B6FF2400C2FF4800CEFF6C00DAFF9000E6FFB4003E3E0000
+        5D5D00007C7C00009B9B0000BABA0000D9D90000F0F00000FFFF2400FFFF4800
+        FFFF6C00FFFF9000FFFFB4003E2A00005D3F00007C5400009B690000BA7E0000
+        D9930000F0AA0000FFB62400FFC24800FFCE6C00FFDA9000FFE6B4003E140000
+        5D1E00007C2800009B320000BA3C0000D9460000F0550000FF6D2400FF854800
+        FF9D6C00FFB59000FFCDB4003E0000005D0000007C0000009B000000BA000000
+        D9000000F0000000FF242400FF484800FF6C6C00FF909000FFB4B4003E001400
+        5D001E007C0028009B003200BA003C00D9004600F0005500FF246D00FF488500
+        FF6C9D00FF90B500FFB4CD003E002A005D003F007C0054009B006900BA007E00
+        D9009300F000AA00FF24B600FF48C200FF6CCE00FF90DA00FFB4E6003E003E00
+        5D005D007C007C009B009B00BA00BA00D900D900F000F000FF24FF00FF48FF00
+        FF6CFF00FF90FF00FFB4FF002A003E003F005D0054007C0069009B007E00BA00
+        9300D900AA00F000B624FF00C248FF00CE6CFF00DA90FF00E6B4FF0014003E00
+        1E005D0028007C0032009B003C00BA004600D9005500F0006D24FF008548FF00
+        9D6CFF00B590FF00CDB4FF0006060600121212001F1F1F002C2C2C0039393900
+        45454500525252005F5F5F006C6C6C007878780085858500929292009F9F9F00
+        ABABAB00B8B8B800C5C5C500D2D2D200DEDEDE00EBEBEB00F8F8F800F0FBFF00
+        A4A0A000808080000000FF0000FF000000FFFF00FF000000FF00FF00FFFF0000
+        FFFFFF0000000000000000000000000000000000F8F3F2F2F2F1F1F1F0F0F0EF
+        00000000F8F3F3F2F2F2F1F1F1F0F0F000000000F8F3F3A4A3A30000F1F1F0F0
+        00000000F8F4F3F3F3F2F2320000000000000000F8F4F4F3F3F3F2F232343932
+        00000000F8F4F4A4A3A3A2A2A132343932F80000F8F6F4F4F4F3F3F3F2F23234
+        390000EDF8F6F6F4F4F4F3F3F3F2F2320000ED05F8F6F6A4A3A3A2A2A1A1F2F2
+        00EDC305F8F5F6F6F6F4F4F4F3F3F3F20005C9C3F8F5F5F6F6F6F4F4F4F3F3F3
+        0005C3C9F8F5F5F5F6F6F6F4F4F4F3F3000005C3F8EEEEEEEEEEEEEEEEEEEEEE
+        0000000500ECF3F3F3F2F2F2F1F1F1EC000000000000ECECECECECECECECEC00
+        00000000800F0000000700000007000000070000000700000003000000010000
+        00000000000000000000000000000000000000000004000000060000800F0000
+        C01F0000}
+    end
+    object Label7: TLabel
+      Left = 40
+      Top = 200
+      Width = 128
+      Height = 16
+      AutoSize = False
+      Layout = tlCenter
+    end
+    object Label14: TLabel
+      Left = 176
+      Top = 200
+      Width = 25
+      Height = 16
+      Alignment = taRightJustify
+      AutoSize = False
+      Caption = '%07'
       Layout = tlCenter
     end
     object Edit1: TEdit
@@ -644,6 +715,9 @@ object frmFileRenamer: TfrmFileRenamer
         item
           Caption = '_Comment'
           Width = 100
+        end
+        item
+          Caption = '_Genre'
         end>
       HideSelection = False
       MultiSelect = True
@@ -1151,6 +1225,10 @@ object frmFileRenamer: TfrmFileRenamer
       Caption = '6'
       ImageIndex = 4
       OnClick = N61Click
+    end
+    object N71: TMenuItem
+      Caption = '7'
+      ImageIndex = 4
     end
   end
 end

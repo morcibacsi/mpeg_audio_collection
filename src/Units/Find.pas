@@ -2,6 +2,7 @@ unit Find;
 
 interface
 
+// MB add unit GlobalMB
 uses
 	Global, SourcePath,
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
@@ -87,6 +88,11 @@ type
     CheckBox10: TCheckBox;
     Image23: TImage;
     ComboBox11: TComboBox;
+// begin MB
+    Image24: TImage;
+    Label7: TLabel;
+    Edit1: TEdit;
+// end MB
 		procedure Button2Click(Sender: TObject);
 		procedure Button1Click(Sender: TObject);
 		procedure FormCreate(Sender: TObject);
@@ -177,7 +183,9 @@ begin
 		TagText[4] := Edit5.Text;
 		TagText[5] := Edit6.Text;
 		TagText[6] := Edit7.Text;
-
+// begin MB    
+    TagText[7] := Edit1.Text;
+// end MB
 		CompareName := CheckBox8.Checked;
 		CompareProperty := CheckBox9.Checked;
     CompareTag := CheckBox10.Checked;
@@ -279,6 +287,9 @@ begin
 	Label4.Caption := GetText(45);
 	Label5.Caption := GetText(46);
 	Label6.Caption := GetText(47);
+// begin MB
+  Label7.Caption := GetText(lngGenre);
+// end MB
 
 	Edit2.Text := TagText[1];
 	Edit3.Text := TagText[2];
@@ -286,6 +297,9 @@ begin
 	Edit5.Text := TagText[4];
 	Edit6.Text := TagText[5];
 	Edit7.Text := TagText[6];
+// begin MB
+  Edit1.Text := TagText[7];
+// end MB
 
 	GroupBox5.Caption := GetText(185);
 	CheckBox8.Caption := GetText(120);
@@ -346,7 +360,9 @@ begin
 											(Trim(Edit4.Text) <> '') or
 											(Trim(Edit5.Text) <> '') or
 											(Trim(Edit6.Text) <> '') or
-											(Trim(Edit7.Text) <> ''));
+											(Trim(Edit7.Text) <> '') or
+                      (Trim(Edit1.Text) <> ''));  // MB add Edit1
+
   Button3.Enabled := Button1.Enabled;
 end;
 

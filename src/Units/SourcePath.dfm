@@ -160,7 +160,7 @@ object frmSourcePath: TfrmSourcePath
     Width = 75
     Height = 17
     Hint = 'Check this if you want the CD to be ejected after scanning'
-    Caption = 'Eject CD'
+    Caption = '_Eject'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 4

@@ -67,7 +67,7 @@ begin
 	GroupBox3.Caption := GetText(168);
   CheckBox1.Caption := GetText(234);
 
-  for Index := 1 to 12 do
+  for Index := 1 to 13 do
   begin
   	case Abs(InfoCol[Index]) div 10000 mod 100 of
   		1: CheckListBox1.Items.Add(GetText(171));
@@ -82,6 +82,7 @@ begin
   		10: CheckListBox1.Items.Add(GetText(177) + ': ' + GetText(45));
   		11: CheckListBox1.Items.Add(GetText(177) + ': ' + GetText(46));
   		12: CheckListBox1.Items.Add(GetText(177) + ': ' + GetText(47));
+      13: CheckListBox1.Items.Add(GetText(177) + ': ' + GetText(lngGenre));
     end;
 
     CheckListBox1.Checked[Index - 1] := InfoCol[Index] > 0;
@@ -107,7 +108,7 @@ procedure TfrmColumnsDialog.Button1Click(Sender: TObject);
 var
 	Index: integer;
 begin
-  for Index := 1 to 12 do
+  for Index := 1 to 13 do
   begin
   	InfoCol[Index] := Longint(CheckListBox1.Items.Objects[Index - 1]);
 		if CheckListBox1.Checked[Index - 1] then InfoCol[Index] := Abs(InfoCol[Index])

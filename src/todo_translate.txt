@@ -1,4 +1,15 @@
 
+ MAC 2.91 beta:
+
+ (+) added:
+239Genre
+240Eject CD
+241Check this if you want the CD to be ejected after scanning
+
+ (*) changed:
+177Tag
+__________________
+
  MAC 2.91 alpha 7:
 
  (*) changed:
