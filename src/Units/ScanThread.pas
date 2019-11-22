@@ -4,7 +4,8 @@ interface
 
 uses
 	Monkey, WAVfile, OggVorbis, TwinVQ, MPEGplus, ID3v2, MPEGaudio, WMAfile,
-  FlacFile, OptimFROG, Global, Classes, StdCtrls,ComCtrls, SysUtils, Masks;
+  FlacFile, OptimFROG, AACfile, Global, Classes, StdCtrls,ComCtrls, SysUtils,
+  Masks;
 
 type
 	TScanThread = class(TThread)
@@ -23,6 +24,7 @@ type
     WAVFile: TWAVfile;
     FlacFile: TFLACFile;
     OfrFile: TOptimFROG;
+    AACfile: TAACfile;
     Monkey: TMonkey;
     ID3v2: TID3v2;
 		VolumeData: DataArray;
@@ -54,7 +56,7 @@ begin
   else
 	FileList.Mask := FileMask + ';' + MPPFileMask + ';*.' + VQFExt + ';*.' +
                    WMAExt + ';*.' + OGGExt + ';*.' + WAVExt + ';' + MonkeyMask +
-                   ';' + FlacMask + ';' + OfrMask;
+                   ';' + FlacMask + ';' + OfrMask + ';' + AacMask;
 
 	MPEGFile := TMPEGaudio.Create;
   MPPFile := TMPEGplus.Create;
@@ -63,6 +65,7 @@ begin
   OGGFile := TOggVorbis.Create;
   WAVFile := TWAVfile.Create;
   FlacFile := TFlacFile.Create;
+  AACfile := TAACfile.Create;
   Monkey := TMonkey.Create;
   OfrFile := TOptimFROG.Create;
   ID3v2 := TID3v2.Create;
@@ -96,6 +99,7 @@ begin
  	MPEGFile.Free;
   MPPFile.Free;
   FlacFile.Free;
+  AACfile.Free;
   VQFFile.Free;
   WMAFile.Free;
   OGGFile.Free;
@@ -186,7 +190,7 @@ begin
 		if Length(CurrentDir) > 3 then CurrentDir := CurrentDir + '\' + CurrentItem
 		else CurrentDir := CurrentDir + CurrentItem;
 
-		Child := Tree.Items.AddChild(Root, CurrentItem);
+		Child := Tree.Items.AddChild(Root, Trim(CurrentItem));
 		DirData := ScanDir(Child, CurrentDir);
 
 		if DirData[4] > 0 then
@@ -212,7 +216,7 @@ begin
 		if Terminated then exit;
 
 		FileList.ItemIndex := Index;
-		CurrentItem := FileList.Items.Strings[Index];
+		CurrentItem := Trim(FileList.Items.Strings[Index]);
 		FLabel.Caption := FLabel.Hint + CurrentItem;
 
 		for Index2 := 1 to 6 do
@@ -249,6 +253,35 @@ begin
       end
       else if ValidFiles then continue;
     end;
+
+
+    if AacMaskObj.Matches(FileList.FileName) then
+    begin
+			AacFile.ReadFromFile(FileList.FileName);
+			FileData[1] := AacFile.FileSize div 1024;
+			if AacFile.Valid then
+			begin
+				FileData[2] := Round(AacFile.Duration);
+				FileData[3] := AacFile.SampleRate div 10;
+        if AacFile.Channels = 1 then FileData[4] := 4;
+        if AacFile.Channels = 2 then FileData[4] := 1;
+        FileData[5] := 45;
+        FileData[6] := 45;
+
+				if AacFile.BitRateTypeID <> AAC_BITRATE_TYPE_CBR then FileData[2] := -FileData[2];
+
+				if (AacFile.ID3v1.Exists) or (AacFile.ID3v2.Exists) or (AacFile.APEtag.Exists) then
+          FileTag := GetFileTag(FileList.FileName, 0, 0);
+
+        if GuessedEncoder then
+          if AACfile.MPEGVersionID = AAC_MPEG_VERSION_UNKNOWN then
+            FileTag[6] := AACfile.Profile
+          else
+            FileTag[6] := AACfile.MPEGVersion + ' ' + AACfile.Profile;
+			end
+			else if ValidFiles then continue;
+    end;
+
 
     if Pos(LowerCase(ExtractFileExt(FileList.FileName)), MPPFileMask) > 0 then
     begin

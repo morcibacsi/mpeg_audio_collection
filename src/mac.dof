@@ -115,7 +115,7 @@ AutoIncBuild=0
 MajorVer=2
 MinorVer=9
 Release=1
-Build=3
+Build=5
 Debug=0
 PreRelease=0
 Special=0
@@ -126,7 +126,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=Jurgen Faul
 FileDescription=MPEG Audio Collection
-FileVersion=2.9.1.3
+FileVersion=2.9.1.5
 InternalName=MAC
 LegalCopyright=Copyright © 2000-2003 by Jurgen Faul
 LegalTrademarks=Trademark ® 2000-2003 by Jurgen Faul

@@ -50,7 +50,7 @@ type
     CompressionID: Byte;
   end;
 
-  { Class TMonkey }
+  { Class TOptimFrog }
   TOptimFrog = class(TObject)
     private
       { Private declarations }
@@ -226,7 +226,7 @@ begin
     { Set read-access, open file and get file length }
     Source := TFileStreamW.Create(FileName, fmOpenRead);
     FFileLength := Source.Size;
-    { Read Monkey's Audio header data }
+    { Read header data }
     Source.Seek(ID3v2.Size, soFromBeginning);
     Source.Read(FHeader, SizeOf(FHeader));
     if FHeader.ID = 'OFR ' then

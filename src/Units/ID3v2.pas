@@ -43,7 +43,7 @@ unit ID3v2;
 interface
 
 uses
-  Classes, SysUtils, WideStrings;
+  Classes, SysUtils;
 
 const
   TAG_VERSION_2_2 = 2;                               { Code for ID3v2.2.x tag }
@@ -87,9 +87,9 @@ type
       { Public declarations }
       constructor Create;                                     { Create object }
       procedure ResetData;                                   { Reset all data }
-      function ReadFromFile(const FileName: WideString): Boolean;  { Load tag }
-      function SaveToFile(const FileName: WideString): Boolean;    { Save tag }
-      function RemoveFromFile(const FileName: WideString): Boolean;{Delete tag}
+      function ReadFromFile(const FileName: string): Boolean;      { Load tag }
+      function SaveToFile(const FileName: string): Boolean;        { Save tag }
+      function RemoveFromFile(const FileName: string): Boolean;  { Delete tag }
       property Exists: Boolean read FExists;              { True if tag found }
       property VersionID: Byte read FVersionID;                { Version code }
       property Size: Integer read FSize;                     { Total tag size }
@@ -164,22 +164,26 @@ type
 
 { ********************* Auxiliary functions & procedures ******************** }
 
-function ReadHeader(const FileName: WideString; var Tag: TagInfo): Boolean;
+function ReadHeader(const FileName: string; var Tag: TagInfo): Boolean;
 var
-  Source: TFileStreamW;
+  SourceFile: file;
   Transferred: Integer;
 begin
-  { Set read-access and open file }
-  Result := false;
-  Source := TFileStreamW.Create(FileName, fmOpenRead);
   try
+    Result := true;
+    { Set read-access and open file }
+    AssignFile(SourceFile, FileName);
+    FileMode := 0;
+    Reset(SourceFile, 1);
     { Read header and get file size }
-    Transferred := Source.Read(Tag, 10);
-    Tag.FileSize := Source.Size;
-    { if transfer is complete }
-    if Transferred >= 10 then Result := true;
-  finally
-    Source.Free;
+    BlockRead(SourceFile, Tag, 10, Transferred);
+    Tag.FileSize := FileSize(SourceFile);
+    CloseFile(SourceFile);
+    { if transfer is not complete }
+    if Transferred < 10 then Result := false;
+  except
+    { Error }
+    Result := false;
   end;
 end;
 
@@ -232,72 +236,74 @@ end;
 
 { --------------------------------------------------------------------------- }
 
-procedure ReadFramesNew(const FileName: WideString; var Tag: TagInfo);
+procedure ReadFramesNew(const FileName: string; var Tag: TagInfo);
 var
-  Source: TFileStreamW;
+  SourceFile: file;
   Frame: FrameHeaderNew;
   Data: array [1..500] of Char;
   DataPosition, DataSize: Integer;
 begin
   { Get information from frames (ID3v2.3.x & ID3v2.4.x) }
-  { Set read-access, open file }
-  Source := TFileStreamW.Create(FileName, fmOpenRead);
   try
-    Source.Seek(10, soFromBeginning);
-    while (Source.Position < GetTagSize(Tag)) and
-          (Source.Position < Source.Size) do
+    { Set read-access, open file }
+    AssignFile(SourceFile, FileName);
+    FileMode := 0;
+    Reset(SourceFile, 1);
+    Seek(SourceFile, 10);
+    while (FilePos(SourceFile) < GetTagSize(Tag)) and (not EOF(SourceFile)) do
     begin
       FillChar(Data, SizeOf(Data), 0);
       { Read frame header and check frame ID }
-      Source.Read(Frame, 10);
+      BlockRead(SourceFile, Frame, 10);
       if not (Frame.ID[1] in ['A'..'Z']) then break;
       { Note data position and determine significant data size }
-      DataPosition := Source.Position;
+      DataPosition := FilePos(SourceFile);
       if Swap32(Frame.Size) > SizeOf(Data) then DataSize := SizeOf(Data)
       else DataSize := Swap32(Frame.Size);
       { Read frame data and set tag item if frame supported }
-      Source.Read(Data, DataSize);
+      BlockRead(SourceFile, Data, DataSize);
       if Frame.Flags and $8000 <> $8000 then SetTagItem(Frame.ID, Data, Tag);
-      Source.Seek(DataPosition + Swap32(Frame.Size), soFromBeginning);
+      Seek(SourceFile, DataPosition + Swap32(Frame.Size));
     end;
-  finally
-    Source.Free;
+    CloseFile(SourceFile);
+  except
   end;
 end;
 
 { --------------------------------------------------------------------------- }
 
-procedure ReadFramesOld(const FileName: WideString; var Tag: TagInfo);
+procedure ReadFramesOld(const FileName: string; var Tag: TagInfo);
 var
-  Source: TFileStreamW;
+  SourceFile: file;
   Frame: FrameHeaderOld;
   Data: array [1..500] of Char;
   DataPosition, FrameSize, DataSize: Integer;
 begin
   { Get information from frames (ID3v2.2.x) }
-  Source := TFileStreamW.Create(FileName, fmOpenRead);
   try
     { Set read-access, open file }
-    Source.Seek(10, soFromBeginning);
-    while (Source.Position < GetTagSize(Tag)) and
-          (Source.Position < Source.Size) do
+    AssignFile(SourceFile, FileName);
+    FileMode := 0;
+    Reset(SourceFile, 1);
+    Seek(SourceFile, 10);
+    while (FilePos(SourceFile) < GetTagSize(Tag)) and (not EOF(SourceFile)) do
     begin
       FillChar(Data, SizeOf(Data), 0);
       { Read frame header and check frame ID }
-      Source.Read(Frame, 6);
+      BlockRead(SourceFile, Frame, 6);
       if not (Frame.ID[1] in ['A'..'Z']) then break;
       { Note data position and determine significant data size }
-      DataPosition := Source.Position;
+      DataPosition := FilePos(SourceFile);
       FrameSize := Frame.Size[1] shl 16 + Frame.Size[2] shl 8 + Frame.Size[3];
       if FrameSize > SizeOf(Data) then DataSize := SizeOf(Data)
       else DataSize := FrameSize;
       { Read frame data and set tag item if frame supported }
-      Source.Read(Data, DataSize);
+      BlockRead(SourceFile, Data, DataSize);
       SetTagItem(Frame.ID, Data, Tag);
-      Source.Seek(DataPosition + FrameSize, soFromBeginning);
+      Seek(SourceFile, DataPosition + FrameSize);
     end;
-  finally
-    Source.Free;
+    CloseFile(SourceFile);
+  except
   end;
 end;
 
@@ -424,7 +430,7 @@ end;
 
 { --------------------------------------------------------------------------- }
 
-function ReplaceTag(const FileName: WideString; TagData: TStream): Boolean;
+function ReplaceTag(const FileName: string; TagData: TStream): Boolean;
 var
   Destination: TFileStream;
 begin
@@ -444,10 +450,10 @@ end;
 
 { --------------------------------------------------------------------------- }
 
-function RebuildFile(const FileName: WideString; TagData: TStream): Boolean;
+function RebuildFile(const FileName: string; TagData: TStream): Boolean;
 var
   Tag: TagInfo;
-  Source, Destination: TFileStreamW;
+  Source, Destination: TFileStream;
   BufferName: string;
 begin
   { Rebuild file with old file data and new tag data (optional) }
@@ -455,11 +461,11 @@ begin
   if (not FileExists(FileName)) or (FileSetAttr(FileName, 0) <> 0) then exit;
   if not ReadHeader(FileName, Tag) then exit;
   if (TagData = nil) and (Tag.ID <> ID3V2_ID) then exit;
-  Source := TFileStreamW.Create(FileName, fmOpenRead);
-  Destination := TFileStreamW.Create(BufferName, fmCreate);
   try
     { Create file streams }
     BufferName := FileName + '~';
+    Source := TFileStream.Create(FileName, fmOpenRead);
+    Destination := TFileStream.Create(BufferName, fmCreate);
     { Copy data blocks }
     if Tag.ID = ID3V2_ID then Source.Seek(GetTagSize(Tag), soFromBeginning);
     if TagData <> nil then Destination.CopyFrom(TagData, 0);
@@ -475,14 +481,12 @@ begin
   except
     { Access error }
     if FileExists(BufferName) then DeleteFile(BufferName);
-    Source.Free;
-    Destination.Free;
   end;
 end;
 
 { --------------------------------------------------------------------------- }
 
-function SaveTag(const FileName: WideString; Tag: TagInfo): Boolean;
+function SaveTag(const FileName: string; Tag: TagInfo): Boolean;
 var
   TagData: TStringStream;
   Iterator, FrameSize: Integer;
@@ -639,7 +643,7 @@ end;
 
 { --------------------------------------------------------------------------- }
 
-function TID3v2.ReadFromFile(const FileName: WideString): Boolean;
+function TID3v2.ReadFromFile(const FileName: string): Boolean;
 var
   Tag: TagInfo;
 begin
@@ -677,7 +681,7 @@ end;
 
 { --------------------------------------------------------------------------- }
 
-function TID3v2.SaveToFile(const FileName: WideString): Boolean;
+function TID3v2.SaveToFile(const FileName: string): Boolean;
 var
   Tag: TagInfo;
 begin
@@ -702,7 +706,7 @@ end;
 
 { --------------------------------------------------------------------------- }
 
-function TID3v2.RemoveFromFile(const FileName: WideString): Boolean;
+function TID3v2.RemoveFromFile(const FileName: string): Boolean;
 begin
   { Remove tag from file }
   Result := RebuildFile(FileName, nil);

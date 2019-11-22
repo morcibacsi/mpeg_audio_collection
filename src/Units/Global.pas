@@ -19,10 +19,10 @@ var
 	AppTitle: string = 'MPEG Audio Collection';
   AppTitleShort: string = 'MAC';
 	////////////////////////////
-	AVersion: string = '2.91 alpha4';
+	AVersion: string = '2.91 alpha5';
   ADate: string = 'July 2003';
 	////////////////////////////
-  AppCopyright: string = 'Freeware, copyright by Jurgen Faul';
+  AppCopyright: string = 'Freeware, copyright by Jurgen Faul && MAC Team';
 	Homepage: string = 'http://sourceforge.net/projects/mac';
 	EMail: string = 'macteam@users.sourceforge.net';
   MACHelpFile: string = 'mac.hlp';
@@ -53,8 +53,19 @@ var
   FlacMaskObj: TMask;
   OfrMask: string = '*.ofr';
   OfrMaskObj: TMask;
+  AacMask: string = '*.aac';
+  AacMaskObj: TMask;
   MonkeyMask: string = '*.mac;*.ape';
 	PlaylistFile: string = 'mac.m3u';
+  CueFile: string = '.cue';
+  PlaylistMask: string = '*.fpl;*.m3u8;*.m3u;*.pls';
+  TextMask: string = '*.txt;*.nfo;*.log';
+  ImageMask: string = '*.ani;*.b3d;*.bmp;*.dib;*.cam;*.clp;*.crw;*.cur;*.dcm;' +
+  '*.acr;*.dcx;*.djvu;*.iw44;*.ecw;*.emf;*.eps;*.fpx;*.fsh;*.g3;*.gif;*.icl;' +
+  '*.ico;*.ics;*.ids;*.iff;*.lbm;*.img;*.jp2;*.jpc;*.j2k;*.jpf;*.jpg;*.jpeg;' +
+  '*.jpe;*.kdc;*.ldf;*.lwf;*.mng;*.jng;*.nlm;*.nol;*.ngg;*.gsm;*.pbm;*.pcd;' +
+  '*.pcx;*.pgm;*.png;*.ppm;*.psd;*.psp;*.ras;*.sun;*.raw;*.rle;*.sff;*.sfw;' +
+  '*.sgi;*.rgb;*.sid;*.swf;*.tga;*.tif;*.tiff;*.wbmp;*.wmf;*.xbm;*.xpm';
 
 	RootD: string;
   FirstDrive: integer;
@@ -628,6 +639,7 @@ begin
     35: Result := 'FLAC (' + IntToStr(Layer) + '-bit)';
     40: Result := 'OptimFROG (' + IntToStr(Layer and $FF) + '-bit ' +
       OFR_COMPRESSION[Layer shr 11] + ')';
+    45: Result := 'AAC';
   else
     Result := '?';
   end;
@@ -872,4 +884,5 @@ end;
 begin
   FlacMaskObj := TMask.Create(FlacMask);
   OfrMaskObj := TMask.Create(OfrMask);
+  AacMaskObj := TMask.Create(AacMask);
 end.

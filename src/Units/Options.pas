@@ -4,7 +4,7 @@ interface
 
 uses
 	FileCtrl, Global, Windows, Messages, SysUtils, Classes, Graphics,
-	Controls, Forms, Dialogs, StdCtrls, ExtCtrls;
+	Controls, Forms, Dialogs, StdCtrls, ExtCtrls, Buttons, SourcePath;
 
 type
   TfrmOptions = class(TForm)
@@ -36,10 +36,14 @@ type
     ImageFoobar: TImage;
     CheckBoxAllFiles: TCheckBox;
     ImageAllFiles: TImage;
+    edtFoobar: TEdit;
+    spdbtnFoobar: TSpeedButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure CheckBoxFoobarClick(Sender: TObject);
+    procedure spdbtnFoobarClick(Sender: TObject);
   private
 		SetOptions: boolean;
 		function GetLangName(FileIndex: longint): string;
@@ -79,6 +83,7 @@ begin
   ValidFiles := CheckBox5.Checked;
   GuessedEncoder := CheckBox4.Checked;
   UseFoobar := CheckBoxFoobar.Checked;
+  FoobarPath := edtFoobar.Text;
   AllFiles := CheckBoxAllFiles.Checked;
 
   if RadioButton2.Checked then PreferTag := 2
@@ -167,9 +172,31 @@ begin
   CheckBox5.Checked := ValidFiles;
   CheckBox4.Checked := GuessedEncoder;
   CheckBoxFoobar.Checked := UseFoobar;
+  edtFoobar.Enabled := UseFoobar;
+  spdbtnFoobar.Enabled := UseFoobar;
+  edtFoobar.Text := FoobarPath;
   CheckBoxAllFiles.Checked := AllFiles;
   if PreferTag = 2 then RadioButton2.Checked := true
   else RadioButton1.Checked := true;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmOptions.CheckBoxFoobarClick(Sender: TObject);
+begin
+  edtFoobar.Enabled := not edtFoobar.Enabled;
+  spdbtnFoobar.Enabled := not spdbtnFoobar.Enabled;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmOptions.spdbtnFoobarClick(Sender: TObject);
+var
+	SourcePath, SourceLabel: string;
+	SourceSerial: longint;
+begin
+  if SourcePathOKfoobar(GetText(238), SourcePath, SourceLabel, SourceSerial) then
+    edtFoobar.Text := SourcePath;
 end;
 
 // -----------------------------------------------------------------------------

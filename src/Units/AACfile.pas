@@ -24,7 +24,7 @@ unit AACfile;
 interface
 
 uses
-  Classes, SysUtils, ID3v1, ID3v2;
+  Classes, SysUtils, ID3v1, ID3v2, APEtag;
 
 const
   { Header type codes }
@@ -80,6 +80,7 @@ type
       FBitRateTypeID: Byte;
       FID3v1: TID3v1;
       FID3v2: TID3v2;
+      FAPEtag: TAPEtag;
       procedure FResetData;
       function FGetHeaderType: string;
       function FGetMPEGVersion: string;
@@ -111,6 +112,7 @@ type
       property Valid: Boolean read FIsValid;             { True if data valid }
       property ID3v1: TID3v1 read FID3v1;                    { ID3v1 tag data }
       property ID3v2: TID3v2 read FID3v2;                    { ID3v2 tag data }
+      property APEtag: TAPEtag read FAPEtag;                   { APE tag data }
   end;
 
 implementation
@@ -153,6 +155,7 @@ begin
   FBitRateTypeID := AAC_BITRATE_TYPE_UNKNOWN;
   FID3v1.ResetData;
   FID3v2.ResetData;
+  FAPEtag.ResetData;
 end;
 
 { --------------------------------------------------------------------------- }
@@ -286,7 +289,9 @@ begin
     else
       FBitRateTypeID := AAC_BITRATE_TYPE_CBR;
     if FBitRateTypeID = AAC_BITRATE_TYPE_CBR then break;
-  until (Frames = 1000) or (Source.Size <= FID3v2.Size + TotalSize);
+  // more accurate
+  //until (Frames = 1000) or (Source.Size <= FID3v2.Size + TotalSize);
+  until (Source.Size <= FID3v2.Size + TotalSize);
   FBitRate := Round(8 * TotalSize / 1024 / Frames * FSampleRate);
 end;
 
@@ -297,6 +302,7 @@ begin
   { Create object }
   FID3v1 := TID3v1.Create;
   FID3v2 := TID3v2.Create;
+  FAPEtag := TAPEtag.Create;
   FResetData;
   inherited;
 end;
@@ -308,6 +314,7 @@ begin
   { Destroy object }
   FID3v1.Free;
   FID3v2.Free;
+  FAPEtag.Free;
   inherited;
 end;
 
@@ -321,7 +328,7 @@ begin
   Result := false;
   FResetData;
   { At first search for tags, then try to recognize header type }
-  if (FID3v2.ReadFromFile(FileName)) and (FID3v1.ReadFromFile(FileName)) then
+  if (FID3v2.ReadFromFile(FileName)) and (FID3v1.ReadFromFile(FileName)) and (FAPEtag.ReadFromFile(FileName)) then
     try
       Source := TFileStream.Create(FileName, fmOpenRead or fmShareDenyWrite);
       FFileSize := Source.Size;

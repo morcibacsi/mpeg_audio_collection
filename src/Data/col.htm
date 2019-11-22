@@ -1,0 +1,171 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>COL file</title>
+</head>
+
+<body>
+
+<table cellSpacing="0" cellPadding="0" border="0" height="1634">
+  <tr>
+    <th vAlign="bottom" height="19"><span lang="en-us">MPEG Audio Collection<br>
+    COL file format</span></th>
+  </tr>
+  <tr>
+    <td height="19">&nbsp;</td>
+  </tr>
+  <tr>
+    <td height="1596"><span lang="en-us">Description for the COL file format 
+    used in MAC 2.9x</span><ul>
+      <li><span lang="en-us">The COL file consists of many Lines (Rows). Each line includes 
+      information about one Object.<br>
+      There are 4 object kinds:</span><ul>
+      <li><span lang="en-us">Collection</span></li>
+      <li><span lang="en-us">Volume</span></li>
+      <li><span lang="en-us">Folder</span></li>
+      <li><span lang="en-us">File</span></li>
+    </ul>
+      </li>
+    </ul>
+    <ul>
+      <li><span lang="en-us">Each object is on an ordained place in the file tree: Level is the 
+      count of symbol #9 (TAB) at the beginning of each line. The first line has 
+      level 0 (no TAB symbol), and so on...</span></li>
+    </ul>
+    <ul>
+      <li><span lang="en-us">Each object kind consists of ordained information Clusters. Each 
+      cluster is separated with one symbol from other neighbour clusters. There 
+      are different symbols for separating.</span></li>
+    </ul>
+    <ul>
+      <li><span lang="en-us">Collection: </span>
+      <ul>
+        <li><span lang="en-us">Symbol #1 </span> </li>
+        <li><span lang="en-us">Size (kilobytes) </span> </li>
+        <li><span lang="en-us">Symbol #2 </span> </li>
+        <li><span lang="en-us">Duration (seconds) </span> </li>
+        <li><span lang="en-us">Symbol #3 </span> </li>
+        <li><span lang="en-us">Volume count </span> </li>
+        <li><span lang="en-us">Symbol #4 </span> </li>
+        <li><span lang="en-us">File count </span> </li>
+        <li><span lang="en-us">Symbol #5 </span> </li>
+        <li><span lang="en-us">Date (last change), the number of days that have passed since 
+        12/30/1899 </span> </li>
+        <li><span lang="en-us">Symbol #6 </span> </li>
+      </ul>
+      </li>
+    </ul>
+    <ul>
+      <li><span lang="en-us">Volume: </span>
+      <ul>
+        <li><span lang="en-us">Name (CD-Label and Path, if not Root) </span> </li>
+        <li><span lang="en-us">Symbol #1 </span> </li>
+        <li><span lang="en-us">Size (kilobytes) </span> </li>
+        <li><span lang="en-us">Symbol #2 </span> </li>
+        <li><span lang="en-us">Duration (seconds) </span> </li>
+        <li><span lang="en-us">Symbol #3 </span> </li>
+        <li><span lang="en-us">Folder count </span> </li>
+        <li><span lang="en-us">Symbol #4 </span> </li>
+        <li><span lang="en-us">File count </span> </li>
+        <li><span lang="en-us">Symbol #5 </span> </li>
+        <li><span lang="en-us">Date (adding to collection), see &quot;last change date&quot;
+        </span> </li>
+        <li><span lang="en-us">Symbol #6 </span> </li>
+        <li><span lang="en-us">Serial number of CD/HDD </span> </li>
+        <li><span lang="en-us">Symbol #7 </span> </li>
+      </ul>
+      </li>
+    </ul>
+    <ul>
+      <li><span lang="en-us">Folder: </span>
+      <ul>
+        <li><span lang="en-us">Name (max. 250 characters) </span> </li>
+        <li><span lang="en-us">Symbol #1 </span> </li>
+        <li><span lang="en-us">Size (kilobytes) </span> </li>
+        <li><span lang="en-us">Symbol #2 </span> </li>
+        <li><span lang="en-us">Duration (seconds) </span> </li>
+        <li><span lang="en-us">Symbol #3 </span> </li>
+        <li><span lang="en-us">Subfolder count </span> </li>
+        <li><span lang="en-us">Symbol #4 </span> </li>
+        <li><span lang="en-us">File count </span> </li>
+        <li><span lang="en-us">Symbol #5 </span> </li>
+      </ul>
+      </li>
+    </ul>
+    <ul>
+      <li><span lang="en-us">File (Song): </span>
+      <ul>
+        <li><span lang="en-us">File name (max. 250 characters) </span> </li>
+        <li><span lang="en-us">Symbol #1 </span> </li>
+        <li><span lang="en-us">Size (kilobytes) </span> </li>
+        <li><span lang="en-us">Symbol #2 </span> </li>
+        <li><span lang="en-us">Duration (seconds), a negative number means &quot;VBR&quot; - coded with 
+        variable bit rate </span> </li>
+        <li><span lang="en-us">Symbol #3 </span> </li>
+        <li><span lang="en-us">Sample Rate (without last 0 - e.g. 4410) </span> </li>
+        <li><span lang="en-us">Symbol #4 </span> </li>
+        <li><span lang="en-us">Kanal mode:</span><ul>
+        <li><span lang="en-us">Stereo = 1</span></li>
+        <li><span lang="en-us">Joint Stereo = 2</span></li>
+        <li><span lang="en-us">Dual Channel = 3</span></li>
+        <li><span lang="en-us">Mono = 4</span></li>
+      </ul>
+        </li>
+        <li><span lang="en-us">Symbol #5 </span> </li>
+        <li><span lang="en-us">MPEG Version:</span><ul>
+        <li><span lang="en-us">Unknown = 0</span></li>
+        <li><span lang="en-us">V1 = 1</span></li>
+        <li><span lang="en-us">V2 = 2</span></li>
+        <li><span lang="en-us">V2.5 = 3</span></li>
+        <li><span lang="en-us">MPEG+ SV4..7 = 
+        4..7</span></li>
+        <li><span lang="en-us">Windows PCM = 9</span></li>
+        <li><span lang="en-us">TwinVQ = 10</span></li>
+        <li><span lang="en-us">Ogg Vorbis = 20</span></li>
+        <li><span lang="en-us">Windows Media Audio = 25</span></li>
+        <li><span lang="en-us">Monkey's Audio = 30</span></li>
+        <li><span lang="en-us">FLAC = 35</span></li>
+      </ul>
+        </li>
+        <li><span lang="en-us">Symbol #6 </span> </li>
+        <li><span lang="en-us">MPEG Layer:</span><ul>
+        <li><span lang="en-us">Unknown = 0</span></li>
+        <li><span lang="en-us">L1..3 = 1..3 or MPEG+ SV7 Profile 1..5 = 
+        1..5</span></li>
+        <li><span lang="en-us">Windows PCM, Monkey's Audio or FLAC = 8, 16 (bit)</span></li>
+        <li><span lang="en-us">TwinVQ = 10</span></li>
+        <li><span lang="en-us">Ogg 
+        Vorbis = 20</span></li>
+        <li><span lang="en-us">Windows Media Audio = 25 </span></li>
+      </ul>
+        </li>
+        <li><span lang="en-us">Symbol #7 </span> </li>
+        <li><span lang="en-us">Symbol #21 </span> </li>
+        <li><span lang="en-us">ID3-tag: Title (can be empty) </span> </li>
+        <li><span lang="en-us">Symbol #22 </span> </li>
+        <li><span lang="en-us">ID3-tag: Artist (can be empty) </span> </li>
+        <li><span lang="en-us">Symbol #23 </span> </li>
+        <li><span lang="en-us">ID3-tag: Album (can be empty) </span> </li>
+        <li><span lang="en-us">Symbol #24 </span> </li>
+        <li><span lang="en-us">ID3-tag: Track number (can be empty) </span> </li>
+        <li><span lang="en-us">Symbol #25 </span> </li>
+        <li><span lang="en-us">ID3-tag: Year (can be empty) </span> </li>
+        <li><span lang="en-us">Symbol #26 </span> </li>
+        <li><span lang="en-us">ID3-tag: Comment (can be empty) </span> </li>
+        <li><span lang="en-us">Symbol #27 </span> </li>
+      </ul>
+      </li>
+    </ul>
+    <ul>
+      <li><span lang="en-us">If there is the symbol #30 at the end of a line - this line is &quot;marked&quot; 
+      (selected)</span></li>
+    </ul>
+    <p><span lang="en-us">Generally:<br>
+    Bit rate = Size(kb) * 8 * 1.024 / Duration(sec)</span></td>
+  </tr>
+</table>
+
+</body>
+
+</html>

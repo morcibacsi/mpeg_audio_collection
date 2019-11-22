@@ -4,7 +4,7 @@ object frmOptions: TfrmOptions
   ActiveControl = Button1
   BorderStyle = bsDialog
   Caption = '_Title'
-  ClientHeight = 378
+  ClientHeight = 408
   ClientWidth = 464
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -98,7 +98,7 @@ object frmOptions: TfrmOptions
   end
   object Button1: TButton
     Left = 368
-    Top = 300
+    Top = 330
     Width = 81
     Height = 25
     Caption = '_OK'
@@ -107,7 +107,7 @@ object frmOptions: TfrmOptions
   end
   object Button2: TButton
     Left = 368
-    Top = 340
+    Top = 370
     Width = 81
     Height = 25
     Cancel = True
@@ -117,7 +117,7 @@ object frmOptions: TfrmOptions
   end
   object GroupBox1: TGroupBox
     Left = 16
-    Top = 226
+    Top = 256
     Width = 337
     Height = 75
     Caption = '_Start'
@@ -247,7 +247,7 @@ object frmOptions: TfrmOptions
   end
   object GroupBox2: TGroupBox
     Left = 16
-    Top = 308
+    Top = 338
     Width = 337
     Height = 57
     Caption = '_Language'
@@ -328,7 +328,7 @@ object frmOptions: TfrmOptions
     Left = 16
     Top = 16
     Width = 337
-    Height = 147
+    Height = 177
     Caption = '_General'
     TabOrder = 2
     object Image5: TImage
@@ -545,7 +545,7 @@ object frmOptions: TfrmOptions
     end
     object ImageAllFiles: TImage
       Left = 17
-      Top = 122
+      Top = 149
       Width = 32
       Height = 32
       AutoSize = True
@@ -596,6 +596,15 @@ object frmOptions: TfrmOptions
         80010000800100008001000080010000800100008003000080070000E00F0000
         E01F0000}
     end
+    object spdbtnFoobar: TSpeedButton
+      Left = 297
+      Top = 119
+      Width = 23
+      Height = 22
+      Caption = '...'
+      Flat = True
+      OnClick = spdbtnFoobarClick
+    end
     object CheckBox3: TCheckBox
       Left = 40
       Top = 24
@@ -627,14 +636,23 @@ object frmOptions: TfrmOptions
       Height = 17
       Caption = '_Use Foobar'
       TabOrder = 3
+      OnClick = CheckBoxFoobarClick
     end
     object CheckBoxAllFiles: TCheckBox
       Left = 40
-      Top = 121
+      Top = 148
       Width = 289
       Height = 17
       Caption = '_All Files'
       TabOrder = 4
+    end
+    object edtFoobar: TEdit
+      Left = 40
+      Top = 119
+      Width = 250
+      Height = 21
+      Enabled = False
+      TabOrder = 5
     end
   end
   object RadioGroup1: TRadioGroup
@@ -647,7 +665,7 @@ object frmOptions: TfrmOptions
   end
   object GroupBox4: TGroupBox
     Left = 16
-    Top = 170
+    Top = 200
     Width = 337
     Height = 49
     Caption = '_Preferred tag'

@@ -2,10 +2,10 @@
 {                                                                             }
 { MPEG Audio Collection (Freeware)                                            }
 {                                                                             }
-{                                                                             }
 { Copyright (c) 2000-2002 by Jurgen Faul                                      }
-{ E-mail: macteam@users.sourceforge.net                                                                     }
-{ http://sourceforge.net/projects/mac                                                                     }
+{ Copyright (c) 2003 by The MAC Team (ErikS & Gambit)                         }
+{ E-mail: macteam@users.sourceforge.net                                       }
+{ http://sourceforge.net/projects/mac                                         }
 {                                                                             }
 { *************************************************************************** }
 
@@ -336,7 +336,10 @@ begin
       Reg.WriteString('LastMacro', LastMacro);
 
       Reg.WriteBool('GuessedEncoder', GuessedEncoder);
+
       Reg.WriteBool('UseFoobar', UseFoobar);
+      Reg.WriteString('FoobarPath', FoobarPath);
+
       Reg.WriteBool('AllFiles', AllFiles);
       Reg.WriteInteger('PreferTag', PreferTag);
 
@@ -453,6 +456,7 @@ begin
 
       GuessedEncoder := Reg.ReadBool('GuessedEncoder');
       UseFoobar := Reg.ReadBool('UseFoobar');
+      FoobarPath := Reg.ReadString('FoobarPath');
       AllFiles := Reg.ReadBool('AllFiles');
       PreferTag := Reg.ReadInteger('PreferTag');
 
@@ -464,6 +468,8 @@ begin
 	Reg.CloseKey;
 	Reg.Free;
 
+  if FoobarPath = '' then
+  begin
   // Gambit - reads foobar path
   Reg2 := TRegistry.Create(KEY_READ);
   try
@@ -473,6 +479,7 @@ begin
     FoobarPath := Reg2.ReadString('InstallDir');
   finally
     Reg2.Free;
+  end;
   end;
 end;
 
@@ -741,7 +748,7 @@ end;
 procedure TfrmMain.UpdateListView;
 var
 	Index, BitRate: longint;
-	Line, ItemText: string;
+	Line, ItemText, ItemExtension, SupportedExtension: string;
 	ListItem: TListItem;
 	Child: TTreeNode;
 	FileTag: TagArray;
@@ -770,8 +777,29 @@ begin
 			FileTag := ExtractTag(Line);
       FileData := ExtractData(Line);
 
-			if Child.HasChildren then ListItem.ImageIndex := 2
-			else ListItem.ImageIndex := 4;
+			if Child.HasChildren then
+        ListItem.ImageIndex := 2
+			else
+      begin
+        ItemExtension := '';
+        ItemExtension := LowerCase(ExtractFileExt(ExtractName(Line)));
+        SupportedExtension := FileMask + ';' + MPPFileMask + ';*.' + VQFExt +
+        ';*.' + WMAExt + ';*.' + OGGExt + ';*.' + WAVExt + ';' + MonkeyMask +
+        ';' + FlacMask + ';' + OfrMask + ';' + AacMask;;
+
+        if Pos(ItemExtension, SupportedExtension) > 0 then
+          ListItem.ImageIndex := 4
+        else if ItemExtension = CueFile then
+          ListItem.ImageIndex := 7
+        else if Pos(ItemExtension, PlaylistMask) > 0 then
+          ListItem.ImageIndex := 9
+        else if Pos(ItemExtension, TextMask) > 0 then
+          ListItem.ImageIndex := 10
+        else if Pos(ItemExtension, ImageMask) > 0 then
+          ListItem.ImageIndex := 11
+        else
+          ListItem.ImageIndex := 8;
+      end;
 
       for Index := 1 to ListView1.Columns.Count - 1 do
       begin
@@ -2154,7 +2182,7 @@ begin
     if ErrorMsg = '' then
      	try
        	TempList.Items.SaveToFile(RootD + PlaylistFile);
-        if (UseFoobar) and (FoobarPath <> '') then
+        if (UseFoobar) and (FileExists(FoobarPath + '\foobar2000.exe')) then
           ShellExecute(Handle, nil, PChar('"' + FoobarPath + '\foobar2000.exe"'), PChar('"' + RootD + PlaylistFile + '"'), nil, SW_SHOW)
         else
           ShellExecute(Handle, 'open', PChar(RootD + PlaylistFile), nil, nil, SW_SHOW);
@@ -2185,7 +2213,7 @@ begin
     if ErrorMsg = '' then
      	try
        	TempList.Items.SaveToFile(RootD + PlaylistFile);
-        if (UseFoobar) and (FoobarPath <> '') then
+        if (UseFoobar) and (FileExists(FoobarPath + '\foobar2000.exe')) then
           ShellExecute(Handle, nil, PChar('"' + FoobarPath + '\foobar2000.exe"'), PChar('/add "' + RootD + PlaylistFile + '"'), nil, SW_SHOW)
         else
           ShellExecute(Handle, 'enqueue', PChar(RootD + PlaylistFile), nil, nil, SW_SHOW);

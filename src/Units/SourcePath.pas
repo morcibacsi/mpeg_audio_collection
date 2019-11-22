@@ -31,6 +31,7 @@ type
 	end;
 
 function SourcePathOK(WTitle: string; var SPath, SLabel: string; var SSerial: longint): boolean;
+function SourcePathOKfoobar(WTitle: string; var SPath, SLabel: string; var SSerial: longint): boolean;
 
 implementation
 
@@ -48,6 +49,39 @@ begin
 			SourceOK := false;
 
 			ShowModal;
+
+			Result := SourceOK;
+			SPath := SourcePath;
+			SLabel := SourceLabel;
+			SSerial := SourceSerial;
+		end;
+		finally Release;
+	end;
+end;
+
+// -----------------------------------------------------------------------------
+
+function SourcePathOKfoobar(WTitle: string; var SPath, SLabel:  string; var SSerial: longint): boolean;
+var
+	LastAddDirNotFoobar : String;
+begin
+	with TfrmSourcePath.Create(Application) do
+		try
+		begin
+    	UserVolumeLabel := '';
+			Caption := WTitle;
+			SourceOK := false;
+
+      GroupBox2.Visible := False;
+      GroupBox1.Height := GroupBox1.Height + 72;
+      FolderTree1.Height := FolderTree1.Height + 72;
+
+      LastAddDirNotFoobar := LastAddDir;
+      FolderTree1.SetDirectory(FoobarPath);
+
+			ShowModal;
+
+      LastAddDir := LastAddDirNotFoobar;
 
 			Result := SourceOK;
 			SPath := SourcePath;

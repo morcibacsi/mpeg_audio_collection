@@ -1,0 +1,25 @@
+
+MPEG Audio Collection 2.91 alpha 5 (Jul-25-2003):
+ - AAC support (not final yet)
+ - new file info dialog window
+ - different icons for different file types
+ - yet another chapter in the never-ending-foobar-option story
+ - updated Italian language file
+
+MPEG Audio Collection 2.91 alpha 4 (Jul-11-2003):
+ - OptimFROG support
+ - updated Swedish, Spanish and French language files
+
+MPEG Audio Collection 2.91 alpha 3 (Jul-10-2003):
+ - FLAC support
+ - option to include all files to collection
+ - some minor fixes
+
+MPEG Audio Collection 2.91 alpha 2 (Jun-29-2003):
+ - reads ape tags from mp3 files
+ - option to use foobar2000 for playing
+
+MPEG Audio Collection 2.91 alpha 1 (Jun-11-2003):
+ - source is cleaned up a bit
+ - mpc support for SV 7.1 and all profiles
+ - XP Themes support

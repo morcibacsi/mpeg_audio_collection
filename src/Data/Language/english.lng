@@ -60,18 +60,18 @@
 059Read data
 060Build collection
 061Refresh window
-062Mb
+062MB
 063
 064H:M:S
 065ABR
 066VBR
-067Kbit/s
+067kbit/s
 068Folder(s)
 069File(s)
 070Hz
 071Stereo
-072Joint stereo
-073Dual channel
+072Joint Stereo
+073Dual Channel
 074Mono
 075MPEG
 076Layer
@@ -235,5 +235,7 @@
 234Auto size
 235Use foobar2000 for playing
 236Include all files in collection
+237Copy To Clipboard
+238Where is foobar2000?
 >>>Translation by Jurgen Faul
 >>>Correction by Joerg Walther
