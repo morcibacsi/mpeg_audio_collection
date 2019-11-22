@@ -15,6 +15,7 @@ type
 		UpdateInfo: boolean;
 		SourceLabel: string;
 		SourceSerial: longint;
+    SourceType: Integer;
 		VLabel, DLabel, FLabel: TLabel;
 		MPEGFile: TMPEGaudio;
     MPPFile: TMPEGplus;
@@ -80,7 +81,7 @@ var
 	Index: longint;
 	VolumeNode: TTreeNode;
 begin
-	if not VolumeDataOK(SourcePath[1], SourceLabel, SourceSerial) then exit;
+	if not VolumeDataOK(SourcePath[1], SourceLabel, SourceSerial, SourceType) then exit;
 
   if UserVolumeLabel <> '' then SourceLabel := UserVolumeLabel;
 	if Length(SourcePath) > 3 then
@@ -218,6 +219,7 @@ begin
 		FileList.ItemIndex := Index;
 		CurrentItem := Trim(FileList.Items.Strings[Index]);
 		FLabel.Caption := FLabel.Hint + CurrentItem;
+    
 
 		for Index2 := 1 to 6 do
 		begin

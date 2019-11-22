@@ -16,6 +16,7 @@ type
     FolderTree1: TFolderTree;
     GroupBox2: TGroupBox;
     Edit1: TEdit;
+    ChckBxEject: TCheckBox;
 		procedure Button2Click(Sender: TObject);
 		procedure Button1Click(Sender: TObject);
 		procedure FormCreate(Sender: TObject);
@@ -26,11 +27,12 @@ type
 		SourcePath: string;
 		SourceLabel: string;
 		SourceSerial: longint;
+    SourceType: Integer;
 		SourceOK: boolean;
     procedure DrawLabel;
 	end;
 
-function SourcePathOK(WTitle: string; var SPath, SLabel: string; var SSerial: longint): boolean;
+function SourcePathOK(WTitle: string; var SPath, SLabel: string; var SSerial: longint; var SType: Integer): boolean;
 function SourcePathOKfoobar(WTitle: string; var SPath, SLabel: string; var SSerial: longint): boolean;
 
 implementation
@@ -39,7 +41,7 @@ implementation
 
 // -----------------------------------------------------------------------------
 
-function SourcePathOK(WTitle: string; var SPath, SLabel:  string; var SSerial: longint): boolean;
+function SourcePathOK(WTitle: string; var SPath, SLabel:  string; var SSerial: longint; var SType: Integer): boolean;
 begin
 	with TfrmSourcePath.Create(Application) do
 		try
@@ -54,6 +56,7 @@ begin
 			SPath := SourcePath;
 			SLabel := SourceLabel;
 			SSerial := SourceSerial;
+      SType := SourceType;
 		end;
 		finally Release;
 	end;
@@ -103,8 +106,11 @@ end;
 
 procedure TfrmSourcePath.Button1Click(Sender: TObject);
 begin
+
+  EjectCD := ChckBxEject.Checked;
+
 	if (DirectoryExists(FolderTree1.Directory)) and
-	  (VolumeDataOK(FolderTree1.Directory[1], SourceLabel, SourceSerial)) then
+	  (VolumeDataOK(FolderTree1.Directory[1], SourceLabel, SourceSerial, SourceType)) then
 	begin
 		SourceOK := true;
 
@@ -142,6 +148,8 @@ begin
   end;
 
 	FolderTree1.SetDirectory(LastAddDir);
+
+  ChckBxEject.Checked := EjectCD;
 end;
 
 // -----------------------------------------------------------------------------
@@ -150,9 +158,10 @@ procedure TfrmSourcePath.DrawLabel;
 var
 	SL: string;
   SS: longint;
+  ST: Integer;
 begin
 	if (DirectoryExists(FolderTree1.Directory)) and
-	  (VolumeDataOK(FolderTree1.Directory[1], SL, SS)) then
+	  (VolumeDataOK(FolderTree1.Directory[1], SL, SS, ST)) then
   begin
     Edit1.Text := SL;
     if (FolderTree1.Selected <> nil) and (FolderTree1.Selected.Level <> 2) then

@@ -5,7 +5,7 @@ interface
 uses
 	Global, WaitWindow, ProgressWindow, SysUtils, MessageDialog, Windows,
 	Classes, Forms, ImgList, Controls, StdCtrls, ComCtrls, ExtCtrls, Graphics,
-  Dialogs;
+  Dialogs, Menus, ShellAPI;
 
 type
 	TfrmTagResults = class(TForm)
@@ -18,6 +18,12 @@ type
     SaveDialog1: TSaveDialog;
     Button3: TButton;
     StatusBar1: TStatusBar;
+    pmnSearch: TPopupMenu;
+    Play1: TMenuItem;
+    Enqueue1: TMenuItem;
+    Playlist1: TMenuItem;
+    N4: TMenuItem;
+    Information1: TMenuItem;
 		procedure Button1Click(Sender: TObject);
     procedure ListView1DblClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -28,15 +34,25 @@ type
     procedure ListView1ColumnClick(Sender: TObject; Column: TListColumn);
     procedure ListView1Compare(Sender: TObject; Item1, Item2: TListItem;
       Data: Integer; var Compare: Integer);
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure pmnSearchPopup(Sender: TObject);
+    procedure Play1Click(Sender: TObject);
+    procedure Enqueue1Click(Sender: TObject);
+    procedure Playlist1Click(Sender: TObject);
 	private
   	FindItem: TTreeNode;
     SourcePath: string;
     function SaveFoundItemsOK(FName: string): boolean;
+
+    function GetSelectedNode: TTreeNode;
 	end;
 
 function ShowTagResults(SPath: string; GD, HT: boolean): TTreeNode;
 
 implementation
+
+uses Main;
 
 {$R *.DFM}
 
@@ -270,6 +286,193 @@ begin
 	if Abs(Tag) = 1 then Compare := AnsiCompareText(Item1.Caption,Item2.Caption);
   if Abs(Tag) > 1 then Compare := AnsiCompareText(Item1.SubItems.Strings[Abs(Tag) - 2],Item2.SubItems.Strings[Abs(Tag) - 2]);
   if Tag < 0 then Compare := -Compare;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmTagResults.FormCreate(Sender: TObject);
+begin
+if UseWindowSettings then
+begin
+  if SearchTop > 0 then	Top := SearchTop;
+	if SearchLeft > 0 then	Left := SearchLeft;
+	if SearchHeight > 239 then	Height := SearchHeight;
+	if SearchWidth > 319 then	Width := SearchWidth;
+end;
+
+	Play1.Caption := GetText(152);
+	Enqueue1.Caption := GetText(153);
+	Playlist1.Caption := GetText(154);
+  Information1.Caption := GetText(52);
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmTagResults.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  SearchTop := Top;
+	SearchLeft := Left;
+	SearchHeight := Height;
+	SearchWidth := Width;
+end;
+
+// -----------------------------------------------------------------------------
+
+function TfrmTagResults.GetSelectedNode: TTreeNode;
+var
+	Index, Value: integer;
+begin
+	Result := nil;
+  frmMain.ListBox4.Items.Clear;
+
+	if ActiveControl = ListView1 then
+   	for Index := 0 to ListView1.Items.Count - 1 do
+     	if ListView1.Items[Index].Selected then
+      begin
+				Result := ListView1.Items[Index].Data;
+		    Value := frmMain.ListBox4.Items.Add(Result.Text);
+		    frmMain.ListBox4.Items.Objects[Value] := Result;
+     	end;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmTagResults.pmnSearchPopup(Sender: TObject);
+var
+  SelNode: TTreeNode;
+begin
+
+	SelNode := GetSelectedNode;
+
+	if SelNode <> nil then
+	begin
+		Play1.Visible := true;
+		Enqueue1.Visible := true;
+		N4.Visible := true;
+    //if frmMain.ListBox4.Items.Count = 1 then Information1.Visible := true;
+    //if (SelNode.HasChildren) or (frmMain.ListBox4.Items.Count > 1) then Playlist1.Visible := true;
+	end;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmTagResults.Play1Click(Sender: TObject);
+var
+	SelectedNode: TTreeNode;
+  ErrorMsg: string;
+begin
+	SelectedNode := GetSelectedNode;
+	if SelectedNode <> nil then
+  begin
+  	ShowWaitWindow(GetText(155));
+    SetWaitWindowText(GetText(156) + '...');
+    TempList.Sorted := false;
+  	ErrorMsg := frmMain.CreatePlayList(SelectedNode, TempList);
+    CloseWaitWindow;
+
+    if ErrorMsg = '' then
+     	try
+       	TempList.Items.SaveToFile(RootD + PlaylistFile);
+        if (UseFoobar) and (FileExists(FoobarPath + '\foobar2000.exe')) then
+          ShellExecute(Handle, nil, PChar('"' + FoobarPath + '\foobar2000.exe"'), PChar('"' + RootD + PlaylistFile + '"'), nil, SW_SHOW)
+        else
+          ShellExecute(Handle, 'open', PChar(RootD + PlaylistFile), nil, nil, SW_SHOW);
+      except
+       	Dialog(GetText(157) + ': ' + RootD + PlaylistFile, GetText(51), GetText(54), '', '', 1, 2);
+      end
+    else Dialog(ErrorMsg, GetText(51), GetText(54), '', '', 1, 2);
+		TempList.Clear;
+  end;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmTagResults.Enqueue1Click(Sender: TObject);
+var
+	SelectedNode: TTreeNode;
+  ErrorMsg: string;
+begin
+	SelectedNode := GetSelectedNode;
+	if SelectedNode <> nil then
+  begin
+  	ShowWaitWindow(GetText(155));
+    SetWaitWindowText(GetText(156) + '...');
+    TempList.Sorted := false;
+  	ErrorMsg := frmMain.CreatePlayList(SelectedNode, TempList);
+    CloseWaitWindow;
+
+    if ErrorMsg = '' then
+     	try
+       	TempList.Items.SaveToFile(RootD + PlaylistFile);
+        if (UseFoobar) and (FileExists(FoobarPath + '\foobar2000.exe')) then
+          ShellExecute(Handle, nil, PChar('"' + FoobarPath + '\foobar2000.exe"'), PChar('/add "' + RootD + PlaylistFile + '"'), nil, SW_SHOW)
+        else
+          ShellExecute(Handle, 'enqueue', PChar(RootD + PlaylistFile), nil, nil, SW_SHOW);
+      except
+       	Dialog(GetText(157) + ': ' + RootD + PlaylistFile, GetText(51), GetText(54), '', '', 1, 2);
+      end
+    else Dialog(ErrorMsg, GetText(51), GetText(54), '', '', 1, 2);
+		TempList.Clear;
+  end;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TfrmTagResults.Playlist1Click(Sender: TObject);
+var
+	SelectedNode: TTreeNode;
+	FileName, ErrorMsg: string;
+  Index: integer;
+begin
+	SelectedNode := GetSelectedNode;
+
+	if SelectedNode <> nil then
+	begin
+		FileName := ExtractName(SelectedNode.Text);
+		Delete(FileName, 1, LastDelimiter('\', FileName));
+
+		SaveDialog1.Title := GetText(154);
+		SaveDialog1.DefaultExt := PlaylistExt1;
+		SaveDialog1.Filter := GetText(162) + ' (*.' + PlaylistExt1 + ', *.' + PlaylistExt2 + ')|*.' + PlaylistExt1 + ';*.' + PlaylistExt2;
+
+		SaveDialog1.InitialDir := PlayListSaveDir;
+    if frmMain.ListBox4.Items.Count > 1 then FileName := '';
+		SaveDialog1.FileName := FileName;
+		if SaveDialog1.Execute then
+		begin
+			PlayListSaveDir := ExtractFilePath(SaveDialog1.FileName);
+
+      Repaint;
+	  	ShowWaitWindow(GetText(155));
+  	  SetWaitWindowText(GetText(156) + '...');
+    	TempList.Sorted := false;
+	  	ErrorMsg := frmMain.CreatePlayList(SelectedNode, TempList);
+
+	    if ErrorMsg = '' then
+      	try
+          for Index := 0 to TempList.Items.Count - 1 do
+	          if Pos(LowerCase(PlayListSaveDir), LowerCase(TempList.Items.Strings[Index])) = 1 then
+  	        begin
+    	      	FileName := TempList.Items.Strings[Index];
+              Delete(FileName, 1, Length(PlayListSaveDir));
+              TempList.Items.Strings[Index] := FileName;
+      	    end;
+
+        	TempList.Items.SaveToFile(SaveDialog1.FileName);
+          CloseWaitWindow;
+        except
+        	CloseWaitWindow;
+        	Dialog(GetText(157) + ': ' + SaveDialog1.FileName, GetText(51), GetText(54), '', '', 1, 2);
+        end
+  	  else
+      begin
+      	CloseWaitWindow;
+      	Dialog(ErrorMsg, GetText(51), GetText(54), '', '', 1, 2);
+      end;
+			TempList.Clear;
+		end;
+	end;
 end;
 
 // -----------------------------------------------------------------------------

@@ -363,8 +363,9 @@ procedure TfrmFind.Button3Click(Sender: TObject);
 var
 	SourcePath, SourceLabel: string;
 	SourceSerial: longint;
+  SourceType: Integer;
 begin
-	if SourcePathOK(GetText(17), SourcePath, SourceLabel, SourceSerial) then
+	if SourcePathOK(GetText(17), SourcePath, SourceLabel, SourceSerial, SourceType) then
 	begin
 		SearchArea := SourcePath;
 		StartSearch;

@@ -76,12 +76,13 @@ var
 	Node: TTreeNode;
   DLabel, VLabel: string;
   DSerial, VSerial: longint;
+  DType, VType: Integer;
   NodeData: DataArray;
 begin
 	Result := '';
   Node := Tree.Items[0];
 
-  if VolumeDataOK(DriveChar, DLabel, DSerial) then
+  if VolumeDataOK(DriveChar, DLabel, DSerial, DType) then
   begin
   	Result := DLabel;
   	if not Node.HasChildren then exit;

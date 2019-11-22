@@ -16,7 +16,8 @@ object frmPropertyResults: TfrmPropertyResults
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  Position = poMainFormCenter
+  OnClose = FormClose
+  OnCreate = FormCreate
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
@@ -144,7 +145,9 @@ object frmPropertyResults: TfrmPropertyResults
           Width = 110
         end>
       IconOptions.WrapText = False
+      MultiSelect = True
       ReadOnly = True
+      PopupMenu = pmnSearch
       SmallImages = ImageList1
       TabOrder = 0
       ViewStyle = vsReport
@@ -340,5 +343,37 @@ object frmPropertyResults: TfrmPropertyResults
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
     Left = 544
     Top = 48
+  end
+  object pmnSearch: TPopupMenu
+    MenuAnimation = [maLeftToRight, maTopToBottom]
+    OnPopup = pmnSearchPopup
+    Left = 544
+    Top = 80
+    object Play1: TMenuItem
+      Caption = '_Play'
+      ImageIndex = 21
+      ShortCut = 116
+      OnClick = Play1Click
+    end
+    object Enqueue1: TMenuItem
+      Caption = '_Enqueue'
+      ImageIndex = 22
+      ShortCut = 117
+      OnClick = Enqueue1Click
+    end
+    object Playlist1: TMenuItem
+      Caption = '_Playlist'
+      Visible = False
+      OnClick = Playlist1Click
+    end
+    object N4: TMenuItem
+      Caption = '-'
+      Visible = False
+    end
+    object Information1: TMenuItem
+      Caption = '_Information'
+      ShortCut = 118
+      Visible = False
+    end
   end
 end

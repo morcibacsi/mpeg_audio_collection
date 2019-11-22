@@ -1,4 +1,12 @@
 
+MPEG Audio Collection 2.91 alpha 6 a.k.a. "The Futurama Edition" (Aug-15-2003):
+ - more new icons (thanks to SacRat, Jan S. and M. Blake)
+ - fixed the bug when closing the scanning window
+ - search window position and size are now saved
+ - right click menu added to the search window
+ - added option to eject the cd after scanning
+ - arabic language updated
+
 MPEG Audio Collection 2.91 alpha 5 (Jul-25-2003):
  - AAC support (not final yet)
  - new file info dialog window

@@ -15,12 +15,12 @@ type
   RowColIndexArray = array [1..16] of integer;
 
 var
-	AuthorName: string = 'Jurgen Faul';
+	AuthorName: string = 'MAC Team';
 	AppTitle: string = 'MPEG Audio Collection';
   AppTitleShort: string = 'MAC';
 	////////////////////////////
-	AVersion: string = '2.91 alpha5';
-  ADate: string = 'July 2003';
+	AVersion: string = '2.91 alpha6';
+  ADate: string = 'August 2003';
 	////////////////////////////
   AppCopyright: string = 'Freeware, copyright by Jurgen Faul && MAC Team';
 	Homepage: string = 'http://sourceforge.net/projects/mac';
@@ -60,6 +60,12 @@ var
   CueFile: string = '.cue';
   PlaylistMask: string = '*.fpl;*.m3u8;*.m3u;*.pls';
   TextMask: string = '*.txt;*.nfo;*.log';
+  ExeMask: string = '*.exe;*.com';
+  ComprMask: string = '*.001;*.7z;*.ace;*.arj;*.bz;*.bz2;*.cab;*.cpio;*.deb;' +
+  '*.gz;*.jar;*.lha;*.lzh;*.rar;*.rpm;*.tar;*.tbz;*.tbz2;*.tgz;*.uu;*.uue;*.xxe;*.zip';
+  DllMask: string = '*.dll;*.sys;*.drv;*.ocx;*.cpl;*.vxd';
+  IniMask: string = '*.inf;*.ini;*.cfg';
+  BatMask: string = '*.bat';
   ImageMask: string = '*.ani;*.b3d;*.bmp;*.dib;*.cam;*.clp;*.crw;*.cur;*.dcm;' +
   '*.acr;*.dcx;*.djvu;*.iw44;*.ecw;*.emf;*.eps;*.fpx;*.fsh;*.g3;*.gif;*.icl;' +
   '*.ico;*.ics;*.ids;*.iff;*.lbm;*.img;*.jp2;*.jpc;*.j2k;*.jpf;*.jpg;*.jpeg;' +
@@ -159,6 +165,11 @@ var
 
   AppState: integer = 0;
 
+  SearchTop : Integer;
+  SearchLeft : Integer;
+  SearchHeight : Integer;
+  SearchWidth : Integer;
+
   LastMacro: string = '%04 - %02 - %01';
 
   UserVolumeLabel: string;
@@ -173,7 +184,17 @@ var
 
   ColumnAutoSize: boolean = false;
 
+  EjectCD: Boolean = False;
+
 const
+  { Volume type IDs }
+  VOLUME_TYPE_REMOVABLE = 1;                                       { Diskette }
+  VOLUME_TYPE_FIXED = 2;                                                { HDD }
+  VOLUME_TYPE_REMOTE = 3;                                           { Network }
+  VOLUME_TYPE_CDROM = 4;                                        { CD-ROM disk }
+  VOLUME_TYPE_RAM = 5;                                             { RAM disk }
+  VOLUME_TYPE_AUDIO_CD = 6;                                        { Audio CD }
+
 	MAX_DEFAULT_FILTER_ITEMS = 9;
   DEFAULT_FILTER: array [1..MAX_DEFAULT_FILTER_ITEMS, 1..2] of string = (
   	('\', ''),
@@ -226,11 +247,12 @@ function TextFilter(Source: string; Limit: integer): string;
 function GetMPEGType(Version, Layer: integer): string;
 function GetNewFileName(const OldName: string; Tag: TagArray; Macro: string; Filter: TListView): string;
 function GetFileTag(const FileName: string; LengthLimit: integer; Number: integer): TagArray;
-function VolumeDataOK(Drive: Char; var VLabel: string; var VSerial: longint): boolean;
+function VolumeDataOK(Drive: Char; var VLabel: string; var VSerial: longint; var VType: Integer): boolean;
 function GetVolumeLabel(Drive: Char): String;
 
 // Gambit
 function GetMPCVersion(VersionNumber: Integer): String;
+
 
 implementation
 
@@ -818,7 +840,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-function VolumeDataOK(Drive: Char; var VLabel: string; var VSerial: longint): boolean;
+function VolumeDataOK(Drive: Char; var VLabel: string; var VSerial: longint; var VType: Integer): boolean;
 var
 	SearchString: string[7];
 	Buffer: array[0..255] of char;
@@ -829,6 +851,26 @@ begin
 	begin
 		VLabel := buffer;
 		VSerial := a;
+
+    if (SearchString[1] <> '\') or (SearchString[2] <> '\') then
+    begin
+      case GetDriveType(@SearchString[1]) of
+        DRIVE_REMOVABLE: VType := VOLUME_TYPE_REMOVABLE;
+        DRIVE_FIXED: VType := VOLUME_TYPE_FIXED;
+        DRIVE_REMOTE: VType := VOLUME_TYPE_REMOTE;
+        DRIVE_CDROM: VType := VOLUME_TYPE_CDROM;
+        DRIVE_RAMDISK: VType := VOLUME_TYPE_RAM;
+      end;
+      (*
+      { If Audio CD }
+      if (VType = VOLUME_TYPE_CDROM) and (FileTExt = '.cda') then
+        VType := VOLUME_TYPE_AUDIO_CD;
+      *)
+    end
+    else
+      { Network drive }
+      VType := VOLUME_TYPE_REMOTE;
+
 		Result := true;
 	end
 	else Result := false;

@@ -154,4 +154,15 @@ object frmSourcePath: TfrmSourcePath
       OnKeyDown = Edit1KeyDown
     end
   end
+  object ChckBxEject: TCheckBox
+    Left = 306
+    Top = 230
+    Width = 75
+    Height = 17
+    Hint = 'Check this if you want the CD to be ejected after scanning'
+    Caption = 'Eject CD'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 4
+  end
 end

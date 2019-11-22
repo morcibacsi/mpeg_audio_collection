@@ -1886,7 +1886,7 @@ object frmFileInfo: TfrmFileInfo
       Height = 19
       BevelKind = bkFlat
       BorderStyle = bsNone
-      Color = clBtnFace
+      Color = clSilver
       ReadOnly = True
       TabOrder = 0
       OnEnter = edtTitleEnter
@@ -1900,7 +1900,7 @@ object frmFileInfo: TfrmFileInfo
       Height = 19
       BevelKind = bkFlat
       BorderStyle = bsNone
-      Color = clBtnFace
+      Color = clSilver
       ReadOnly = True
       TabOrder = 1
       OnEnter = edtArtistEnter
@@ -1914,7 +1914,7 @@ object frmFileInfo: TfrmFileInfo
       Height = 19
       BevelKind = bkFlat
       BorderStyle = bsNone
-      Color = clBtnFace
+      Color = clSilver
       ReadOnly = True
       TabOrder = 2
       OnEnter = edtAlbumEnter
@@ -1928,7 +1928,7 @@ object frmFileInfo: TfrmFileInfo
       Height = 19
       BevelKind = bkFlat
       BorderStyle = bsNone
-      Color = clBtnFace
+      Color = clSilver
       ReadOnly = True
       TabOrder = 3
       OnEnter = edtTrackEnter
@@ -1942,7 +1942,7 @@ object frmFileInfo: TfrmFileInfo
       Height = 19
       BevelKind = bkFlat
       BorderStyle = bsNone
-      Color = clBtnFace
+      Color = clSilver
       ReadOnly = True
       TabOrder = 4
       OnEnter = edtYearEnter
@@ -1956,7 +1956,7 @@ object frmFileInfo: TfrmFileInfo
       Height = 19
       BevelKind = bkFlat
       BorderStyle = bsNone
-      Color = clBtnFace
+      Color = clSilver
       ReadOnly = True
       TabOrder = 5
       OnEnter = edtCommentEnter

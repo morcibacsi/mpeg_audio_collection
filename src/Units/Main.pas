@@ -191,7 +191,11 @@ type
     procedure Filerenamer1Click(Sender: TObject);
     procedure Copy1Click(Sender: TObject);
     procedure FormPaint(Sender: TObject);
+
+    function CreatePlayList(SNode: TTreeNode; PlayList: TListBox): string;
+
 	private
+    function GetSelectedNode: TTreeNode;
 		procedure SetCaptions;
 		procedure ShowTextFile(FileName: string);
 		function QuestionForSaveCollection: byte;
@@ -212,8 +216,6 @@ type
 		procedure WriteSettings;
 		procedure ReadSettings;
 		function ConvertOK(FileName: string): boolean;
-		function CreatePlayList(SNode: TTreeNode; PlayList: TListBox): string;
-		function GetSelectedNode: TTreeNode;
 		procedure UpdateVolume(SourcePath: string; UpdatedNode: TTreeNode);
     procedure AddToPopup(FileName: string);
     procedure OnPopupClick(Sender: TObject);
@@ -293,6 +295,11 @@ begin
 			Reg.WriteInteger('Height', Height);
 			Reg.WriteInteger('Width', Width);
 
+      Reg.WriteInteger('SearchTop', SearchTop);
+			Reg.WriteInteger('SearchLeft', SearchLeft);
+			Reg.WriteInteger('SearchHeight', SearchHeight);
+			Reg.WriteInteger('SearchWidth', SearchWidth);
+
       Reg.WriteBool('ReportSorting', RSorting);
       Reg.WriteInteger('DuplicateArea', DuplicateArea);
       Reg.WriteInteger('ColumnToSorting', ColumnToSorting);
@@ -345,6 +352,8 @@ begin
 
       Reg.WriteString('LastEditDir', LastEditDir);
       Reg.WriteBool('ColumnAutoSize', ColumnAutoSize);
+
+      Reg.WriteBool('EjectCD', EjectCD);
     except
 		end;
 
@@ -462,6 +471,14 @@ begin
 
       LastEditDir := Reg.ReadString('LastEditDir');
       ColumnAutoSize := Reg.ReadBool('ColumnAutoSize');
+
+      EjectCD := Reg.ReadBool('EjectCD');
+
+      SearchTop := Abs(Reg.ReadInteger('SearchTop'));
+      SearchLeft := Reg.ReadInteger('SearchLeft');
+      SearchHeight := Reg.ReadInteger('SearchHeight');
+      SearchWidth := Reg.ReadInteger('SearchWidth');
+
     except
 		end;
 
@@ -473,7 +490,7 @@ begin
   // Gambit - reads foobar path
   Reg2 := TRegistry.Create(KEY_READ);
   try
-    Reg2.RootKey := HKEY_LOCAL_MACHINE;
+    Reg2.RootKey := HKEY_CURRENT_USER;
     // False because we do not want to create it if it doesn't exist
     Reg2.OpenKey('\Software\foobar2000', False);
     FoobarPath := Reg2.ReadString('InstallDir');
@@ -787,6 +804,7 @@ begin
         ';*.' + WMAExt + ';*.' + OGGExt + ';*.' + WAVExt + ';' + MonkeyMask +
         ';' + FlacMask + ';' + OfrMask + ';' + AacMask;;
 
+        // determines file type icons
         if Pos(ItemExtension, SupportedExtension) > 0 then
           ListItem.ImageIndex := 4
         else if ItemExtension = CueFile then
@@ -797,6 +815,16 @@ begin
           ListItem.ImageIndex := 10
         else if Pos(ItemExtension, ImageMask) > 0 then
           ListItem.ImageIndex := 11
+        else if Pos(ItemExtension, ExeMask) > 0 then
+          ListItem.ImageIndex := 12
+        else if Pos(ItemExtension, ComprMask) > 0 then
+          ListItem.ImageIndex := 13
+        else if Pos(ItemExtension, DllMask) > 0 then
+          ListItem.ImageIndex := 14
+        else if Pos(ItemExtension, IniMask) > 0 then
+          ListItem.ImageIndex := 15
+        else if Pos(ItemExtension, BatMask) > 0 then
+          ListItem.ImageIndex := 16
         else
           ListItem.ImageIndex := 8;
       end;
@@ -1446,13 +1474,14 @@ procedure TfrmMain.Add1Click(Sender: TObject);
 var
 	SourcePath, SourceLabel: string;
 	SourceSerial: longint;
+  SourceType: Integer;
 	Child: TTreeNode;
 	VolumeData: DataArray;
 	ItemCount: longint;
   Value: integer;
 begin
 	Repaint;
-	if SourcePathOK(GetText(11), SourcePath, SourceLabel, SourceSerial) then
+	if SourcePathOK(GetText(11), SourcePath, SourceLabel, SourceSerial, SourceType) then
 	begin
 		Child := Tree.Items[0].GetFirstChild;
 
@@ -1460,6 +1489,7 @@ begin
 		begin
 			VolumeData := ExtractData(Child.Text);
 
+      // volume already exists
 			if (VolumeData[6] = SourceSerial) and
       	(CompareText(GetVolumePath(SourcePath), GetVolumePath(ExtractName(Child.Text))) = 0) then
 			begin
@@ -2091,6 +2121,7 @@ function TfrmMain.CreatePlayList(SNode: TTreeNode; PlayList: TListBox): string;
 var
 	Path, DriveLabel, SLabel: string;
 	Index, SSerial, ItemIndex: longint;
+  SType: Integer;
 	DriveExists: boolean;
 	VData: DataArray;
 	Node: TTreeNode;
@@ -2125,7 +2156,7 @@ begin
 		VData := ExtractData(Node.Text);
 
 		for Index := FirstDrive to DriveComboBox1.Items.Count - 1 do
-			if (VolumeDataOK(DriveComboBox1.Items.Strings[Index][1], SLabel, SSerial)) and
+			if (VolumeDataOK(DriveComboBox1.Items.Strings[Index][1], SLabel, SSerial, SType)) and
 	  	  ((VData[6] = SSerial) or ((VData[6] = 0) and (CompareText(DriveLabel, SLabel) = 0))) then
 			begin
 				DriveExists := true;
@@ -2290,6 +2321,7 @@ var
 	SelectedNode: TTreeNode;
 	Path, SLabel: string;
 	Index, SSerial: longint;
+  SType: Integer;
 	VData: DataArray;
 begin
 	SelectedNode := GetSelectedNode;
@@ -2300,7 +2332,7 @@ begin
     Path := GetVolumePath(ExtractName(SelectedNode.Text));
 
 		for Index := FirstDrive to DriveComboBox1.Items.Count - 1 do
-			if (VolumeDataOK(DriveComboBox1.Items.Strings[Index][1], SLabel, SSerial)) and
+			if (VolumeDataOK(DriveComboBox1.Items.Strings[Index][1], SLabel, SSerial, SType)) and
 	      (VData[6] = SSerial) then
 			begin
 				Path := DriveComboBox1.Items.Strings[Index][1] + ':\' + Path;
@@ -2313,7 +2345,7 @@ begin
 				exit;
 			end;
 
-    if SourcePathOK(GetText(12), Path, SLabel, SSerial) then UpdateVolume(Path, SelectedNode);
+    if SourcePathOK(GetText(12), Path, SLabel, SSerial, SType) then UpdateVolume(Path, SelectedNode);
 	end;
 end;
 
