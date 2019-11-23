@@ -1,5 +1,30 @@
 MPEG Audio Collection: history
 
+(11. January 2006) 2.92+
+-----------------------
+ - fixed problem with non-flac files with .flac extension
+ - fixed problem with the CD cover designer
+ - updated to Audio Tools Library v2.3 (27 May 2005)
+ - new component needed to compile the sources: TNTUnicodeControls 
+   (http://www.tntware.com/delphicontrols/unicode/)
+
+(14. July 2005) 2.92+
+--------------------
+ - some part of the code rewritten -> compiled exe size reduced by 97 Kbyte
+ - removed jclUnicode.pas from the source code because the latest Jedi Code Library has updated
+   version of it
+
+(19. June 2005) 2.92+
+--------------------
+ - added new functions to the OGG Tag editor
+ - some minor fixes in the behavior of the OGG Tag editor
+ - some part of the code rewritten
+
+(29. May 2005) 2.92+
+--------------------
+ - added new functions to the ID3 Tag editor
+ - some minor fixes in the behavior of the ID3 Tag editor
+
 (14. May 2005) 2.92+
 --------------------
  - added autosorting & autosaving after adding a new volume

@@ -1,11 +1,11 @@
 object frmAbout: TfrmAbout
-  Left = 461
-  Top = 272
+  Left = 326
+  Top = 183
   ActiveControl = Button1
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
   Caption = '_Title'
-  ClientHeight = 176
+  ClientHeight = 194
   ClientWidth = 410
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -100,7 +100,7 @@ object frmAbout: TfrmAbout
   end
   object Button1: TButton
     Left = 319
-    Top = 136
+    Top = 160
     Width = 83
     Height = 25
     Cancel = True
@@ -112,7 +112,7 @@ object frmAbout: TfrmAbout
     Left = 16
     Top = 16
     Width = 293
-    Height = 145
+    Height = 169
     BevelInner = bvRaised
     BevelOuter = bvLowered
     TabOrder = 1
@@ -155,8 +155,8 @@ object frmAbout: TfrmAbout
     object Image1: TImage
       Left = 24
       Top = 16
-      Width = 32
-      Height = 32
+      Width = 16
+      Height = 16
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -208,8 +208,8 @@ object frmAbout: TfrmAbout
     object Image3: TImage
       Left = 24
       Top = 88
-      Width = 32
-      Height = 32
+      Width = 16
+      Height = 16
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -261,8 +261,8 @@ object frmAbout: TfrmAbout
     object Image4: TImage
       Left = 23
       Top = 40
-      Width = 32
-      Height = 32
+      Width = 16
+      Height = 16
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -314,8 +314,8 @@ object frmAbout: TfrmAbout
     object Image5: TImage
       Left = 24
       Top = 64
-      Width = 32
-      Height = 32
+      Width = 16
+      Height = 16
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -366,7 +366,7 @@ object frmAbout: TfrmAbout
     end
     object Label5: TLabel
       Left = 110
-      Top = 112
+      Top = 128
       Width = 56
       Height = 13
       Cursor = crHandPoint
@@ -381,9 +381,9 @@ object frmAbout: TfrmAbout
     end
     object Image6: TImage
       Left = 24
-      Top = 112
-      Width = 32
-      Height = 32
+      Top = 128
+      Width = 16
+      Height = 16
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -447,10 +447,40 @@ object frmAbout: TfrmAbout
     end
     object Label7: TLabel
       Left = 48
-      Top = 112
+      Top = 128
       Width = 55
       Height = 13
       Caption = 'Homepage:'
+    end
+    object Label8: TLabel
+      Left = 86
+      Top = 105
+      Width = 30
+      Height = 13
+      Cursor = crHandPoint
+      Caption = '_mail2'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clNavy
+      Font.Height = -9
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      OnClick = Label8Click
+    end
+    object Label9: TLabel
+      Left = 110
+      Top = 144
+      Width = 62
+      Height = 13
+      Cursor = crHandPoint
+      Caption = '_homepage2'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clNavy
+      Font.Height = -9
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      OnClick = Label9Click
     end
   end
   object mmFuturama1: TMemo

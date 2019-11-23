@@ -32,3 +32,5 @@ For Borland Delphi 6 and higher only!
 At first two visual components are to install:
   - TFolderTree
   - TPreview
+  - TpkID3
+  - JEDI Code Library (http://www.delphi-jedi.org/)

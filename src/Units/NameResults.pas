@@ -68,13 +68,13 @@ var
 	Item, ParentNode: TTreeNode;
   FileData: DataArray;
 begin
-	with TfrmNameResults.Create(Application) do
+	with frmMain do
 		try
 		begin
     	SourcePath := SPath;
-      ListView1.GridLines := GD;
-      ListView1.RowSelect := ListView1.GridLines;
-      ListView1.HotTrack := HT;
+      ListView2.GridLines := GD;
+      ListView2.RowSelect := ListView2.GridLines;
+      ListView2.HotTrack := HT;
       FindItem := nil;
 
       Tag := 0;

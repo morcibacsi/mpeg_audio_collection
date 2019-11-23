@@ -56,8 +56,8 @@ uses
   CDROMIOCTL in 'Units\CDROMIOCTL.PAS',
   scsidefs in 'Units\scsidefs.pas',
   EditTag in 'Units\EditTag.pas' {FormEditTag},                               //PinterPeti
-  EditOggTag in 'Units\EditOggTag.pas' {FormEditOggTag};                      //PinterPeti
-
+  EditOggTag in 'Units\EditOggTag.pas' {FormEditOggTag},                      //PinterPeti
+  Helpers in 'Units\Helpers.pas';                                             //PinterPeti
 
 {$R *.RES}
 {$R Units\XPThemes.res}

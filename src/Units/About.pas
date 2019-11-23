@@ -25,11 +25,15 @@ type
     Label7: TLabel;
     mmFuturama1: TMemo;
     mmFuturama2: TMemo;
+    Label8: TLabel;
+    Label9: TLabel;
 		procedure Button1Click(Sender: TObject);
 		procedure FormCreate(Sender: TObject);
     procedure Label5Click(Sender: TObject);
     procedure Label4Click(Sender: TObject);
     procedure Image2DblClick(Sender: TObject);
+    procedure Label8Click(Sender: TObject);
+    procedure Label9Click(Sender: TObject);
 	private
 		{ Private declarations }
 	end;
@@ -69,6 +73,8 @@ begin
 	Label3.Caption := AppCopyright;
 	Label4.Caption := EMail;
 	Label5.Caption := Homepage;
+	Label8.Caption := EMail2;//PP
+	Label9.Caption := HomePage2; //PP
 end;
 
 { --------------------------------------------------------------------------- }
@@ -133,5 +139,19 @@ end;
 end;
 
 { --------------------------------------------------------------------------- }
+
+procedure TfrmAbout.Label8Click(Sender: TObject);
+var
+	Command: string;
+begin
+	Command := 'mailto:' + EMail2 + '?subject=' + AppTitleShort + ' '
+  	+ AVersion + ' (' + GetText(0) + ')';
+	ShellExecute(Handle, 'open', PChar(Command), nil, nil, SW_SHOW);
+end;
+
+procedure TfrmAbout.Label9Click(Sender: TObject);
+begin
+	ShellExecute(Handle, 'open', PChar(Homepage2), nil, nil, SW_SHOW);
+end;
 
 end.

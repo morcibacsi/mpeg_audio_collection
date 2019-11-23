@@ -17,18 +17,21 @@ type
 	MatchArray = array [1..6] of boolean;
 	RowColArray = array [1..21] of boolean;
   RowColIndexArray = array [1..17] of integer;
+  FTagArray = array [1..7] of string; //PP (for the GetTagFromFileName function)
 
 var
 	AuthorName: string = 'MAC Team';
-	AppTitle: string = 'MPEG Audio Collection';
+	AppTitle: string = 'Enhanced MPEG Audio Collection';
   AppTitleShort: string = 'MAC';
 	////////////////////////////
-	AVersion: string = '2.92';
-  ADate: string = 'October 2003';
+	AVersion: string = '2.92+';
+  ADate: string = '11 January 2006';
 	////////////////////////////
   AppCopyright: string = 'Freeware, copyright by J. Faul && The MAC Team';
 	Homepage: string = 'http://mac.sourceforge.net/';
+	HomePage2: string = 'http://pinterpeti.tvn.hu'; //PP
 	EMail: string = 'macteam@users.sourceforge.net';
+    EMail2: string = 'pinterpeti@tvn.hu';  //PP
   MACHelpFile: string = 'mac.hlp';
 	InfoFile: string = 'info.txt';
 	HistoryFile: string = 'history.txt';

@@ -94,7 +94,7 @@ OutputDir=Data
 UnitOutputDir=DCU
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=C:\Program Files\Borland\Delphi7\Lib\Jedi\Jcl\Source;C:\Program Files\Borland\Delphi7\Lib\Jedi\Jvcl\Source;C:\Program Files\Borland\Delphi7\Lib\TpkID3;.\Units;.\TFolderTree;.\TpkID3;.\TPreview
+SearchPath=$(DELPHI)\Lib\Jedi\Jcl\Source;$(DELPHI)\Lib\Jedi\Jvcl\Source;$(DELPHI)\Lib\TpkID3;.\Units;.\TFolderTree;.\TpkID3;.\TPreview;$(DELPHI)\Lib\TNTUnicodeControls
 Packages=Vcl50;Vclx50;VclSmp50;Vcldb50;vclado50;ibevnt50;Vclbde50;vcldbx50;Qrpt50;TeeUI50;TeeDB50;Tee50;Dss50;TeeQR50;VCLIB50;Vclmid50;vclie50;Inetdb50;Inet50;NMFast50;webmid50;dclocx50;dcloffice2k50
 Conditionals=
 DebugSourceDirs=
@@ -134,13 +134,15 @@ Comments=Audio Manager
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=6
-Item0=C:\Program Files\Borland\Delphi7\Lib\Jedi\Jcl\Source;C:\Program Files\Borland\Delphi7\Lib\Jedi\Jvcl\Source;C:\Program Files\Borland\Delphi7\Lib\TpkID3;.\Units;.\TFolderTree;.\TpkID3;.\TPreview
-Item1=C:\Program Files\Borland\Delphi7\Lib\Jedi\Jcl\Source;C:\Program Files\Borland\Delphi7\Lib\Jedi\Jvcl\Source;C:\Program Files\Borland\Delphi7\Lib\TpkID3;.\Units;
-Item2=C:\Program Files\Borland\Delphi7\Lib\Jedi\Jcl\Source;C:\Program Files\Borland\Delphi7\Lib\Jedi\Jvcl\Source;C:\Program Files\Borland\Delphi7\Lib\TpkID3
-Item3=C:\Program Files\Borland\Delphi7\Lib\Jedi\Jcl\Source;C:\Program Files\Borland\Delphi7\Lib\Jedi\Jvcl\Source
-Item4=C:\Documents and Settings\Administrator\My Documents\Delphi\MPEG Audio Collection\ID3v2
-Item5=DCU
+Count=8
+Item0=$(DELPHI)\Lib\Jedi\Jcl\Source;$(DELPHI)\Lib\Jedi\Jvcl\Source;$(DELPHI)\Lib\TpkID3;.\Units;.\TFolderTree;.\TpkID3;.\TPreview;$(DELPHI)\Lib\TNTUnicodeControls
+Item1=$(DELPHI)\Lib\Jedi\Jcl\Source;$(DELPHI)\Lib\Jedi\Jvcl\Source;$(DELPHI)\Lib\TpkID3;.\Units;.\TFolderTree;.\TpkID3;.\TPreview
+Item2=C:\Program Files\Borland\Delphi7\Lib\Jedi\Jcl\Source;C:\Program Files\Borland\Delphi7\Lib\Jedi\Jvcl\Source;C:\Program Files\Borland\Delphi7\Lib\TpkID3;.\Units;.\TFolderTree;.\TpkID3;.\TPreview
+Item3=C:\Program Files\Borland\Delphi7\Lib\Jedi\Jcl\Source;C:\Program Files\Borland\Delphi7\Lib\Jedi\Jvcl\Source;C:\Program Files\Borland\Delphi7\Lib\TpkID3;.\Units;
+Item4=C:\Program Files\Borland\Delphi7\Lib\Jedi\Jcl\Source;C:\Program Files\Borland\Delphi7\Lib\Jedi\Jvcl\Source;C:\Program Files\Borland\Delphi7\Lib\TpkID3
+Item5=C:\Program Files\Borland\Delphi7\Lib\Jedi\Jcl\Source;C:\Program Files\Borland\Delphi7\Lib\Jedi\Jvcl\Source
+Item6=C:\Documents and Settings\Administrator\My Documents\Delphi\MPEG Audio Collection\ID3v2
+Item7=DCU
 [HistoryLists\hlUnitOutputDirectory]
 Count=2
 Item0=DCU

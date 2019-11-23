@@ -216,14 +216,13 @@ end;
 procedure TfrmFind.Button1Click(Sender: TObject);
 begin
   if cbClearResults.Checked then begin //PinterPeti
-    frmMain.ListView2.Items.Clear;
+    frmMain.lvSearchResults.Items.Clear;
     STempList.Clear;
     STempList.Tag := 0;
     frmMain.ListBox5.Clear;
-    frmMain.ComboBox1.Clear;
+    frmMain.cbDuplicates.Clear;
   end;
-
-	StartSearch;
+    StartSearch;
 end;
 
 { --------------------------------------------------------------------------- }

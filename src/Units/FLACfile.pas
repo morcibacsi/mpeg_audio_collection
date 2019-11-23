@@ -167,7 +167,8 @@ begin
     Source.Read(Header, SizeOf(Header));
     FFileLength := Source.Size;
     { Process data if loaded and header valid }
-    if Header.StreamMarker = 'fLaC' then
+
+    if Header.StreamMarker = 'fLaC' then begin
       with Header do
       begin
         FChannels := Info[13] shr 1 and $7 + 1;
@@ -191,6 +192,7 @@ begin
       end
       else
         Source.Seek(Blocklength, soCurrent); //skip unknown metadata blocks
+    end;
     end;
     Source.Free;
   except

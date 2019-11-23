@@ -7,11 +7,8 @@ interface
 uses
   ComCtrls, SysUtils, Windows, Forms,
   Controls, StdCtrls, ExtCtrls, Classes,
-  Main, Global, TagEditor, MPEGAudio, pkID3, Registry, Unicode,
-  Graphics, Math, Buttons;
-
-function Str2Size( s: String ): Int64;
-function Size2Str( a: Int64 ): String;
+  Main, Global, TagEditor, MPEGAudio, pkID3, Registry, Helpers,
+  Graphics, Math, Buttons, StrUtils;
 
 type
   TFormEditTag = class(TForm)
@@ -60,12 +57,19 @@ type
     lbTiL: TLabel;
     lbAlL: TLabel;
     pkID31: TpkID3;
-    cboxCapitalization: TComboBox;
+    imSwap: TImage;
+    gbCapitalization: TGroupBox;
     cbCapitalization: TCheckBox;
+    cboxCapitalization: TComboBox;
+    edDelimiters: TEdit;
+    lbWordDelimiters: TLabel;
+    gbMisc: TGroupBox;
     leReplaceThis: TLabeledEdit;
     leReplaceForThis: TLabeledEdit;
     btReplace: TButton;
-    imSwap: TImage;
+    edFileFormat: TEdit;
+    lbFileNameFormat: TLabel;
+    cbDeleteIfNotEmpty: TCheckBox;
     procedure btCancelClick(Sender: TObject);
     procedure cbID3v1Click(Sender: TObject);
     procedure cbID3v2Click(Sender: TObject);
@@ -92,7 +96,8 @@ type
     procedure ClearAll1;
     procedure ClearAll2;
     procedure SetCaptions;
-    function SetCapital(InputString:WideString;CapitalType:Byte):WideString;
+    procedure EnableAll;
+    procedure DisableAll;
   end;
 
 var
@@ -102,152 +107,178 @@ var
   SelectedNode: TTreeNode;
   TagD1: array [1..7] of String;
   TagD2: array [1..12] of String;
-//  TagCap
+  //  TagCap
   TagD1Ex,TagD2Ex: Boolean;
+
 
 implementation
 
-//uses pkID3;
 {$R *.dfm}
+{ --------------------------------------------------------------------------- }
+function GetTagFromFileName(FileName,Options:String):FTagArray;
+type Tag = record
+       Typo:Char;
+       Delim:String;
+     end;
+var i,j:byte;
+    TagA: array [1..7] of Tag;
+    TheTags: FTagArray;
+    TempStr:String;
+begin
+  if Options = '' then
+    Options := '%a - %b';
+  TempStr := WideLowerCase(FileName);
+  for i:=1 to 7 do begin
+    TagA[i].Typo := #0;
+    TagA[i].Delim :='';
+  end;
+  j := 1;
+  for i:=1 to Length(Options) do begin
+    if Options[i] = '%' then begin
+      case UpCase(Options[i+1]) of
+        'A':TagA[j].Typo := UpCase(Options[i+1]);
+        'B':TagA[j].Typo := UpCase(Options[i+1]);
+        'C':TagA[j].Typo := UpCase(Options[i+1]);
+        'D':TagA[j].Typo := UpCase(Options[i+1]);
+        'E':TagA[j].Typo := UpCase(Options[i+1]);
+        'F':TagA[j].Typo := UpCase(Options[i+1]);
+        'G':TagA[j].Typo := UpCase(Options[i+1]);
+        'H':TagA[j].Typo := UpCase(Options[i+1]);
+        'I':TagA[j].Typo := UpCase(Options[i+1]);
+        'J':TagA[j].Typo := UpCase(Options[i+1]);
+        'K':TagA[j].Typo := UpCase(Options[i+1]);
+        'L':TagA[j].Typo := UpCase(Options[i+1]);
+      end;
 
-function Size2Str( a: Int64 ): String;
-var s: String;
-begin
-  s := IntToStr( a );
-  if Copy( s, Length( s ) - 3, 1 ) <> ',' then
-    Insert( ',', s, Length( s ) - 2 );
-  if Copy( s, Length( s ) - 7, 1 ) <> ',' then
-    if ( Length( s ) > 7 ) then
-      Insert( ',', s, Length( s ) - 6 );
-  if ( Length( s ) > 11 ) and ( Copy( s, Length( s ) - 11, 1 ) <> ',' ) then
-    Insert( ',', s, Length( s ) - 10 );
-  Size2Str := s;
+      if copy(Options,i+2,PosEx('%',Options,PosEx('%',Options,i+1))-(i+2)) <> '' then
+        TagA[j].Delim := WideLowerCase(copy(Options,i+2,PosEx('%',Options,PosEx('%',Options,i+1))-(i+2)))
+      else
+        TagA[j].Delim := '.mp3';
+      inc(j);
+    end;
+  end;
+  i:=1;
+  while i<>8 do begin
+    case TagA[i].Typo of
+      'A':begin
+            TheTags[1]:= copy(TempStr,1,Pos(TagA[i].Delim,TempStr)-1);
+            delete(TempStr,1,Pos(TagA[i].Delim,TempStr)+Length(TagA[i].Delim)-1);
+          end;
+      'B':begin
+            TheTags[2]:= copy(TempStr,1,Pos(TagA[i].Delim,TempStr)-1);
+            delete(TempStr,1,Pos(TagA[i].Delim,TempStr)+Length(TagA[i].Delim)-1);
+          end;
+      'C':begin
+            TheTags[3]:= copy(TempStr,1,Pos(TagA[i].Delim,TempStr)-1);
+            delete(TempStr,1,Pos(TagA[i].Delim,TempStr)+Length(TagA[i].Delim)-1);
+          end;
+      'D':begin
+            TheTags[4]:= copy(TempStr,1,Pos(TagA[i].Delim,TempStr)-1);
+            delete(TempStr,1,Pos(TagA[i].Delim,TempStr)+Length(TagA[i].Delim)-1);
+          end;
+      'E':begin
+            TheTags[5]:= copy(TempStr,1,Pos(TagA[i].Delim,TempStr)-1);
+            delete(TempStr,1,Pos(TagA[i].Delim,TempStr)+Length(TagA[i].Delim)-1);
+          end;
+      'F':begin
+            TheTags[6]:= copy(TempStr,1,Pos(TagA[i].Delim,TempStr)-1);
+            delete(TempStr,1,Pos(TagA[i].Delim,TempStr)+Length(TagA[i].Delim)-1);
+          end;
+      'G':begin
+            TheTags[7]:= copy(TempStr,1,Pos(TagA[i].Delim,TempStr)-1);
+            delete(TempStr,1,Pos(TagA[i].Delim,TempStr)+Length(TagA[i].Delim)-1);
+          end;
+    end;
+    inc(i);
+  end;
+  TempStr := WideLowerCase(FileName);
+  for i := 1 to 7 do begin
+    if (Pos(TagA[i].Delim,TempStr)=0) and (TagA[i].Delim<>'') then
+      TheTags[i] := ''
+    else if Length(TheTags[i])>30 then
+//      TagBiggerThanLimit := True;
+  end;
+  Result := TheTags;
 end;
 { --------------------------------------------------------------------------- }
-function Str2Size( s: String ): Int64;
-var j: Int64;
-    i: Integer;
+procedure TFormEditTag.DisableAll;
+var i: Integer;
 begin
-  i := 1;
-  repeat
-    if not ( s[i] in ['0'..'9'] ) then
-      Delete( s, i, 1 )
-    else
-  inc(i);
-  until i = Length( s )+1;
-  j := StrToInt64( s );
-  Str2Size := j;
+  for i := 0 to ComponentCount-1 do try
+    if Components[i].Name <> pkID31.Name then
+      TControl(Components[i]).Enabled := False;
+    except
+  end;
+  try
+    btCancel.Enabled := True;
+//    cbID3v1Click(Self);
+//    cbID3v2Click(Self);
+    except
+  end;
 end;
 { --------------------------------------------------------------------------- }
-function TFormEditTag.SetCapital(InputString:WideString;CapitalType:Byte):WideString;
-var B:Byte;
-    TempStr:WideString;
-//    Bool:Boolean;
-    WideChr:WideChar;
+procedure TFormEditTag.EnableAll;
+var i: Integer;
 begin
-  Result := '';
-  case CapitalType of
-    0:Result := WideLowerCase(InputString); {lowercase}
-    1:Result := WideUpperCase(InputString); {uppercase}
-    2:begin                                 {every word's first letter in uppercase}
-        if InputString = '' then begin
-          Result := InputString;
-          Exit;
-        end;
-        InputString := WideLowerCase(InputString);
-        WideChr := WideChar(InputString[1]);
-        WideChr := WideUpCase(WideChr);
-        Result := Result + WideStringOfChar(WideChr,1);
-        for b:=2 to Length(InputString) do begin
-          WideChr := WideChar(InputString[b]);
-          if (WideChar(InputString[b-1])=' ') or (WideChar(InputString[b-1])='_') or (WideChar(InputString[b-1])='.') or (WideChar(InputString[b-1])='(') or (WideChar(InputString[b-1])='[') or (WideChar(InputString[b-1])='-') then begin
-            WideChr := WideChar(InputString[b]);
-            WideChr := WideUpCase(WideChr);
-          end;
-            Result := Result + WideStringOfChar(WideChr,1);
-        end;
-      end;
-    3:begin {first letter in uppercase}
-        if InputString = '' then begin
-          Result := InputString;
-          Exit;
-        end;
-        InputString := WideLowerCase(InputString);
-        WideChr := WideChar(InputString[1]);
-//        try
-//          InputString[1]:= Char(WideUpperCase(InputString)[1]);
-//          except on EAccessViolation do
-//        end;
-//        Result := InputString;
-        WideChr := WideUpCase(WideChr);
-        Result := WideStringOfChar(WideChr,1) + Copy(InputString,2,Length(InputString)-1);
-      end;
-    4:begin {random case}
-        if InputString = '' then begin
-          Result := InputString;
-          Exit;
-        end;
-      Result := '';
-        Randomize;
-        for b:=1 to Length(InputString) do begin
-          WideChr := WideChar(InputString[b]);
-          case Random(2) of
-           0:WideChr := WideUpCase(WideChr);
-           1:WideChr := WideLoCase(WideChr);
-          end;
-        Result := Result + WideStringOfChar(WideChr,1)
-        end;
-      end;
-    5:begin {invert case}
-        if InputString = '' then begin
-          Result := InputString;
-          Exit;
-        end;
-        Result := '';
-        TempStr := InputString;
-        for b:=1 to Length(InputString) do begin
-          WideChr := WideChar(TempStr[b]);
-          if WideUpCase(WideChr) = WideChar((InputString[b])) then
-            WideChr := WideLoCase(WideChr)
-          else
-            WideChr := WideUpCase(WideChr);
-          Result := Result + WideStringOfChar(WideChr,1);
-        end;
-      end;
-    6:Result := InPutString;
+  for i := 0 to ComponentCount-1 do try
+    if Components[i].Name <> pkID31.Name then
+      TControl(Components[i]).Enabled := True;
+    except
+  end;
+  try
+    btCancel.Enabled := True;
+    cbID3v1Click(Self);
+    cbID3v2Click(Self);
+    except
   end;
 end;
 { --------------------------------------------------------------------------- }
 procedure TFormEditTag.SetCaptions;
+var TempStr: WideString;
+    i: Integer;
 begin
-  leTitle1.EditLabel.Caption := GetText(42);
-  leArtist1.EditLabel.Caption := GetText(43);
-  leAlbum1.EditLabel.Caption := GetText(44);
-  leTrack1.EditLabel.Caption := GetText(45)+' #';
-  leYear1.EditLabel.Caption := GetText(46);
-  leComment1.EditLabel.Caption := GetText(47);
-  lbGenre1.Caption := GetText(239);
+  leTitle1.EditLabel.Caption   := GetText(042);
+  leArtist1.EditLabel.Caption  := GetText(043);
+  leAlbum1.EditLabel.Caption   := GetText(044);
+  leTrack1.EditLabel.Caption   := GetText(045)+' #';
+  leYear1.EditLabel.Caption    := GetText(046);
+  leComment1.EditLabel.Caption := GetText(047);
+  lbGenre1.Caption             := GetText(239);
 
-  leTitle2.EditLabel.Caption := GetText(42);
-  leArtist2.EditLabel.Caption := GetText(43);
-  leAlbum2.EditLabel.Caption := GetText(44);
-  leTrack2.EditLabel.Caption := GetText(45)+' #';
-  leYear2.EditLabel.Caption := GetText(46);
-  leComment2.EditLabel.Caption := GetText(47);
-  lbGenre2.Caption := GetText(239);
+  leTitle2.EditLabel.Caption   := GetText(042);
+  leArtist2.EditLabel.Caption  := GetText(043);
+  leAlbum2.EditLabel.Caption   := GetText(044);
+  leTrack2.EditLabel.Caption   := GetText(045)+' #';
+  leYear2.EditLabel.Caption    := GetText(046);
+  leComment2.EditLabel.Caption := GetText(047);
+  lbGenre2.Caption             := GetText(239);
 
-  leComposer.EditLabel.Caption := GetText(295);
+  leComposer.EditLabel.Caption   := GetText(295);
   leOrigArtist.EditLabel.Caption := GetText(296);
-  leCopyright.EditLabel.Caption := GetText(297);
-  leEncodedby.EditLabel.Caption := GetText(298);
+  leCopyright.EditLabel.Caption  := GetText(297);
+  leEncodedby.EditLabel.Caption  := GetText(298);
 
   leReplaceThis.EditLabel.Caption := GetText(249);
-  btUpdate.Caption := GetText(299);
-  btCancel.Caption := GetText(057);
-  btUndo.Caption := GetText(300);
-  btCopyTo.Caption := GetText(301);
-  btCopyFrom.Caption := GetText(302);
-  btReplace.Caption := GetText(249);
+  btUpdate.Caption                := GetText(299);
+  btCancel.Caption                := GetText(057);
+  btUndo.Caption                  := GetText(300);
+  btCopyTo.Caption                := GetText(301);
+  btCopyFrom.Caption              := GetText(302);
+  lbFileNameFormat.Caption        := GetText(333);
+  gbMisc.Caption                  := GetText(205);
+  cbDeleteIfNotEmpty.Caption      := GetText(334);
+//  btReplace.Caption := GetText(249);
+  TempStr                         := GetText(335); // edFileFormat.Hint before line-breaking
+  i := 1;
+  while i <= Length(TempStr) do begin
+    if TempStr[i] = '%' then begin
+      Insert(''#13#10'',TempStr,i);
+      inc(i,3)
+    end else
+     inc(i);
+  end;
+  edFileFormat.Hint               := TempStr;
+  lbFileNameFormat.Hint           := TempStr;
 
   Label1.Caption := GetText(171); //Size
   Label2.Caption := GetText(172); //Length
@@ -259,6 +290,8 @@ begin
   Label8.Caption := GetText(306); //Emphasis
   imSwap.Hint    := GetText(329);
 
+  gbCapitalization.Caption := GetText(321);
+  lbWordDelimiters.Caption := GetText(332);
   cbCapitalization.Caption := GetText(321);
   cboxCapitalization.Items[0] := GetText(322);
   cboxCapitalization.Items[1] := GetText(323);
@@ -308,10 +341,12 @@ begin
   NeedUpd := False;
   ClearAll1;
   ClearAll2;
-  cbID3v1.Checked    := False;
-  cbID3v2.Checked    := False;
-  lbLyrics3Tag.Visible := False;
-  leTrack1.Enabled   := False;
+//  cbID3v1.Checked    := False;
+//  cbID3v2.Checked    := False;
+//  lbLyrics3Tag.Visible := False;
+  DisableAll;
+
+{  leTrack1.Enabled   := False;
   leArtist1.Enabled  := False;
   leTitle1.Enabled   := False;
   leAlbum1.Enabled   := False;
@@ -331,14 +366,26 @@ begin
   leURL.Enabled        := False;
   leEncodedby.Enabled  := False;
   cbGenre2.Enabled     := False;
+}
   SetCaptions;
-
   Reg := TRegistry.Create;
   Reg.RootKey := HKEY_CURRENT_USER;
   if Reg.OpenKey('\Software\' + AppTitle, false) then try
     cbCapitalization.Checked := Reg.ReadBool('CapitalizationBoxState');
     cboxCapitalization.Enabled := Reg.ReadBool('CapitalizationBoxState');
+    edDelimiters.Enabled := Reg.ReadBool('CapitalizationBoxState');
     cboxCapitalization.ItemIndex := Reg.ReadInteger('CapitalizationBoxIndex');
+
+    if Reg.ReadString('WordDelimiters') = '' then
+      edDelimiters.Text := ' _!+-.,[(&@#='
+    else
+      edDelimiters.Text := Reg.ReadString('WordDelimiters');
+    if Reg.ReadString('FileFormat') = '' then
+      edFileFormat.Text := '%a - %b'
+    else
+      edFileFormat.Text := Reg.ReadString('FileFormat');
+    cbDeleteIfNotEmpty.Checked := Reg.ReadBool('DeleteIfNotEmpty');
+
   except
   end;
   Reg.Free;
@@ -363,6 +410,7 @@ begin
     leYear1.Enabled      := not leYear1.Enabled;
     leComment1.Enabled   := not leComment1.Enabled;
     cbGenre1.Enabled     := not cbGenre1.Enabled;
+
     if cbID3v1.Checked then
       lbLyrics3Tag.Font.Color := clWindowText
     else
@@ -399,19 +447,15 @@ begin
   ClearAll2;
   Data := TMPEGAudio.Create;
   edPath.Text := GetFilePath(frmMain.GetSelectedNode);//GetFilePath(SelectedNode);
-//  if FileExists(edPath.Text) then begin
-  if Data.ReadFromFile( edPath.Text ) then begin
-//    if data.Valid then begin
-  {    if Data.ID3v1.Exists then begin
-      cbID3v1.Checked := True;
-      leArtist1.Text  := Data.ID3v1.Artist;
-      leTrack1.Text   := IntToStr(Data.ID3v1.Track);
-      leTitle1.Text   := Data.ID3v1.Title;
-      leAlbum1.Text   := Data.ID3v1.Album;
-      leYear1.Text    := Data.ID3v1.Year;
-      leComment1.Text := Data.ID3v1.Comment;
-      cbGenre1.Text   := Data.ID3v1.Genre;
-    end;
+  if FileExists(edPath.Text) then begin
+    EnableAll;
+    if Data.ReadFromFile( edPath.Text ) then begin
+
+{       cbID3v1.Enabled := True;
+       cbID3v2.Enabled := True;
+       cbCapitalization.Enabled := True;
+       cboxCapitalization.Enabled := True;
+       edDelimiters.Enabled := True;
 }
        frmMain.pkID3.LoadFromFile(edPath.Text);
        if (frmMain.pkID3.UseID3v1) and (frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 = False) then begin
@@ -486,15 +530,16 @@ begin
       else
         Label7.Caption := GetText(305) + ' : ' + GetText(055);
       Label8.Caption := GetText(306) + ' : ' + Data.Emphasis;
-    end;
-  if cbCapitalization.Checked then
-    cboxCapitalizationChange(Sender);
 
-//   end;
-//   else
-    if Data.ReadFromFile( edPath.Text ) = False then begin
-      cbID3v1.Enabled := False;
-      cbID3v2.Enabled := False;
+      if cbCapitalization.Checked then
+        cboxCapitalizationChange(Sender);
+
+    end;
+  end else begin
+//    if Data.ReadFromFile( edPath.Text ) = False then begin
+      DisableAll;
+//      cbID3v1.Enabled := False;
+//      cbID3v2.Enabled := False;
       MessageBox(Handle, PChar(GetText(310)+#13#10+GetText(311)), PChar('Error'), $00000010);
       FileTag := ExtractTag(TTreeNode(frmMain.GetSelectedNode).Text);
       FileData := ExtractData(TTreeNode(frmMain.GetSelectedNode).Text);
@@ -530,7 +575,8 @@ begin
       Label8.Caption := GetText(306) + ' : ???';
       cbCapitalization.Enabled := False;
       cboxCapitalization.Enabled := False;
-      btUpdate.SetFocus;
+      edDelimiters.Enabled := False;
+      btCancel.SetFocus;
    end;
 
 //   if Data.ReadFromFile( edPath.Text ) and (not data.Valid) then begin
@@ -623,16 +669,16 @@ begin
     if cbCapitalization.Checked = False then
       CaseConvertIndex := 6;
 
-    Data.ID3v2.Title     := SetCapital(leTitle2.Text,CaseConvertIndex);
-    Data.ID3v2.Artist    := SetCapital(leArtist2.Text,CaseConvertIndex);
-    Data.ID3v2.Album     := SetCapital(leAlbum2.Text,CaseConvertIndex);
-    Data.ID3v2.Year      := SetCapital(leYear2.Text,CaseConvertIndex);
-    Data.ID3v2.Genre     := SetCapital(cbGenre2.Text,CaseConvertIndex);
-    Data.ID3v2.Comment   := SetCapital(leComment2.Text,CaseConvertIndex);
-    Data.ID3v2.Composer  := SetCapital(leComposer.Text,CaseConvertIndex);
-    Data.ID3v2.Encoder   := SetCapital(leEncodedby.Text,CaseConvertIndex);
-    Data.ID3v2.Copyright := SetCapital(leCopyright.Text,CaseConvertIndex);
-    Data.ID3v2.Link      := SetCapital(leURL.Text,CaseConvertIndex);
+    Data.ID3v2.Title     := SetCapital(leTitle2.Text,CaseConvertIndex,edDelimiters.Text);
+    Data.ID3v2.Artist    := SetCapital(leArtist2.Text,CaseConvertIndex,edDelimiters.Text);
+    Data.ID3v2.Album     := SetCapital(leAlbum2.Text,CaseConvertIndex,edDelimiters.Text);
+    Data.ID3v2.Year      := SetCapital(leYear2.Text,CaseConvertIndex,edDelimiters.Text);
+    Data.ID3v2.Genre     := SetCapital(cbGenre2.Text,CaseConvertIndex,edDelimiters.Text);
+    Data.ID3v2.Comment   := SetCapital(leComment2.Text,CaseConvertIndex,edDelimiters.Text);
+    Data.ID3v2.Composer  := SetCapital(leComposer.Text,CaseConvertIndex,edDelimiters.Text);
+    Data.ID3v2.Encoder   := SetCapital(leEncodedby.Text,CaseConvertIndex,edDelimiters.Text);
+    Data.ID3v2.Copyright := SetCapital(leCopyright.Text,CaseConvertIndex,edDelimiters.Text);
+    Data.ID3v2.Link      := SetCapital(leURL.Text,CaseConvertIndex,edDelimiters.Text);
 //    Data.ID3v2.Language  := leOrigArtist.Text;
     Val(leTrack2.Text, Value, Code);
     if (Code = 0) and (Value > 0) then
@@ -649,17 +695,17 @@ begin
       CaseConvertIndex := cboxCapitalization.ItemIndex;
     if cbCapitalization.Checked = False then
       CaseConvertIndex := 6;
-    frmMain.pkID3.ID3v1.Lyrics3.Title   := SetCapital(leTitle1.Text,CaseConvertIndex);
-    frmMain.pkID3.ID3v1.Lyrics3.Artist  := SetCapital(leArtist1.Text,CaseConvertIndex);
-    frmMain.pkID3.ID3v1.Lyrics3.Album   := SetCapital(leAlbum1.Text,CaseConvertIndex);
-    frmMain.pkID3.ID3v1.Title   := SetCapital(leTitle1.Text,CaseConvertIndex);
-    frmMain.pkID3.ID3v1.Artist  := SetCapital(leArtist1.Text,CaseConvertIndex);
-    frmMain.pkID3.ID3v1.Album   := SetCapital(leAlbum1.Text,CaseConvertIndex);
-    frmMain.pkID3.ID3v1.Year    := SetCapital(leYear1.Text,CaseConvertIndex);
+    frmMain.pkID3.ID3v1.Lyrics3.Title   := SetCapital(leTitle1.Text,CaseConvertIndex,edDelimiters.Text);
+    frmMain.pkID3.ID3v1.Lyrics3.Artist  := SetCapital(leArtist1.Text,CaseConvertIndex,edDelimiters.Text);
+    frmMain.pkID3.ID3v1.Lyrics3.Album   := SetCapital(leAlbum1.Text,CaseConvertIndex,edDelimiters.Text);
+    frmMain.pkID3.ID3v1.Title   := SetCapital(leTitle1.Text,CaseConvertIndex,edDelimiters.Text);
+    frmMain.pkID3.ID3v1.Artist  := SetCapital(leArtist1.Text,CaseConvertIndex,edDelimiters.Text);
+    frmMain.pkID3.ID3v1.Album   := SetCapital(leAlbum1.Text,CaseConvertIndex,edDelimiters.Text);
+    frmMain.pkID3.ID3v1.Year    := SetCapital(leYear1.Text,CaseConvertIndex,edDelimiters.Text);
 //    Data.ID3v1.GenreID := GetID3v1GenreID(cbGenre1.Text); PinterPeti - removed
     frmMain.pkID3.ID3v1.GenreID := GetID3v1GenreID(cbGenre1.Text); //PinterPeti much nicer than previous
 
-    frmMain.pkID3.ID3v1.Comment := SetCapital(leComment1.Text,CaseConvertIndex);
+    frmMain.pkID3.ID3v1.Comment := SetCapital(leComment1.Text,CaseConvertIndex,edDelimiters.Text);
 
     Val(leTrack1.Text, Value, Code);
     if (Code = 0) and (Value > 0) then
@@ -682,12 +728,12 @@ begin
     frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 := False;
     frmMain.pkID3.SaveToFile(edPath.Text);
 
-    Data.ID3v1.Title   := SetCapital(leTitle1.Text,CaseConvertIndex);
-    Data.ID3v1.Artist  := SetCapital(leArtist1.Text,CaseConvertIndex);
-    Data.ID3v1.Album   := SetCapital(leAlbum1.Text,CaseConvertIndex);
-    Data.ID3v1.Year    := SetCapital(leYear1.Text,CaseConvertIndex);
+    Data.ID3v1.Title   := SetCapital(leTitle1.Text,CaseConvertIndex,edDelimiters.Text);
+    Data.ID3v1.Artist  := SetCapital(leArtist1.Text,CaseConvertIndex,edDelimiters.Text);
+    Data.ID3v1.Album   := SetCapital(leAlbum1.Text,CaseConvertIndex,edDelimiters.Text);
+    Data.ID3v1.Year    := SetCapital(leYear1.Text,CaseConvertIndex,edDelimiters.Text);
     Data.ID3v1.GenreID := GetID3v1GenreID(cbGenre1.Text);
-    Data.ID3v1.Comment := SetCapital(leComment1.Text,CaseConvertIndex);
+    Data.ID3v1.Comment := SetCapital(leComment1.Text,CaseConvertIndex,edDelimiters.Text);
 
     Val(leTrack1.Text, Value, Code);
     if (Code = 0) and (Value > 0) then
@@ -719,21 +765,21 @@ begin
       Genre   := '';
     end;
     if ((cbID3v1.Checked) and (PreferTag = 1)) or ((not cbID3v2.Checked) and (PreferTag = 2)) then begin
-      Artist  := SetCapital(leArtist1.Text,CaseConvertIndex);
-      Title   := SetCapital(leTitle1.Text,CaseConvertIndex);
-      Album   := SetCapital(leAlbum1.Text,CaseConvertIndex);
-      Track   := SetCapital(leTrack1.Text,CaseConvertIndex);
-      Year    := SetCapital(leYear1.Text,CaseConvertIndex);
-      Comment := SetCapital(leComment1.Text,CaseConvertIndex);
+      Artist  := SetCapital(leArtist1.Text,CaseConvertIndex,edDelimiters.Text);
+      Title   := SetCapital(leTitle1.Text,CaseConvertIndex,edDelimiters.Text);
+      Album   := SetCapital(leAlbum1.Text,CaseConvertIndex,edDelimiters.Text);
+      Track   := SetCapital(leTrack1.Text,CaseConvertIndex,edDelimiters.Text);
+      Year    := SetCapital(leYear1.Text,CaseConvertIndex,edDelimiters.Text);
+      Comment := SetCapital(leComment1.Text,CaseConvertIndex,edDelimiters.Text);
       Genre   := cbGenre1.Items[cbGenre1.ItemIndex];
     end;
     if ((cbID3v2.Checked) and (PreferTag = 2)) or ((not cbID3v1.Checked) and (PreferTag = 1)) then begin
-      Artist  := SetCapital(leArtist2.Text,CaseConvertIndex);
-      Title   := SetCapital(leTitle2.Text,CaseConvertIndex);
-      Album   := SetCapital(leAlbum2.Text,CaseConvertIndex);
-      Track   := SetCapital(leTrack2.Text,CaseConvertIndex);
-      Year    := SetCapital(leYear2.Text,CaseConvertIndex);
-      Comment := SetCapital(leComment2.Text,CaseConvertIndex);
+      Artist  := SetCapital(leArtist2.Text,CaseConvertIndex,edDelimiters.Text);
+      Title   := SetCapital(leTitle2.Text,CaseConvertIndex,edDelimiters.Text);
+      Album   := SetCapital(leAlbum2.Text,CaseConvertIndex,edDelimiters.Text);
+      Track   := SetCapital(leTrack2.Text,CaseConvertIndex,edDelimiters.Text);
+      Year    := SetCapital(leYear2.Text,CaseConvertIndex,edDelimiters.Text);
+      Comment := SetCapital(leComment2.Text,CaseConvertIndex,edDelimiters.Text);
     end;
     {Clear Artist,Title,Album...}
     Delete(IText,Pos(#$15,IText)+1,(Pos(#$16,IText)-1-Pos(#$15,IText)));  //Title
@@ -810,16 +856,24 @@ end;
 { --------------------------------------------------------------------------- }
 procedure TFormEditTag.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
-var p:Integer;
+var //p:Integer;
     FName:String;
+    FTags: FTagArray;
 begin
   if Key = VK_ESCAPE then
     Close;
+
   if Key = VK_RETURN then
     btUpdateClick(Sender);
+
   if (Shift = [ssCtrl]) and (Key = VK_TAB) then
     FormEditTag.SelectNext(FormEditTag.ActiveControl,False,True);
-  //  (Sender as (TWinControl)).TabOrder := (Sender as (TWinControl)).TabOrder-1;
+
+  if (Shift = [ssCtrl]) and (Key = Ord('Z')) then
+    btUndoClick(imSwap);
+
+  if (Shift = [ssAlt])  and (Key = Ord('S')) then
+    cbCapitalizationClick(Sender);
 
   if (Shift = [ssCtrl]) and (Key = VK_UP) then
     imSwapClick(Sender);
@@ -830,23 +884,77 @@ begin
   if (Shift = [ssAlt]) and (Key = VK_RIGHT) then
     btCopyFromClick(Sender);
 
-  if (Shift = [ssCtrl]) and (Key = VK_DOWN) then
-    if Pos( ' - ', edPath.Text ) <> 0 then begin
-      if cbID3v1.Checked then begin
-        FName := ExtractFileName(edPath.Text);
-        p := Pos( ' - ', FName);
-        leArtist1.Text := copy(FName, 1, p-1); // PinterPeti p -> p-1
-        leTitle1.Text := copy(FName,p+3,Length(FName)-(p+6));
-//        leArtist1.Text := copy(ExtractFileName(edPath.Text), 1, Pos( ' - ', ExtractFileName(edPath.Text)));
-//        leTitle1.Text := copy(ExtractFileName(edPath.Text),Pos(' - ',ExtractFileName(edPath.Text))+3,Length(ExtractFileName(edPath.Text))-Pos(' - ',edPath.Text)+1);
+  if (Shift = [ssCtrl]) and (Key = VK_DOWN) then begin
+    FTags := GetTagFromFileName(ExtractFileName(edPath.Text),edFileFormat.Text);
+    if cbID3v1.Checked then begin
+      if cbDeleteIfNotEmpty.Checked then begin  //delete content of the fields if there were data in them
+        if (leArtist1.Text<>'')  and (FTags[1]='') then
+          leArtist1.Text := FTags[1];
+        if (leTitle1.Text<>'')   and (FTags[2]='') then
+          leTitle1.Text  := FTags[2];
+        if (leAlbum1.Text<>'')   and (FTags[3]='') then
+          leAlbum1.Text  := FTags[3];
+        if (leYear1.Text<>'')    and (FTags[4]='') then
+          leYear1.Text   := FTags[4];
+        if (leTrack1.Text<>'')   and (FTags[5]='') then
+          leTrack1.Text  := FTags[5];
+        if (cbGenre1.ItemIndex<>0) and (FTags[7]='') then
+          cbGenre1.ItemIndex := GetID3v1GenreID(FTags[6]);
+        if (leComment1.Text<>'') and (FTags[7]='') then
+          leComment1.Text := FTags[7];
       end;
-      if cbID3v2.Checked then begin
-        FName := ExtractFileName(edPath.Text);
-        p := Pos( ' - ', FName);
-        leArtist2.Text := copy(FName, 1, p);
-        leTitle2.Text := copy(FName,p+3,Length(FName)-(p+6));
-      end;
+      //fill the fields if they were empty
+//      if (leArtist1.Text='')  and (FTags[1]<>'') then
+        leArtist1.Text := FTags[1];
+//      if (leTitle1.Text='')   and (FTags[2]<>'') then
+        leTitle1.Text  := FTags[2];
+//      if (leAlbum1.Text='')   and (FTags[3]<>'') then
+        leAlbum1.Text  := FTags[3];
+//      if (leYear1.Text='')    and (FTags[4]<>'') then
+        leYear1.Text   := FTags[4];
+//      if (leTrack1.Text='')   and (FTags[5]<>'') then
+        leTrack1.Text  := FTags[5];
+//      if (cbGenre1.ItemIndex=0) and (FTags[6]<>'') then
+        cbGenre1.ItemIndex := GetID3v1GenreID(FTags[6]);
+//      if (leComment1.Text='') and (FTags[7]<>'') then
+        leComment1.Text := FTags[7];
     end;
+
+
+    if cbID3v2.Checked then begin
+      if cbDeleteIfNotEmpty.Checked then begin
+        if (leArtist2.Text<>'')  and (FTags[1]='') then
+          leArtist2.Text := FTags[1];
+        if (leTitle2.Text<>'')   and (FTags[2]='') then
+          leTitle2.Text  := FTags[2];
+        if (leAlbum2.Text<>'')   and (FTags[3]='') then
+          leAlbum2.Text  := FTags[3];
+        if (leYear2.Text<>'')    and (FTags[4]='') then
+          leYear2.Text   := FTags[4];
+        if (leTrack2.Text<>'')   and (FTags[5]='') then
+          leTrack2.Text  := FTags[5];
+        if (cbGenre2.Text<>'') and (FTags[6]='') then
+          cbGenre2.Text := FTags[6];
+        if (leComment2.Text<>'') and (FTags[7]='') then
+          leComment2.Text := FTags[7];
+      end;
+
+//      if (leArtist2.Text='')  and (FTags[1]<>'') then
+        leArtist2.Text := FTags[1];
+//      if (leTitle2.Text='')   and (FTags[2]<>'') then
+        leTitle2.Text  := FTags[2];
+//      if (leAlbum2.Text='')   and (FTags[3]<>'') then
+        leAlbum2.Text  := FTags[3];
+//      if (leYear2.Text='')    and (FTags[4]<>'') then
+        leYear2.Text   := FTags[4];
+//      if (leTrack2.Text='')   and (FTags[5]<>'') then
+        leTrack2.Text  := FTags[5];
+//      if (cbGenre1.Text='') and (FTags[6]<>'') then
+        cbGenre1.Text := FTags[6];
+//      if (leComment2.Text='') and (FTags[7]<>'') then
+        leComment2.Text := FTags[7];
+    end;
+  end;
 end;
 { --------------------------------------------------------------------------- }
 procedure TFormEditTag.btUndoClick(Sender: TObject);
@@ -877,7 +985,10 @@ end;
 
 procedure TFormEditTag.cbCapitalizationClick(Sender: TObject);
 begin
+//  if (Sender as TImage).Name = imSwap.Name then
+//    cbCapitalization.Checked := not cbCapitalization.Checked;
   cboxCapitalization.Enabled := cbCapitalization.Checked;
+  edDelimiters.Enabled := cbCapitalization.Checked;
   if cbCapitalization.Checked then
     cboxCapitalizationChange(Sender);
 end;
@@ -886,51 +997,50 @@ procedure TFormEditTag.cboxCapitalizationChange(Sender: TObject);
 begin
   if cboxCapitalization.ItemIndex = 6 then begin
     if (frmMain.pkID3.UseID3v1) and (frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 = False) then begin
-      leArtist1.Text  := SetCapital(frmMain.pkID3.ID3v1.Artist,cboxCapitalization.ItemIndex);
-      leTitle1.Text   := SetCapital(frmMain.pkID3.ID3v1.Title,cboxCapitalization.ItemIndex);
-      leAlbum1.Text   := SetCapital(frmMain.pkID3.ID3v1.Album,cboxCapitalization.ItemIndex);
-      leYear1.Text    := SetCapital(frmMain.pkID3.ID3v1.Year,cboxCapitalization.ItemIndex);
-      leComment1.Text := SetCapital(frmMain.pkID3.ID3v1.Comment,cboxCapitalization.ItemIndex);
+      leArtist1.Text  := SetCapital(frmMain.pkID3.ID3v1.Artist,cboxCapitalization.ItemIndex,edDelimiters.Text);
+      leTitle1.Text   := SetCapital(frmMain.pkID3.ID3v1.Title,cboxCapitalization.ItemIndex,edDelimiters.Text);
+      leAlbum1.Text   := SetCapital(frmMain.pkID3.ID3v1.Album,cboxCapitalization.ItemIndex,edDelimiters.Text);
+      leYear1.Text    := SetCapital(frmMain.pkID3.ID3v1.Year,cboxCapitalization.ItemIndex,edDelimiters.Text);
+      leComment1.Text := SetCapital(frmMain.pkID3.ID3v1.Comment,cboxCapitalization.ItemIndex,edDelimiters.Text);
     end;
     if (frmMain.pkID3.UseID3v1) and (frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 = True) then begin
-      leArtist1.Text  := SetCapital(frmMain.pkID3.ID3v1.Lyrics3.Artist,cboxCapitalization.ItemIndex);
-      leTitle1.Text   := SetCapital(frmMain.pkID3.ID3v1.Lyrics3.Title,cboxCapitalization.ItemIndex);
-      leAlbum1.Text   := SetCapital(frmMain.pkID3.ID3v1.Lyrics3.Album,cboxCapitalization.ItemIndex);
-      leYear1.Text    := SetCapital(frmMain.pkID3.ID3v1.Year,cboxCapitalization.ItemIndex);
-      leComment1.Text := SetCapital(frmMain.pkID3.ID3v1.Comment,cboxCapitalization.ItemIndex);
+      leArtist1.Text  := SetCapital(frmMain.pkID3.ID3v1.Lyrics3.Artist,cboxCapitalization.ItemIndex,edDelimiters.Text);
+      leTitle1.Text   := SetCapital(frmMain.pkID3.ID3v1.Lyrics3.Title,cboxCapitalization.ItemIndex,edDelimiters.Text);
+      leAlbum1.Text   := SetCapital(frmMain.pkID3.ID3v1.Lyrics3.Album,cboxCapitalization.ItemIndex,edDelimiters.Text);
+      leYear1.Text    := SetCapital(frmMain.pkID3.ID3v1.Year,cboxCapitalization.ItemIndex,edDelimiters.Text);
+      leComment1.Text := SetCapital(frmMain.pkID3.ID3v1.Comment,cboxCapitalization.ItemIndex,edDelimiters.Text);
     end;
-    leTrack2.Text     := SetCapital(Data.ID3v2.TrackString,cboxCapitalization.ItemIndex);
-    leArtist2.Text    := SetCapital(Data.ID3v2.Artist,cboxCapitalization.ItemIndex);
-    leTitle2.Text     := SetCapital(Data.ID3v2.Title,cboxCapitalization.ItemIndex);
-    leAlbum2.Text     := SetCapital(Data.ID3v2.Album,cboxCapitalization.ItemIndex);
-    leYear2.Text      := SetCapital(Data.ID3v2.Year,cboxCapitalization.ItemIndex);
-    leComment2.Text   := SetCapital(Data.ID3v2.Comment,cboxCapitalization.ItemIndex);
-    leComposer.Text   := SetCapital(Data.ID3v2.Composer,cboxCapitalization.ItemIndex);
+    leTrack2.Text     := SetCapital(Data.ID3v2.TrackString,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leArtist2.Text    := SetCapital(Data.ID3v2.Artist,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leTitle2.Text     := SetCapital(Data.ID3v2.Title,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leAlbum2.Text     := SetCapital(Data.ID3v2.Album,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leYear2.Text      := SetCapital(Data.ID3v2.Year,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leComment2.Text   := SetCapital(Data.ID3v2.Comment,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leComposer.Text   := SetCapital(Data.ID3v2.Composer,cboxCapitalization.ItemIndex,edDelimiters.Text);
     //leOrigArtist.Text := Data.ID3v2.Language;
-    leCopyright.Text  := SetCapital(Data.ID3v2.Copyright,cboxCapitalization.ItemIndex);
-    leURL.Text        := SetCapital(Data.ID3v2.Link,cboxCapitalization.ItemIndex);
-    leEncodedby.Text  := SetCapital(Data.ID3v2.Encoder,cboxCapitalization.ItemIndex);
-    cbGenre2.Text     := SetCapital(Data.ID3v2.Genre,cboxCapitalization.ItemIndex);
-  end;
-  if cboxCapitalization.ItemIndex <> 6 then begin
-    leArtist1.Text  := SetCapital(leArtist1.Text,cboxCapitalization.ItemIndex);
-    leTitle1.Text   := SetCapital(leTitle1.Text,cboxCapitalization.ItemIndex);
-    leAlbum1.Text   := SetCapital(leAlbum1.Text,cboxCapitalization.ItemIndex);
-    leYear1.Text    := SetCapital(leYear1.Text,cboxCapitalization.ItemIndex);
-    leComment1.Text := SetCapital(leComment1.Text,cboxCapitalization.ItemIndex);
+    leCopyright.Text  := SetCapital(Data.ID3v2.Copyright,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leURL.Text        := SetCapital(Data.ID3v2.Link,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leEncodedby.Text  := SetCapital(Data.ID3v2.Encoder,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    cbGenre2.Text     := SetCapital(Data.ID3v2.Genre,cboxCapitalization.ItemIndex,edDelimiters.Text);
+  end else if cboxCapitalization.ItemIndex <> 6 then begin
+    leArtist1.Text  := SetCapital(leArtist1.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leTitle1.Text   := SetCapital(leTitle1.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leAlbum1.Text   := SetCapital(leAlbum1.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leYear1.Text    := SetCapital(leYear1.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leComment1.Text := SetCapital(leComment1.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
 
-    leTrack2.Text     := SetCapital(leTrack2.Text,cboxCapitalization.ItemIndex);
-    leArtist2.Text    := SetCapital(leArtist2.Text,cboxCapitalization.ItemIndex);
-    leTitle2.Text     := SetCapital(leTitle2.Text,cboxCapitalization.ItemIndex);
-    leAlbum2.Text     := SetCapital(leAlbum2.Text,cboxCapitalization.ItemIndex);
-    leYear2.Text      := SetCapital(leYear2.Text,cboxCapitalization.ItemIndex);
-    leComment2.Text   := SetCapital(leComment2.Text,cboxCapitalization.ItemIndex);
-    leComposer.Text   := SetCapital(leComposer.Text,cboxCapitalization.ItemIndex);
+    leTrack2.Text     := SetCapital(leTrack2.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leArtist2.Text    := SetCapital(leArtist2.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leTitle2.Text     := SetCapital(leTitle2.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leAlbum2.Text     := SetCapital(leAlbum2.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leYear2.Text      := SetCapital(leYear2.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leComment2.Text   := SetCapital(leComment2.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leComposer.Text   := SetCapital(leComposer.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
     //leOrigArtist.Text := Data.ID3v2.Language;
-    leCopyright.Text  := SetCapital(leCopyright.Text,cboxCapitalization.ItemIndex);
-    leURL.Text        := SetCapital(leURL.Text,cboxCapitalization.ItemIndex);
-    leEncodedby.Text  := SetCapital(leEncodedby.Text,cboxCapitalization.ItemIndex);
-    cbGenre2.Text     := SetCapital(cbGenre2.Text,cboxCapitalization.ItemIndex);
+    leCopyright.Text  := SetCapital(leCopyright.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leURL.Text        := SetCapital(leURL.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leEncodedby.Text  := SetCapital(leEncodedby.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    cbGenre2.Text     := SetCapital(cbGenre2.Text,cboxCapitalization.ItemIndex,edDelimiters.Text);
   end;
 end;
 

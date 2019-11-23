@@ -330,4 +330,8 @@
 329Swap Artist <> Title (Ctrl+Up)
 330Auto sort collection after adding a new volume
 331Auto save collection after adding a new volume
+332Word delimiters
+333Filename format
+334Delete fields if they're not empty
+335Can be used to get the values of the fields from the filename by pressing CTRL+DOWN %a - artist %b - title %c - album %d - date %e - track %f - genre %h - comment
 >>>Translation by Dex and Ili

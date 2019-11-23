@@ -1,0 +1,8 @@
+a:link { color:#333355; text-decoration:none; }
+a:visited { color:#333355; text-decoration:none; }
+a:active { color:#333355; text-decoration:none; }
+a:hover { color:#990000; text-decoration:none; }
+
+table { font-family:tahoma,verdana,arial; font-size:9pt; font-weight:bold; }
+
+td { border-bottom:1px solid #bbbbdd }

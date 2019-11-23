@@ -1,13 +1,26 @@
-MPEG Audio Collection 2.92+ (14. May 2005)
--------------------------------
- - added autosorting & autosaving after adding a new volume
- - added Tag editor (directly edits files from list,if they are exist,only mp3 & ogg for now)
- - search result displaying changed
- - Lyrics3 v2 Tag support (read & write)
- - TPreview component changed from 3.01 to 4.61
+Enhanced MPEG Audio Collection: history
 
- works, but buggy:
- - remove entries from list (information on summary remains there)
- - physically remove files from disc (information on summary remains there)
-  (it should be: [Volume Size]-[Removed Files' Size] 
-     and it is : [Volume Size])
+MPEG Audio Collection 2.92+ (11. January 2006)
+----------------------------------------------
+ - fixed problem with non-flac files with .flac extension
+ - fixed problem with the CD cover designer
+ - updated to Audio Tools Library v2.3 (27 May 2005)
+ - new component needed to compile the sources: TNTUnicodeControls 
+   (http://www.tntware.com/delphicontrols/unicode/)
+
+MPEG Audio Collection 2.92+ (14. July 2005) 2.92+
+-------------------------------------------------
+ - some part of the code rewritten -> compiled exe size reduced by 97 Kbyte
+ - removed jclUnicode.pas from the source code because the latest Jedi Code Library has updated
+   version of it
+
+MPEG Audio Collection 2.92+ (19. June 2005)
+-------------------------------------------
+ - added new functions to the OGG Tag editor
+ - some minor fixes in the behavior of the OGG Tag editor
+ - some part of the code rewritten
+
+MPEG Audio Collection 2.92+ (29. May 2005)
+------------------------------------------
+ - added new functions to the ID3 Tag editor
+ - some minor fixes in the behavior of the ID3 Tag editor

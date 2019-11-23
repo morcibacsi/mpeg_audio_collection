@@ -1,0 +1,10 @@
+a:link { color:#003388; text-decoration:none; }
+a:visited { color:#003388; text-decoration:none; }
+a:active { color:#003388; text-decoration:none; }
+a:hover { color:#990000; text-decoration:none; }
+
+table { width:490px; margin-left:50px; margin-top:0px; margin-bottom:0px; margin-right:0px; font-family:tahoma,verdana,arial; font-size:smaller; text-align:justify; }
+
+th { border-bottom:1px solid #bbbbdd; font-weight:normal; font-style:normal; font-family:tahoma,verdana,arial; font-size:large; text-align:left; }
+
+body  { background-color:#fff8f8; }
