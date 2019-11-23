@@ -1,6 +1,6 @@
 object frmFilenameToTag: TfrmFilenameToTag
-  Left = 481
-  Top = 314
+  Left = 439
+  Top = 129
   BorderStyle = bsDialog
   Caption = '_Filename To Tag'
   ClientHeight = 334

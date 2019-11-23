@@ -1,6 +1,6 @@
 object frmFileRenamer: TfrmFileRenamer
-  Left = 153
-  Top = 130
+  Left = 224
+  Top = 281
   ActiveControl = Button1
   AutoScroll = False
   BorderIcons = [biSystemMenu, biMaximize]
@@ -220,8 +220,8 @@ object frmFileRenamer: TfrmFileRenamer
     object Image3: TImage
       Left = 16
       Top = 56
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -273,8 +273,8 @@ object frmFileRenamer: TfrmFileRenamer
     object Image4: TImage
       Left = 16
       Top = 80
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -326,8 +326,8 @@ object frmFileRenamer: TfrmFileRenamer
     object Image5: TImage
       Left = 16
       Top = 104
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -379,8 +379,8 @@ object frmFileRenamer: TfrmFileRenamer
     object Image6: TImage
       Left = 16
       Top = 128
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -432,8 +432,8 @@ object frmFileRenamer: TfrmFileRenamer
     object Image7: TImage
       Left = 16
       Top = 152
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -485,8 +485,8 @@ object frmFileRenamer: TfrmFileRenamer
     object Image8: TImage
       Left = 16
       Top = 176
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -586,8 +586,8 @@ object frmFileRenamer: TfrmFileRenamer
     object Image1: TImage
       Left = 16
       Top = 200
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -721,6 +721,7 @@ object frmFileRenamer: TfrmFileRenamer
         end>
       HideSelection = False
       MultiSelect = True
+      RowSelect = True
       SmallImages = ImageList1
       TabOrder = 0
       ViewStyle = vsReport

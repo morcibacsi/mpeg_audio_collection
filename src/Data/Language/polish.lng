@@ -292,5 +292,43 @@
 291Move down
 292ID
 293Freedb
+294Clear results
+295Composer
+296Orig. Artist
+297Copyright
+298Encoded by
+299Update
+300Undo
+301Copy to ID3v1
+302Copy from ID3v1
+303CRC
+304Copyright
+305Original
+306Emphasis
+307Can not save tag to the file: 
+308You have to select a file!
+309View file info (Edit ID3)
+310File not found!
+311Data loaded from database!
+312Not avaible in this mode!
+313Nominal BitRate
+314Serial Number
+315Version
+316Vendor
+317Standard tags
+318Other
+319Physically remove selected
+320All selected files will be REMOVED PHYSICALLY from the disc! Are you sure?
+321&Set capitalization:
+322lower case
+323UPPER CASE
+324Large Case
+325Like a sentence
+326iNVERT CASE
+327rAnDom cASe
+328unchanged
+329Swap Artist <> Title (Ctrl+Up)
+330Auto sort collection after adding a new volume
+331Auto save collection after adding a new volume
 >>>Translation by Tomasz Waraksa, POLAND, tomaszwaraksa@poczta.onet.pl
 >>>Correction by Mr.Samurai@gmx.net

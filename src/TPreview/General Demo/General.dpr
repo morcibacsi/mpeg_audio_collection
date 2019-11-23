@@ -1,4 +1,4 @@
-program PrvDemo;
+program General;
 
 uses
   Forms,

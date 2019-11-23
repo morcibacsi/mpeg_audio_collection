@@ -1,16 +1,33 @@
+// changed by sammy_c 
 { *************************************************************************** }
 {                                                                             }
-{ Audio Tools Library (Freeware)                                              }
+{ Audio Tools Library                                                         }
 { Class TWMAfile - for extracting information from WMA file header            }
 {                                                                             }
-{ Copyright (c) 2001,2002 by Jurgen Faul                                      }
-{ E-mail: jfaul@gmx.de                                                        }
-{ http://jfaul.de/atl                                                         }
+{ http://mac.sourceforge.net/atl/                                             }
+{ e-mail: macteam@users.sourceforge.net                                       }
+{                                                                             }
+{ Copyright (c) 2000-2002 by Jurgen Faul                                      }
+{ Copyright (c) 2003-2005 by The MAC Team                                     }
 {                                                                             }
 { Version 1.0 (29 April 2002)                                                 }
 {   - Support for Windows Media Audio (versions 7, 8)                         }
 {   - File info: file size, channel mode, sample rate, duration, bit rate     }
 {   - WMA tag info: title, artist, album, track, year, genre, comment         }
+{                                                                             }
+{ This library is free software; you can redistribute it and/or               }
+{ modify it under the terms of the GNU Lesser General Public                  }
+{ License as published by the Free Software Foundation; either                }
+{ version 2.1 of the License, or (at your option) any later version.          }
+{                                                                             }
+{ This library is distributed in the hope that it will be useful,             }
+{ but WITHOUT ANY WARRANTY; without even the implied warranty of              }
+{ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU           }
+{ Lesser General Public License for more details.                             }
+{                                                                             }
+{ You should have received a copy of the GNU Lesser General Public            }
+{ License along with this library; if not, write to the Free Software         }
+{ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA   }
 {                                                                             }
 { *************************************************************************** }
 
@@ -90,7 +107,7 @@ const
 
   { Names of supported comment fields }
   WMA_FIELD_NAME: array [1..WMA_FIELD_COUNT] of WideString =
-    ('WM/TITLE', 'WM/AUTHOR', 'WM/ALBUMTITLE', 'WM/TRACK', 'WM/YEAR',
+    ('WM/TITLE', 'WM/AUTHOR', 'WM/ALBUMTITLE', 'WM/TRACKNUMBER', 'WM/YEAR',
      'WM/GENRE', 'WM/DESCRIPTION');
 
   { Max. number of characters in tag field }
@@ -125,6 +142,8 @@ begin
   StringSize := DataSize div 2;
   if StringSize > WMA_MAX_STRING_SIZE then StringSize := WMA_MAX_STRING_SIZE;
   Source.ReadBuffer(FieldData, StringSize * 2);
+  { If we didn't read all the data because the string was longer than WMA_MAX_STRING_SIZE,
+    skip to the end of the data }
   Source.Seek(DataSize - StringSize * 2, soFromCurrent);
   for Iterator := 1 to StringSize do
     Result := Result +
@@ -171,13 +190,15 @@ begin
     FieldName := ReadFieldString(Source, DataSize);
     { Read value data type }
     Source.ReadBuffer(DataType, SizeOf(DataType));
+    { and value data size }
+    Source.ReadBuffer(DataSize, SizeOf(DataSize));
     { Read field value only if string }
     if DataType = 0 then
     begin
-      Source.ReadBuffer(DataSize, SizeOf(DataSize));
       FieldValue := ReadFieldString(Source, DataSize);
     end
     else
+      { Skip value }
       Source.Seek(DataSize, soFromCurrent);
     { Set corresponding tag field if supported }
     for Iterator2 := 1 to WMA_FIELD_COUNT do

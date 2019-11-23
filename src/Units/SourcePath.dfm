@@ -1,12 +1,11 @@
 object frmSourcePath: TfrmSourcePath
-  Left = 596
-  Top = 310
+  Left = 283
+  Top = 289
+  Width = 547
+  Height = 468
   ActiveControl = Button1
   BorderIcons = [biSystemMenu]
-  BorderStyle = bsDialog
   Caption = '_Title'
-  ClientHeight = 344
-  ClientWidth = 400
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +18,7 @@ object frmSourcePath: TfrmSourcePath
   PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage
-    Left = 328
+    Left = 456
     Top = 128
     Width = 32
     Height = 32
@@ -100,15 +99,15 @@ object frmSourcePath: TfrmSourcePath
   object GroupBox1: TGroupBox
     Left = 16
     Top = 16
-    Width = 273
-    Height = 241
+    Width = 393
+    Height = 329
     Caption = '_Source'
     TabOrder = 0
     object FolderTree1: TFolderTree
       Left = 16
       Top = 24
-      Width = 241
-      Height = 201
+      Width = 361
+      Height = 289
       Active = True
       FolderOptions = []
       OnChange = FolderTree1Change
@@ -119,8 +118,8 @@ object frmSourcePath: TfrmSourcePath
     end
   end
   object Button1: TButton
-    Left = 304
-    Top = 264
+    Left = 432
+    Top = 368
     Width = 81
     Height = 25
     Caption = '_OK'
@@ -128,8 +127,8 @@ object frmSourcePath: TfrmSourcePath
     OnClick = Button1Click
   end
   object Button2: TButton
-    Left = 304
-    Top = 304
+    Left = 432
+    Top = 400
     Width = 81
     Height = 25
     Cancel = True
@@ -139,15 +138,15 @@ object frmSourcePath: TfrmSourcePath
   end
   object GroupBox2: TGroupBox
     Left = 16
-    Top = 264
-    Width = 273
+    Top = 360
+    Width = 393
     Height = 65
     Caption = '_Name'
     TabOrder = 1
     object Edit1: TEdit
       Left = 16
       Top = 24
-      Width = 241
+      Width = 361
       Height = 21
       MaxLength = 50
       TabOrder = 0
@@ -155,7 +154,7 @@ object frmSourcePath: TfrmSourcePath
     end
   end
   object ChckBxEject: TCheckBox
-    Left = 306
+    Left = 434
     Top = 230
     Width = 90
     Height = 17

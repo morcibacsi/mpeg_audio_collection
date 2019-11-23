@@ -92,6 +92,7 @@ var
 	Tree: TTreeView;
 	TempTree: TTreeView;
 	TempList: TListBox;
+	STempList: TListBox; {SearchTemplist PinterPeti}
 	Lang: TListBox;
 	DirList: TDirectoryListBox;
 	FileList: TFileListBox;
@@ -192,6 +193,8 @@ var
   UseFoobar: boolean = false;
 
   AllFiles: boolean = false;
+  AutoSort: boolean = false; //PP
+  AutoSave: boolean = false; //PP
 
   PreferTag: integer = 1;
   MP3TagWrite: Integer;
@@ -269,7 +272,7 @@ function GetNewFileName(const OldName: string; Tag: TagArray; Macro: string; Fil
 function GetFileTag(const FileName: string; LengthLimit: integer; Number: integer): TagArray;
 function VolumeDataOK(Drive: Char; var VLabel: string; var VSerial: longint; var VType: Integer): boolean;
 function GetVolumeLabel(Drive: Char): String;
-
+function GetFilePath(SNode: TTreeNode): string;  //PinterPeti
 // Gambit
 function GetMPCVersion(VersionNumber: Integer): String;
 function GetSelectedPath(SelectedNode: TTreeNode): String;
@@ -281,15 +284,46 @@ uses Main;
 
 { --------------------------------------------------------------------------- }
 
+function GetFilePath(SNode: TTreeNode): string;  //PinterPeti
+var Path, DriveLabel, SLabel: string;
+    Index, SSerial: longint;
+    SType: Integer;
+    DriveExists: boolean;
+    VData: DataArray;
+    Node: TTreeNode;
+begin
+  Result := '';
+  DriveExists := false;
+  Node := SNode;
+  Path := ExtractName(Node.Text);
+  while Node.Level > 1 do begin
+    Node := Node.Parent;
+    Path := ExtractName(Node.Text) + '\' + Path;
+  end;
+  DriveLabel := '';
+  if Pos('\', Path) > 0 then
+    DriveLabel := Copy(Path, 1, Pos('\', Path) - 1)
+  else
+    Drivelabel := Path;
+  Path := GetVolumePath(Path);
+  VData := ExtractData(Node.Text);
+  for Index := FirstDrive to frmMain.DriveComboBox1.Items.Count - 1 do
+    if (VolumeDataOK(frmMain.DriveComboBox1.Items.Strings[Index][1], SLabel, SSerial, SType)) and   ((VData[6] = SSerial) or ((VData[6] = 0) and (CompareText(DriveLabel, SLabel) = 0))) then begin
+      DriveExists := true;
+      Path := frmMain.DriveComboBox1.Items.Strings[Index][1] + ':\' + Path;
+    end;
+  GetFilePath := path;
+end;
+
+{ --------------------------------------------------------------------------- }
+
 function GetText(Index: integer): string;
 var
 	Line: string;
 begin
 	try
-	begin
 		Line := Lang.Items.Strings[Index];
 		Result := Copy(Line, 4, Length(Line) - 3);
-	end;
 	except
 		Result := '?';
 	end;
@@ -799,16 +833,38 @@ begin
 
 	if FileExists(FileName) then
   begin
-   	ID3v1.ReadFromFile(FileName);
-    if ID3v1.Exists then
+//PinterPeti ID3v1 -> frmMain.pkID3.ID3v1 to Lyrics3 v2.00 support
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+	frmMain.pkID3.LoadFromFile(FileName); //PinterPeti
+	if (frmMain.pkID3.UseID3v1) and (frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 = False) then
 		begin
-    	Tag[1] := TextFilter(ID3v1.Title, LengthLimit);
-      Tag[2] := TextFilter(ID3v1.Artist, LengthLimit);
-      Tag[3] := TextFilter(ID3v1.Album, LengthLimit);
-      Tag[4] := IntToStr(ID3v1.Track);
-      Tag[5] := TextFilter(ID3v1.Year, LengthLimit);
-      Tag[6] := TextFilter(ID3v1.Comment, LengthLimit);
-      Tag[7] := TextFilter(ID3v1.Genre, LengthLimit); // MB
+    	Tag[1] := TextFilter(frmMain.pkID3.ID3v1.Title, LengthLimit);
+      Tag[2] := TextFilter(frmMain.pkID3.ID3v1.Artist, LengthLimit);
+      Tag[3] := TextFilter(frmMain.pkID3.ID3v1.Album, LengthLimit);
+      Tag[4] := IntToStr(frmMain.pkID3.ID3v1.TrackNo);
+      Tag[5] := TextFilter(frmMain.pkID3.ID3v1.Year, LengthLimit);
+      Tag[6] := TextFilter(frmMain.pkID3.ID3v1.Comment, LengthLimit);
+      Tag[7] := TextFilter(frmMain.pkID3.ID3v1.Genre, LengthLimit);
+    end;
+
+    if (frmMain.pkID3.UseID3v1) and (frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 = True) then begin
+      if TextFilter(frmMain.pkID3.ID3v1.Lyrics3.Title, LengthLimit) <> '' then
+        Tag[1] := TextFilter(frmMain.pkID3.ID3v1.Lyrics3.Title, LengthLimit)
+      else
+        Tag[1] := TextFilter(frmMain.pkID3.ID3v1.Title, LengthLimit);
+      if TextFilter(frmMain.pkID3.ID3v1.Lyrics3.Artist, LengthLimit) <> '' then
+        Tag[2] := TextFilter(frmMain.pkID3.ID3v1.Lyrics3.Artist, LengthLimit)
+      else
+        Tag[2] := TextFilter(frmMain.pkID3.ID3v1.Artist, LengthLimit);
+      if TextFilter(frmMain.pkID3.ID3v1.Lyrics3.Album, LengthLimit) <> '' then
+        Tag[3] := TextFilter(frmMain.pkID3.ID3v1.Lyrics3.Album, LengthLimit)
+      else
+        Tag[3] := TextFilter(frmMain.pkID3.ID3v1.Album, LengthLimit);
+      Tag[4] := IntToStr(frmMain.pkID3.ID3v1.TrackNo);
+      Tag[5] := TextFilter(frmMain.pkID3.ID3v1.Year, LengthLimit);
+      Tag[6] := TextFilter(frmMain.pkID3.ID3v1.Comment, LengthLimit);
+      Tag[7] := TextFilter(frmMain.pkID3.ID3v1.Genre, LengthLimit); // MB
     end;
 
     APEtag.ReadFromFile(FileName);

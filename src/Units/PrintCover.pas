@@ -119,7 +119,7 @@ begin
 
 	LineSpace := Abs(PrintPreview1.Canvas.Font.Height) div 4;
 
-	R := PrintPreview1.PageRect;
+        R := PrintPreview1.PageBounds;
 	LSFront := (R.Right - R.Left - FCWidth) div 2;
   LSBack := (R.Right - R.Left - BCWidth) div 2;
 
@@ -142,7 +142,7 @@ begin
 		for Index := DirList.ItemIndex + 1 to DirList.Items.Count - 1 do
 		begin
 			R.Bottom := R.Top - PrintPreview1.Canvas.Font.Height + LineSpace;
-			if R.Bottom > PrintPreview1.PageRect.Top + FCHeight - (VRMargin div 4) then break;
+                        if R.Bottom > PrintPreview1.PageBounds.Top + FCHeight - (VRMargin div 4) then break;
 
 			if not Numeration then Number := ''
       else
@@ -156,7 +156,7 @@ begin
 			R.Top := R.Bottom;
 		end;
 
-    R := PrintPreview1.PageRect;
+    R := PrintPreview1.PageBounds;
 
 		R.Right := R.Left + LSBack + BCWidth - BCSite - HRMargin;
 		R.Left := R.Left + LSBACK + BCSite + HRMargin;
@@ -165,7 +165,7 @@ begin
 		for Index := DirList.ItemIndex + 1 to DirList.Items.Count - 1 do
 		begin
 			R.Bottom := R.Top - PrintPreview1.Canvas.Font.Height + LineSpace;
-			if R.Bottom > PrintPreview1.PageRect.Top + FCHeight + BCHeight - (VRMargin div 4) then break;
+                        if R.Bottom > PrintPreview1.PageBounds.Top + FCHeight + BCHeight - (VRMargin div 4) then break;
 
 			if not Numeration then Number := ''
       else
@@ -188,10 +188,10 @@ begin
         else Info := Info + ',   ' + FloatToStr(Round((DiskSize(Ord(DirList.Directory[1]) - 64) - DiskFree(Ord(DirList.Directory[1]) - 64)) / 1024 / 1024 * 100) / 100) + ' ' + GetText(62);
 
 	    PrintPreview1.Canvas.Font.Size := 18;
-    	R.Left := PrintPreview1.PageRect.Left + LSBack + (BCWidth - PrintPreview1.Canvas.TextWidth(Info)) div 2;
+        R.Left := PrintPreview1.PageBounds.Left + LSBack + (BCWidth - PrintPreview1.Canvas.TextWidth(Info)) div 2;
 	    R.Right := R.Left + PrintPreview1.Canvas.TextWidth(Info);
-  	  R.Top := PrintPreview1.PageRect.Top + FCHeight + BCHeight - ((VRMargin + PrintPreview1.Canvas.TextHeight(Info)) div 2);
-    	R.Bottom := PrintPreview1.PageRect.Top + FCHeight + BCHeight - 1;
+          R.Top := PrintPreview1.PageBounds.Top + FCHeight + BCHeight - ((VRMargin + PrintPreview1.Canvas.TextHeight(Info)) div 2);
+        R.Bottom := PrintPreview1.PageBounds.Top + FCHeight + BCHeight - 1;
 			PrintPreview1.Canvas.TextRect(R, R.Left, R.Top, Info);
     end;
 
@@ -213,8 +213,8 @@ begin
 	  OldFont := SelectObject(PrintPreview1.Canvas.Handle, NewFont);
 
 	  Windows.TextOut(PrintPreview1.Canvas.Handle,
-      PrintPreview1.PageRect.Left + LSBack + (BCSite - PrintPreview1.Canvas.TextHeight(VolLabel)) div 2,
-    	PrintPreview1.PageRect.Top + FCHeight + BCHeight - HRMargin, PChar(VolLabel), Length(VolLabel));
+      PrintPreview1.PageBounds.Left + LSBack + (BCSite - PrintPreview1.Canvas.TextHeight(VolLabel)) div 2,
+        PrintPreview1.PageBounds.Top + FCHeight + BCHeight - HRMargin, PChar(VolLabel), Length(VolLabel));
 	  SelectObject(PrintPreview1.Canvas.Handle, OldFont);
   	DeleteObject(NewFont);
 
@@ -224,8 +224,8 @@ begin
   	NewFont := CreateFontIndirect(lf);
 	  OldFont := SelectObject(PrintPreview1.Canvas.Handle, NewFont);
 	  Windows.TextOut(PrintPreview1.Canvas.Handle,
-      PrintPreview1.PageRect.Left + LSBack + BCWidth - (BCSite - PrintPreview1.Canvas.TextHeight(VolLabel)) div 2,
-    	PrintPreview1.PageRect.Top + FCHeight + HRMargin, PChar(VolLabel), Length(VolLabel));
+      PrintPreview1.PageBounds.Left + LSBack + BCWidth - (BCSite - PrintPreview1.Canvas.TextHeight(VolLabel)) div 2,
+        PrintPreview1.PageBounds.Top + FCHeight + HRMargin, PChar(VolLabel), Length(VolLabel));
 	  SelectObject(PrintPreview1.Canvas.Handle, OldFont);
   	DeleteObject(NewFont);
 	except

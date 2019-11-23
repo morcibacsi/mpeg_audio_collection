@@ -20,7 +20,7 @@
 019Info
 020Dupla példányok
 021Nézet
-022Betû
+022Betû...
 023Négyzetrács
 024Kijelölés kattintás nélkül
 025Eszközsor
@@ -29,7 +29,7 @@
 028Átnevezés
 029ID3 szerkesztése
 030CD borító
-031Beállítások
+031Beállítások...
 032?
 033Infó
 034Verzió-történet
@@ -68,7 +68,7 @@
 067Kbit/s
 068mappa
 069fájl
-070Hz
+070
 071Sztereó
 072Joint stereo
 073Dual channel
@@ -208,7 +208,7 @@
 207Mai dátum hozzáadása
 208CD címke
 209Csak érvényes fájlok vizsgálata
-210Extra oszlopok
+210Extra oszlopok...
 211Típus
 212Törlés
 213Megnyitás újra
@@ -237,7 +237,7 @@
 236Include all files in collection
 237Copy To Clipboard
 238Where is foobar2000?
-239Genre
+239Stílus
 240Eject CD
 241Check this if you want the CD to be ejected after scanning
 242Open in Explorer
@@ -247,7 +247,7 @@
 246First word
 247lowercase
 248UPPERCASE
-249Replace
+249Csere
 250Use replacement-filter
 251Wizards
 252Filename > Tag
@@ -292,5 +292,43 @@
 291Move down
 292ID
 293Freedb
+294Lista törlése
+294Szerzõ
+296Orig. Elõadó
+297Copyright
+298Encoded by
+299Update
+300Undo
+301Copy to ID3v1
+302Copy from ID3v1
+303CRC
+304Copyright
+305Original
+306Emphasis
+307Can not save tag to the file: 
+308You have to select a file!
+309View file info (Edit ID3)
+310File not found!
+311Data loaded from database!
+312Not avaible in this mode!
+313Nominal BitRate
+314Serial Number
+315Version
+316Vendor
+317Standard tags
+318Other
+319Physically remove selected
+320All selected files will be REMOVED PHYSICALLY from the disc! Are you sure?
+321&Nagy/kisbetû:
+322mind kisbetû
+323MIND NAGYBETë
+324Minden Szó Nagybetûs
+325Mint egy mondat
+326kIS/NAGY BETÛ CSERE
+327vélEtlEN
+328változatlan
+329Swap Artist <> Title (Ctrl+Up)
+330Auto sort collection after adding a new volume
+331Auto save collection after adding a new volume
 >>>Translation by Kovács Péter
 >>>Tizedes Krisztián <byter@freemail.hu, last updated: 2001. jul. 24

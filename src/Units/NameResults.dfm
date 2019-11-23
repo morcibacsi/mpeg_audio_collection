@@ -1,6 +1,6 @@
 object frmNameResults: TfrmNameResults
-  Left = 414
-  Top = 353
+  Left = 334
+  Top = 324
   ActiveControl = Button6
   AutoScroll = False
   BorderIcons = [biSystemMenu, biMaximize]
@@ -137,8 +137,8 @@ object frmNameResults: TfrmNameResults
     BevelOuter = bvLowered
     TabOrder = 1
     object ListView1: TListView
-      Left = 16
-      Top = 16
+      Left = 8
+      Top = 24
       Width = 433
       Height = 281
       Columns = <

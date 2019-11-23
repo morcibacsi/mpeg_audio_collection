@@ -30,12 +30,14 @@ interface
 
 uses
 	FileRenamer, FileInfo, FolderInfo, Clipbrd,
-	RenameLabel, NameResults, TagResults, PropertyResults, Dialogs, Menus,
-  ImgList, Controls, ComCtrls, ToolWin, StdCtrls, FileCtrl, ExtCtrls,
-  ColumnsDialog, PrintCover, Registry, Options, ReportDialog, ReportProcess,
-  DuplicatesResults, SourcePath, ScanDialog, TagEditor, SelectVolume,
-  Find,	Statistic, About, WaitWindow, MessageDialog, ShellAPI, Global,
-	Windows, Messages, SysUtils, Classes, Graphics, Forms;
+	RenameLabel,
+  ColumnsDialog, PrintCover, Options, ReportDialog,
+  Find, ReportProcess, ScanDialog, SourcePath, TagEditor, SelectVolume,
+  ProgressWindow, Statistic, About, WaitWindow, MessageDialog, Global, pkID3,
+
+  Windows, SysUtils, Classes, Forms, Registry, ShellAPI,
+  Dialogs, Menus, ImgList, Controls, ComCtrls, ToolWin, StdCtrls,
+  FileCtrl, ExtCtrls, Graphics;
 
 type
   TfrmMain = class(TForm)
@@ -142,6 +144,36 @@ type
     Copy1: TMenuItem;
     Image1: TImage;
     OpenDir: TMenuItem;
+    ToolButton13: TToolButton;
+    EditID3: TMenuItem;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Splitter2: TSplitter;
+    Panel4: TPanel;
+    ListView2: TListView;
+    ILNameResults: TImageList;
+    pmnSearch: TPopupMenu;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
+    ILTagResults: TImageList;
+    ILPropertyResults: TImageList;
+    Panel5: TPanel;
+    DuplicateResults: TImageList;
+    ComboBox1: TComboBox;
+    pkID3: TpkID3;
+    Delete4: TMenuItem;
+    Delete3: TMenuItem;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    ListBox5: TListBox;
+    TabSheet2: TTabSheet;
+    Label1: TLabel;
+    tvArtists: TTreeView;
 		procedure Toolbar1Click(Sender: TObject);
 		procedure Statusbar1Click(Sender: TObject);
 		procedure Gridlines1Click(Sender: TObject);
@@ -211,15 +243,33 @@ type
     function CreatePlayList(SNode: TTreeNode; PlayList: TListBox): string;
     procedure OpenDirClick(Sender: TObject);
 
-	private
+    procedure ToolButton13Click(Sender: TObject);
+    procedure EditID3Click(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure ListView2DblClick(Sender: TObject);
+    procedure ListView2ColumnClick(Sender: TObject; Column: TListColumn);
+    procedure ListView2Compare(Sender: TObject; Item1, Item2: TListItem;
+      Data: Integer; var Compare: Integer);
+    procedure ListView2KeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure MenuItem7Click(Sender: TObject);
+    procedure ComboBox1Change(Sender: TObject);
+//    procedure ListView1Resize(Sender: TObject);
+    procedure ListView1MouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure ListView2MouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure Delete3Click(Sender: TObject);
+    procedure Delete4Click(Sender: TObject);
+    procedure pmnSearchPopup(Sender: TObject);
     function GetSelectedNode: TTreeNode;
+
+    private
 		procedure SetCaptions;
 		procedure ShowTextFile(FileName: string);
 		function QuestionForSaveCollection: byte;
 		function OpenCollectionOK(FileName: string): boolean;
-		procedure UpdateListView;
 		procedure UpdateInformation;
-		procedure UpdateControls;
 		function SaveCollectionOK(FileName: string): boolean;
 		procedure OnSaveCollection(FileName, WindowTitle: string);
 		procedure OpenListViewItem;
@@ -248,20 +298,714 @@ type
     function FindPropertyOK(FItem: longint): boolean;
     function GetDate(Node: TTreeNode): string;
     procedure OnSearch;
-    procedure SetColumns;
+    procedure SetColumns(ListView:TListView);   //PinterPeti added parameter to procedure
     procedure MarkUp(Node: TTreeNode; Marked: boolean);
     procedure MarkDown(Node: TTreeNode; Marked: boolean);
+
+    function ShowNameResults(SPath: string; GD, HT: boolean): TTreeNode;     //PinterPeti
+    function ShowTagResults(SPath: string; GD, HT: boolean): TTreeNode;      //PinterPeti
+    function ShowPropertyResults(SPath: string; GD, HT: boolean): TTreeNode; //PinterPeti
+
+    public
+      procedure UpdateListView;    //PinterPeti
+      procedure UpdateControls;    //PinterPeti
+      procedure DuplicateOnChange; //PinterPeti
+
+      function SaveResults(FName:String;Mode:Byte):Boolean;  //PinterPet
+      function ShowDuplicatesResults(Path: string; GD, HT: boolean): TTreeNode; //PinterPeti
 	end;
 
 var
 	frmMain: TfrmMain;
+	SourcePath:String;   //PinterPeti
+	FindItem: TTreeNode; //PinterPeti
+	frmFind: TfrmFind;   //PinterPeti
+	SearchArea:Byte;     //PinterPeti
 
 implementation
+
+uses EditTag, EditOggTag;
 
 {$R *.DFM}
 
 { --------------------------------------------------------------------------- }
 
+function TfrmMain.SaveResults(FName:String;Mode:Byte):Boolean; //PinterPet
+const PText: array [1..6] of array [0..2] of string =
+            (('128', '160', '192'),
+             ('22050', '32000', '41000'),
+             ('1', '0', '0'),
+             ('1', '2', '2.5'),
+             ('1', '2', '3'),
+             ('0', '0', '0'));
+        PPointer: array [0..2] of string = ('<', '=', '>');
+var RFile: TextFile;
+    ListItem: TListItem;
+    Index, Index2, FirstLine: longint;
+    Duplicate, Path: string;
+    Item, ParentNode: TTreeNode;
+
+begin
+  case Mode of
+    0:begin  //NameResults
+        try
+          FileSetAttr(FName, 0);
+          AssignFile(RFile, FName);
+          Rewrite(RFile);
+          Writeln(RFile, GetText(140) + ': ' + GetText(120));
+          Writeln(RFile, '');
+          Writeln(RFile, GetText(179) + ': ' + LastNameText[1]);
+          if NameCase then
+            Writeln(RFile, GetText(127) + ': ' + GetText(55))
+          else
+            Writeln(RFile, GetText(127) + ': ' + GetText(56));
+          Writeln(RFile, '');
+          for Index := 0 to ListView2.Items.Count - 1 do begin
+            ListItem := ListView2.Items[Index];
+            Writeln(RFile, ListItem.Caption);
+          end;
+          CloseFile(RFile);
+          Result := true;
+          except
+            Result := false;
+        end;
+      end;
+    1:begin //PropertyResults
+        try
+          FileSetAttr(FName, 0);
+          AssignFile(RFile, FName);
+          Rewrite(RFile);
+          Writeln(RFile, GetText(140) + ': ' + GetText(20) + ': ' + IntToStr(ListView2.Items.Count));
+          Writeln(RFile, '');
+          if Prop[1, 1] = 1 then Writeln(RFile, GetText(131) + ': ' + PPointer[Prop[1, 2]] + ' ' + PText[1, Prop[1, 3]] + ' ' + GetText(67));
+          if Prop[2, 1] = 1 then Writeln(RFile, GetText(132) + ': ' + PPointer[Prop[2, 2]] + ' ' + PText[2, Prop[2, 3]] + ' ' + GetText(70));
+          if Prop[3, 1] = 1 then
+            if Prop[3, 2] = 0 then
+              Writeln(RFile, GetText(133) + ': ' + GetText(74))
+            else
+              Writeln(RFile, GetText(133) + ': ' + GetText(71));
+          if Prop[4, 1] = 1 then
+            Writeln(RFile, GetText(134) + ': ' + PPointer[Prop[4, 2]] + ' ' + PText[4, Prop[4, 3]]);
+          if Prop[5, 1] = 1 then
+            Writeln(RFile, GetText(135) + ': ' + PPointer[Prop[5, 2]] + ' ' + PText[5, Prop[5, 3]]);
+          if Prop[6, 1] = 1 then
+            if Prop[6, 2] = 0 then
+              Writeln(RFile, GetText(136) + ': ' + GetText(137))
+            else
+              Writeln(RFile, GetText(136) + ': ' + GetText(138));
+
+          Writeln(RFile, '');
+          for Index := 0 to ListView2.Items.Count - 1 do begin
+            ListItem := ListView2.Items[Index];
+            Writeln(RFile, ListItem.Caption);
+          end;
+          CloseFile(RFile);
+          Result := true;
+          except
+            Result := false;
+        end;
+      end;
+    2:begin //Tag
+        try
+          FileSetAttr(FName, 0);
+          AssignFile(RFile, FName);
+          Rewrite(RFile);
+          Writeln(RFile, GetText(140) + ': ' + GetText(19) + ': ' + IntToStr(ListView2.Items.Count));
+          Writeln(RFile, '');
+          for Index := 1 to numTag do // MB
+            if Trim(TagText[Index]) <> '' then
+              Writeln(RFile, GetText(Index + 41) + ': ' + TagText[Index]);
+          Writeln(RFile, '');
+
+          for Index := 0 to ListView2.Items.Count - 1 do begin
+              ListItem := ListView2.Items[Index];
+              Writeln(RFile, ListItem.Caption);
+          end;
+          CloseFile(RFile);
+          Result := true;
+          except
+            Result := false;
+        end;
+      end;
+    3:begin //Duplicates
+        try
+          FileSetAttr(FName, 0);
+          AssignFile(RFile, FName);
+          Rewrite(RFile);
+          Writeln(RFile, GetText(140) + ': ' + GetText(20) + ': ' + IntToStr(ListView2.Items.Count));
+          for Index2 := 0 to ComboBox1.Items.Count - 1 do begin
+            FirstLine := integer(ComboBox1.Items.Objects[Index2]);
+            Duplicate := STempList.Items.Strings[FirstLine];
+            Index := FirstLine;
+            Writeln(RFile, '');
+            Writeln(RFile, ComboBox1.Items.Strings[Index2]);
+            repeat
+              Item := TTreeNode(STempList.Items.Objects[Index]);
+              Path := '';
+              ParentNode := Item;
+              while (ParentNode.Level > 1) do begin
+                ParentNode := ParentNode.Parent;
+                Path := ExtractName(ParentNode.Text) + '\' + Path;
+              end;
+              if SourcePath <> '' then begin
+                if Pos('\', Path) > 0 then
+                  Delete(Path, 1, Pos('\', Path))
+                else
+                  Path := '';
+                Path := Copy(SourcePath, 1, 3) + Path;
+              end;
+              if (Length(Path) > 0) and (Path[Length(Path)] = '\') then
+                Delete(Path, Length(Path), 1);
+                Writeln(RFile, Path + '\' + ExtractName(Item.Text));
+                Inc(Index);
+            until (Index >= STempList.Items.Count) or (CompareText(Duplicate, STempList.Items.Strings[Index]) <> 0);
+          end;
+          CloseFile(RFile);
+          Result := true;
+          except
+            Result := false;
+        end;
+      end;
+  end;
+end;
+
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmMain.DuplicateOnChange;          //PinterPeti copied from DuplicatesResults.pas
+var Index, FirstLine, BitRate: longint;       //TempList > STempList (SearchTemplist)
+    ListItem: TListItem;
+    Line,Duplicate, Path, ItemText: string;
+    Item, ParentNode: TTreeNode;
+    FileData: DataArray;
+    FileTag: TagArray;
+    ColCounter:byte;
+begin
+  with frmMain do begin
+    ComboBox1.Hint := ComboBox1.Items.Strings[ComboBox1.ItemIndex];
+    FirstLine := integer(ComboBox1.Items.Objects[ComboBox1.ItemIndex]);
+    Duplicate := STempList.Items.Strings[FirstLine];
+    Index := FirstLine;
+    ListView2.Items.Clear;
+    repeat
+      Item := TTreeNode(STempList.Items.Objects[Index]);
+      ListItem := ListView2.Items.Insert(0);
+      ListItem.Data := Item;
+      ItemText := ExtractName(Item.Text);
+      FileTag := ExtractTag(Item.Text);
+      FileData := ExtractData(Item.Text);
+      if not Item.HasChildren then begin
+        if (not FileExtensions) and (Pos('.', ItemText) > 0) then
+          ItemText := Copy(ItemText, 1, LastDelimiter('.', ItemText) - 1);
+        ListItem.ImageIndex := 1;
+        FileTag := ExtractTag(Item.Text);
+      end;
+      Path := '';
+      ParentNode := Item;
+      while (ParentNode.Level > 1) do begin
+        ParentNode := ParentNode.Parent;
+        if (ParentNode.Level > 1) or (SourcePath <> '') then
+          Path := ExtractName(ParentNode.Text) + '\' + Path
+        else
+          Path := TTreeNode(ParentNode.Data).Text + '\' + Path;
+      end;
+      if Length(Path) > 0 then
+        Delete(Path, Length(Path), 1);
+      if SourcePath <> '' then begin
+        if Pos('\', Path) > 0 then
+          Delete(Path, 1, Pos('\', Path))
+        else
+          Path := '';
+        Path := Copy(SourcePath, 1, 3) + Path;
+      end;
+      if (Length(Path) > 0) and (Path[Length(Path)] = '\') then
+        Delete(Path, Length(Path), 1);
+///////////////
+      //FileData
+        //1 - Size
+        //2 - ??
+        //3 - Sample Rate
+        //4 - Channel Type
+        //5 - Type
+        //6 - ??
+      //FileTag
+        //1 - Title
+        //2 - Artist
+        //3 - Album
+        //4 - Track
+        //5 - Year
+        //6 - Comment
+        //7 - Genre
+///////////////
+      ListItem.Caption := Path + '\' + ItemText;
+      for ColCounter := 1 to ListView2.Columns.Count-1 do begin         //Determine what should go where
+        if ListView2.Columns[ColCounter].Caption = GetText(42) then
+          ListItem.SubItems.Add(FileTag[1])
+        else if ListView2.Columns[ColCounter].Caption = GetText(43) then
+          ListItem.SubItems.Add(FileTag[2])
+        else if ListView2.Columns[ColCounter].Caption = GetText(44) then
+          ListItem.SubItems.Add(FileTag[3])
+        else if ListView2.Columns[ColCounter].Caption = GetText(45) then
+          ListItem.SubItems.Add(FileTag[4])
+        else if ListView2.Columns[ColCounter].Caption = GetText(46) then
+          ListItem.SubItems.Add(FileTag[5])
+        else if ListView2.Columns[ColCounter].Caption = GetText(47) then
+          ListItem.SubItems.Add(FileTag[6])
+        else if ListView2.Columns[ColCounter].Caption = GetText(239) then
+          ListItem.SubItems.Add(FileTag[7])
+
+        else if ListView2.Columns[ColCounter].Caption = GetText(172) then
+          ListItem.SubItems.Add(DurationToStr(FileData[2]))
+        else if ListView2.Columns[ColCounter].Caption = GetText(171) then
+          ListItem.SubItems.Add(FloatToStrF(FileData[1] / 1024, ffFixed, 15, 2) + ' ' + GetText(62))
+        else if ListView2.Columns[ColCounter].Caption = GetText(132) then
+          ListItem.SubItems.Add(IntToStr(FileData[3] * 10) + ' ' + GetText(70))
+        else if ListView2.Columns[ColCounter].Caption = GetText(131) then begin
+          if FileData[2] <> 0 then
+            BitRate := Trunc(FileData[1] * 8 * 1.024 / Abs(FileData[2]))
+          else
+            BitRate := 0;
+          if FileData[2] < 0 then
+            Line := FormatFloat('000', BitRate) + ' ' + GetText(67) + ' ' + GetText(66)
+          else begin
+            BitRate := AlignedBitRate(BitRate, FileData[3], FileData[4], FileData[5], FileData[6]);
+            Line := FormatFloat('000', BitRate) + ' ' + GetText(67) + ' ' + GetText(148);
+          end;
+            ListItem.SubItems.Add(Line);
+        end else if ListView2.Columns[ColCounter].Caption = GetText(133) then
+          ListItem.SubItems.Add(GetChannelMode(FileData[4]))
+        else if ListView2.Columns[ColCounter].Caption = GetText(211) then
+          ListItem.SubItems.Add(GetMPEGType(FileData[5], FileData[6]))
+      end;
+      Inc(Index);
+    until (Index >= STempList.Items.Count) or (CompareText(Duplicate, STempList.Items.Strings[Index]) <> 0);//SSS
+    ListView2.AlphaSort;
+    ListView2.Selected := ListView2.Items[0];
+    ListView2.ItemFocused := ListView2.Selected;
+  end;
+end;
+
+{ --------------------------------------------------------------------------- }
+
+function TfrmMain.ShowDuplicatesResults(Path: string; GD, HT: boolean): TTreeNode; //PinterPeti copied from DuplicatesResults.pas
+var Index: longint;                                                                //TempList > STempList (SearchTemplist)
+    ItemData: DataArray;
+    ItemTag: TagArray;
+    Duplicate, NameText, PropertyText, TagText, DCaption: string;
+    Item: TTreeNode;
+begin
+  with frmMain do try
+    begin
+      ComboBox1.Enabled := True;
+      ListView2.SmallImages := DuplicateResults;
+      SourcePath := Path;
+      ListView2.GridLines := GD;
+      ListView2.RowSelect := ListView2.GridLines;
+      ListView2.HotTrack := HT;
+      ShowProgressWindow(GetText(141));
+      Duplicate := '';
+      for Index := 0 to STempList.Items.Count - 1 do begin
+        if (Index mod 100) = 0 then
+          SetProgressValue(Round(Index / STempList.Items.Count * 100));
+          if CompareText(Duplicate, STempList.Items.Strings[Index]) <> 0 then begin
+            Duplicate := STempList.Items.Strings[Index];
+            Item := TTreeNode(STempList.Items.Objects[Index]);
+            if CompareName then
+              NameText := ', ' + ExtractName(Item.Text)
+            else
+              NameText := '';
+            if CompareTag then begin
+              ItemTag := ExtractTag(Item.Text);
+              TagText := ', ' + ItemTag[2] + ' - ' + ItemTag[1];
+            end else
+              TagText := '';
+            if CompareProperty then begin
+              ItemData := ExtractData(Item.Text);
+              PropertyText := ',  ' + FloatToStrF(ItemData[1] / 1024, ffFixed, 15, 3)
+                + ' ' + GetText(62) + ',  ' + DurationToStr(Abs(ItemData[2])) + ' ' + GetText(64);
+            end else
+              PropertyText := '';
+            DCaption := NameText + TagText + PropertyText;
+            Delete(DCaption, 1, 2);
+            ComboBox1.Items.Add(DCaption);
+            ComboBox1.Items.Objects[ComboBox1.Items.Count - 1] := TObject(Index);
+          end;
+      end;
+      ComboBox1.ItemIndex := 0;
+      DuplicateOnChange;
+      CloseProgressWindow;
+      FindItem := nil;
+      Result := FindItem;
+    end;
+    finally
+  end;
+end;
+
+{ --------------------------------------------------------------------------- }
+
+function TfrmMain.ShowPropertyResults(SPath: string; GD, HT: boolean): TTreeNode;
+var Index, Index2, BitRate: longint;                  //PinterPeti copied from PropertyResults.pas
+    ListItem: TListItem;                              //TempList > STempList (SearchTemplist)
+    Path, Line, ItemText: string;
+    Item, ParentNode: TTreeNode;
+    FileData: DataArray;
+    FileTag: TagArray;
+    ColCounter:Byte;
+begin
+  with frmMain do try
+    begin
+      ComboBox1.Clear;
+      ComboBox1.Enabled := False;
+      ListView2.SmallImages := ILPropertyResults;
+      SourcePath := SPath;
+      ListView2.GridLines := GD;
+      ListView2.RowSelect := ListView2.GridLines;
+      ListView2.HotTrack := HT;
+      FindItem := nil;
+      ShowProgressWindow(GetText(141));
+      for Index := 0 to STempList.Items.Count - 1 do begin
+        if (Index mod 100) = 0 then
+          SetProgressValue(Round(Index / STempList.Items.Count * 100));
+        Item := TTreeNode(STempList.Items.Objects[Index]);
+        FileData := ExtractData(Item.Text);
+        FileTag := ExtractTag(Item.Text);
+        ListItem := ListView2.Items.Add;
+        ListItem.Data := Item;
+        ItemText := ExtractName(Item.Text);
+        if (not FileExtensions) and (Pos('.', ItemText) > 0) then
+          ItemText := Copy(ItemText, 1, LastDelimiter('.', ItemText) - 1);
+        Path := '';
+        ParentNode := Item;
+        while (ParentNode.Level > 1) do begin
+          ParentNode := ParentNode.Parent;
+          if (ParentNode.Level > 1) or (SourcePath <> '') then
+            Path := ExtractName(ParentNode.Text) + '\' + Path
+          else
+            Path := TTreeNode(ParentNode.Data).Text + '\' + Path;
+        end;
+        if Length(Path) > 0 then
+          Delete(Path, Length(Path), 1);
+        if SourcePath <> '' then begin
+          if Pos('\', Path) > 0 then
+            Delete(Path, 1, Pos('\', Path))
+          else
+            Path := '';
+          Path := Copy(SourcePath, 1, 3) + Path;
+        end;
+        if (Length(Path) > 0) and (Path[Length(Path)] = '\') then
+          Delete(Path, Length(Path), 1);
+///////////////
+      //FileData
+        //1 - Size
+        //2 - ??
+        //3 - Sample Rate
+        //4 - Channel Type
+        //5 - Type
+        //6 - ??
+      //FileTag
+        //1 - Title
+        //2 - Artist
+        //3 - Album
+        //4 - Track
+        //5 - Year
+        //6 - Comment
+        //7 - Genre
+///////////////
+        ListItem.Caption := Path + '\' + ItemText;
+        for ColCounter := 1 to ListView2.Columns.count-1 do begin            //Determine what should go where
+          if ListView2.Columns[ColCounter].Caption = GetText(42) then
+            ListItem.SubItems.Add(FileTag[1])
+          else if ListView2.Columns[ColCounter].Caption = GetText(43) then
+            ListItem.SubItems.Add(FileTag[2])
+          else if ListView2.Columns[ColCounter].Caption = GetText(44) then
+            ListItem.SubItems.Add(FileTag[3])
+          else if ListView2.Columns[ColCounter].Caption = GetText(45) then
+            ListItem.SubItems.Add(FileTag[4])
+          else if ListView2.Columns[ColCounter].Caption = GetText(46) then
+            ListItem.SubItems.Add(FileTag[5])
+          else if ListView2.Columns[ColCounter].Caption = GetText(47) then
+            ListItem.SubItems.Add(FileTag[6])
+          else if ListView2.Columns[ColCounter].Caption = GetText(239) then
+            ListItem.SubItems.Add(FileTag[7])
+
+          else if ListView2.Columns[ColCounter].Caption = GetText(172) then
+            ListItem.SubItems.Add(DurationToStr(FileData[2]))
+          else if ListView2.Columns[ColCounter].Caption = GetText(171) then
+            ListItem.SubItems.Add(FloatToStrF(FileData[1] / 1024, ffFixed, 15, 2) + ' ' + GetText(62))
+          else if ListView2.Columns[ColCounter].Caption = GetText(132) then
+            ListItem.SubItems.Add(IntToStr(FileData[3] * 10) + ' ' + GetText(70))
+          else if ListView2.Columns[ColCounter].Caption = GetText(131) then begin
+            if FileData[2] <> 0 then
+              BitRate := Trunc(FileData[1] * 8 * 1.024 / Abs(FileData[2]))
+            else
+              BitRate := 0;
+            if FileData[2] < 0 then
+              Line := FormatFloat('000', BitRate) + ' ' + GetText(67) + ' ' + GetText(66)
+            else begin
+              BitRate := AlignedBitRate(BitRate, FileData[3], FileData[4], FileData[5], FileData[6]);
+              Line := FormatFloat('000', BitRate) + ' ' + GetText(67) + ' ' + GetText(148);
+            end;
+            ListItem.SubItems.Add(Line);
+          end else if ListView2.Columns[ColCounter].Caption = GetText(133) then
+            ListItem.SubItems.Add(GetChannelMode(FileData[4]))
+          else if ListView2.Columns[ColCounter].Caption = GetText(211) then
+            ListItem.SubItems.Add(GetMPEGType(FileData[5], FileData[6]))
+        end;
+      end;
+      ListView2.Selected := ListView2.Items[0];
+      ListView2.ItemFocused := ListView2.Selected;
+      CloseProgressWindow;
+      Result := FindItem;
+    end;
+    finally
+  end;
+end;
+
+{ --------------------------------------------------------------------------- }
+
+function TfrmMain.ShowTagResults(SPath: string; GD, HT: boolean): TTreeNode;
+var Index, Index2,BitRate: longint;             //PinterPeti copied from TagResults.pas
+    ListItem: TListItem;                        //TempList - > STempList
+    Line, Path, ItemText: string;
+    Item, ParentNode: TTreeNode;
+    FileTag: TagArray;
+    FileData: DataArray;
+//    TagInfo: TagArray;
+    ColCounter:byte;
+begin
+  with frmMain do try
+    begin
+      ComboBox1.Clear;
+      ComboBox1.Enabled := False;
+      ListView2.SmallImages := ILTagResults;
+      SourcePath := SPath;
+      ListView2.GridLines := GD;
+      ListView2.RowSelect := ListView2.GridLines;
+      ListView2.HotTrack := HT;
+      FindItem := nil;
+      Tag := 1;
+      ShowProgressWindow(GetText(141));
+      for Index := 0 to STempList.Items.Count - 1 do begin
+        if (Index mod 100) = 0 then
+          SetProgressValue(Round(Index / STempList.Items.Count * 100));
+        Item := TTreeNode(STempList.Items.Objects[Index]);
+        FileData := ExtractData(Item.Text);
+        FileTag := ExtractTag(Item.Text);
+        ListItem := ListView2.Items.Add;
+        ListItem.Data := Item;
+        ItemText := ExtractName(Item.Text);
+        if (not FileExtensions) and (Pos('.', ItemText) > 0) then
+          ItemText := Copy(ItemText, 1, LastDelimiter('.', ItemText) - 1);
+        Path := '';
+        ParentNode := Item;
+        while (ParentNode.Level > 1) do begin
+          ParentNode := ParentNode.Parent;
+          if (ParentNode.Level > 1) or (SourcePath <> '') then
+            Path := ExtractName(ParentNode.Text) + '\' + Path
+          else
+            Path := TTreeNode(ParentNode.Data).Text + '\' + Path;
+        end;
+        if Length(Path) > 0 then
+          Delete(Path, Length(Path), 1);
+        if SourcePath <> '' then begin
+          if Pos('\', Path) > 0 then
+            Delete(Path, 1, Pos('\', Path))
+          else
+            Path := '';
+          Path := Copy(SourcePath, 1, 3) + Path;
+        end;
+        if (Length(Path) > 0) and (Path[Length(Path)] = '\') then
+          Delete(Path, Length(Path), 1);
+///////////////
+      //FileData
+        //1 - Size
+        //2 - ??
+        //3 - Sample Rate
+        //4 - Channel Type
+        //5 - Type
+        //6 - ??
+      //FileTag
+        //1 - Title
+        //2 - Artist
+        //3 - Album
+        //4 - Track
+        //5 - Year
+        //6 - Comment
+        //7 - Genre
+///////////////
+        ListItem.Caption := Path + '\' + ItemText;
+        for ColCounter := 1 to ListView2.Columns.Count-1 do begin             //Determine what should go where
+          if ListView2.Columns[ColCounter].Caption = GetText(42) then
+            ListItem.SubItems.Add(FileTag[1])
+          else if ListView2.Columns[ColCounter].Caption = GetText(43) then
+            ListItem.SubItems.Add(FileTag[2])
+          else if ListView2.Columns[ColCounter].Caption = GetText(44) then
+            ListItem.SubItems.Add(FileTag[3])
+          else if ListView2.Columns[ColCounter].Caption = GetText(45) then
+            ListItem.SubItems.Add(FileTag[4])
+          else if ListView2.Columns[ColCounter].Caption = GetText(46) then
+            ListItem.SubItems.Add(FileTag[5])
+          else if ListView2.Columns[ColCounter].Caption = GetText(47) then
+            ListItem.SubItems.Add(FileTag[6])
+          else if ListView2.Columns[ColCounter].Caption = GetText(239) then
+            ListItem.SubItems.Add(FileTag[7])
+
+          else if ListView2.Columns[ColCounter].Caption = GetText(172) then
+            ListItem.SubItems.Add(DurationToStr(FileData[2]))
+          else if ListView2.Columns[ColCounter].Caption = GetText(171) then
+            ListItem.SubItems.Add(FloatToStrF(FileData[1] / 1024, ffFixed, 15, 2) + ' ' + GetText(62))
+          else if ListView2.Columns[ColCounter].Caption = GetText(132) then
+            ListItem.SubItems.Add(IntToStr(FileData[3] * 10) + ' ' + GetText(70))
+          else if ListView2.Columns[ColCounter].Caption = GetText(131) then begin
+            if FileData[2] <> 0 then
+              BitRate := Trunc(FileData[1] * 8 * 1.024 / Abs(FileData[2]))
+            else
+              BitRate := 0;
+            if FileData[2] < 0 then
+              Line := FormatFloat('000', BitRate) + ' ' + GetText(67) + ' ' + GetText(66)
+            else begin
+              BitRate := AlignedBitRate(BitRate, FileData[3], FileData[4], FileData[5], FileData[6]);
+              Line := FormatFloat('000', BitRate) + ' ' + GetText(67) + ' ' + GetText(148);
+            end;
+            ListItem.SubItems.Add(Line);
+          end else if ListView2.Columns[ColCounter].Caption = GetText(133) then
+            ListItem.SubItems.Add(GetChannelMode(FileData[4]))
+          else if ListView2.Columns[ColCounter].Caption = GetText(211) then
+            ListItem.SubItems.Add(GetMPEGType(FileData[5], FileData[6]))
+        end;
+      end;
+      ListView2.Selected := ListView2.Items[0];
+      ListView2.ItemFocused := ListView2.Selected;
+      CloseProgressWindow;
+      Result := FindItem;
+    end;
+    finally
+  end;
+end;
+
+{ --------------------------------------------------------------------------- }
+
+function TfrmMain.ShowNameResults(SPath: string; GD, HT: boolean): TTreeNode;
+var Index, BitRate: longint;                     //PinterPeti copied from NameResults.pas
+    ListItem: TListItem;                         // TempList -> STempList
+    Line, Path, ItemText: string;
+    Item, ParentNode: TTreeNode;
+    FileData: DataArray;
+    FileTag: TagArray;
+    ColCounter: Byte;
+begin
+  with frmMain do try
+    begin
+      ComboBox1.Clear;
+      ComboBox1.Enabled := False;
+      ListView2.SmallImages := ILNameResults;
+      SourcePath := SPath;
+      ListView2.GridLines := GD;
+      ListView2.RowSelect := ListView2.GridLines;
+      ListView2.HotTrack := HT;
+      FindItem := nil;
+      Tag := 0;
+      ShowProgressWindow(GetText(141));
+      for Index := 0 to STempList.Items.Count - 1 do begin
+        if (Index mod 100) = 0 then
+          SetProgressValue(Round(Index / STempList.Items.Count * 100));
+        Item := TTreeNode(STempList.Items.Objects[Index]);
+        ListItem := ListView2.Items.Add;
+        ListItem.Data := Item;
+        ItemText := ExtractName(Item.Text);
+        FileTag := ExtractTag(Item.Text);
+        FileData := ExtractData(Item.Text);
+        if not Item.HasChildren then begin
+          if (not FileExtensions) and (Pos('.', ItemText) > 0) then
+            ItemText := Copy(ItemText, 1, LastDelimiter('.', ItemText) - 1);
+          ListItem.ImageIndex := 1;
+          end;
+        Path := '';
+        ParentNode := Item;
+        while (ParentNode.Level > 1) do begin
+          ParentNode := ParentNode.Parent;
+          if (ParentNode.Level > 1) or (SourcePath <> '') then
+            Path := ExtractName(ParentNode.Text) + '\' + Path
+          else
+            Path := TTreeNode(ParentNode.Data).Text + '\' + Path;
+        end;
+        if Length(Path) > 0 then
+          Delete(Path, Length(Path), 1);
+        if SourcePath <> '' then begin
+          if Pos('\', Path) > 0 then
+            Delete(Path, 1, Pos('\', Path))
+          else
+            Path := '';
+          Path := Copy(SourcePath, 1, 3) + Path;
+        end;
+        if (Length(Path) > 0) and (Path[Length(Path)] = '\') then
+          Delete(Path, Length(Path), 1);
+///////////////
+      //FileData
+        //1 - Size
+        //2 - ??
+        //3 - Sample Rate
+        //4 - Channel Type
+        //5 - Type
+        //6 - ??
+      //FileTag
+        //1 - Title
+        //2 - Artist
+        //3 - Album
+        //4 - Track
+        //5 - Year
+        //6 - Comment
+        //7 - Genre
+///////////////
+        ListItem.Caption := Path + '\' + ItemText;
+        for ColCounter := 1 to ListView2.Columns.Count-1 do begin  //Determine what should go where
+          if ListView2.Columns[ColCounter].Caption = GetText(42) then
+            ListItem.SubItems.Add(FileTag[1])
+          else if ListView2.Columns[ColCounter].Caption = GetText(43) then
+            ListItem.SubItems.Add(FileTag[2])
+          else if ListView2.Columns[ColCounter].Caption = GetText(44) then
+            ListItem.SubItems.Add(FileTag[3])
+          else if ListView2.Columns[ColCounter].Caption = GetText(45) then
+            ListItem.SubItems.Add(FileTag[4])
+          else if ListView2.Columns[ColCounter].Caption = GetText(46) then
+            ListItem.SubItems.Add(FileTag[5])
+          else if ListView2.Columns[ColCounter].Caption = GetText(47) then
+            ListItem.SubItems.Add(FileTag[6])
+          else if ListView2.Columns[ColCounter].Caption = GetText(239) then
+            ListItem.SubItems.Add(FileTag[7])
+
+          else if ListView2.Columns[ColCounter].Caption = GetText(172) then
+            ListItem.SubItems.Add(DurationToStr(FileData[2]))
+          else if ListView2.Columns[ColCounter].Caption = GetText(171) then
+            ListItem.SubItems.Add(FloatToStrF(FileData[1] / 1024, ffFixed, 15, 2) + ' ' + GetText(62))
+          else if ListView2.Columns[ColCounter].Caption = GetText(132) then
+            ListItem.SubItems.Add(IntToStr(FileData[3] * 10) + ' ' + GetText(70))
+          else if ListView2.Columns[ColCounter].Caption = GetText(131) then begin
+            if FileData[2] <> 0 then
+              BitRate := Trunc(FileData[1] * 8 * 1.024 / Abs(FileData[2]))
+            else
+              BitRate := 0;
+            if FileData[2] < 0 then
+              Line := FormatFloat('000', BitRate) + ' ' + GetText(67) + ' ' + GetText(66)
+            else begin
+              BitRate := AlignedBitRate(BitRate, FileData[3], FileData[4], FileData[5], FileData[6]);
+              Line := FormatFloat('000', BitRate) + ' ' + GetText(67) + ' ' + GetText(148);
+            end;
+            ListItem.SubItems.Add(Line);
+          end else if ListView2.Columns[ColCounter].Caption = GetText(133) then
+            ListItem.SubItems.Add(GetChannelMode(FileData[4]))
+          else if ListView2.Columns[ColCounter].Caption = GetText(211) then
+            ListItem.SubItems.Add(GetMPEGType(FileData[5], FileData[6]))
+        end;
+      end;
+      ListView2.Selected := ListView2.Items[0];
+      ListView2.ItemFocused := ListView2.Selected;
+      CloseProgressWindow;
+      Result := FindItem;
+    end;
+    finally
+  end;
+end;
+{ --------------------------------------------------------------------------- }
 procedure TfrmMain.WriteSettings;
 var
 	Reg: TRegistry;
@@ -306,6 +1050,7 @@ begin
 			Reg.WriteBool('HotTrack', Hottrack1.Checked);
 			Reg.WriteBool('Toolbar', Toolbar1.Checked);
 			Reg.WriteBool('Statusbar', Statusbar1.Checked);
+            Reg.WriteInteger('SearchPanelHeight', Panel3.Height); //PinterPeti
 			Reg.WriteInteger('PanelWidth', Panel1.Width);
       Reg.WriteInteger('Top', Top);
 			Reg.WriteInteger('Left', Left);
@@ -365,12 +1110,16 @@ begin
       Reg.WriteString('FoobarPath', FoobarPath);
 
       Reg.WriteBool('AllFiles', AllFiles);
+      Reg.WriteBool('AutoSort', AutoSort);//PP
+      Reg.WriteBool('AutoSave', AutoSave);//PP
       Reg.WriteInteger('PreferTag', PreferTag);
 
       Reg.WriteString('LastEditDir', LastEditDir);
       Reg.WriteBool('ColumnAutoSize', ColumnAutoSize);
 
       Reg.WriteBool('EjectCD', EjectCD);
+      Reg.WriteBool('CapitalizationBoxState', FormEditTag.cbCapitalization.Checked); //PinterPeti
+      Reg.WriteInteger('CapitalizationBoxIndex',FormEditTag.cboxCapitalization.ItemIndex)//PinterPeti
     except
 		end;
 
@@ -424,10 +1173,13 @@ begin
 
 			Gridlines1.Checked := Reg.ReadBool('GridLines');
       ListView1.GridLines := Gridlines1.Checked;
+      ListView2.GridLines := Gridlines1.Checked;   //PinterPeti
       ListView1.RowSelect := ListView1.GridLines;
+      ListView2.RowSelect := ListView1.GridLines;  //PinterPeti
 			Hottrack1.Checked := Reg.ReadBool('HotTrack');
 			TreeView1.HotTrack := Hottrack1.Checked;
 			ListView1.HotTrack := Hottrack1.Checked;
+            ListView2.HotTrack := Hottrack1.Checked;    //PinterPeti
 
 			Toolbar1.Checked := Reg.ReadBool('Toolbar');
       Toolbar2.Visible := Toolbar1.Checked;
@@ -464,6 +1216,8 @@ begin
       if Reg.ReadBool('WFStrikeOut') then TreeView1.Font.Style := TreeView1.Font.Style + [fsStrikeOut];
 			ListView1.Font.Assign(TreeView1.Font);
 
+      ListView2.Font.Assign(TreeView1.Font); //PinterPeti
+      ComboBox1.Font.Assign(TreeView1.Font); //PinterPeti
       PlayListSaveDir := Reg.ReadString('PlayListSaveDir');
       LastAddDir := Reg.ReadString('LastAddDir');
       AddSize := Reg.ReadBool('AddSize');
@@ -484,6 +1238,8 @@ begin
       UseFoobar := Reg.ReadBool('UseFoobar');
       FoobarPath := Reg.ReadString('FoobarPath');
       AllFiles := Reg.ReadBool('AllFiles');
+      AutoSort := Reg.ReadBool('AutoSort');//PP
+      AutoSave := Reg.ReadBool('AutoSave');//PP
       PreferTag := Reg.ReadInteger('PreferTag');
 
       LastEditDir := Reg.ReadString('LastEditDir');
@@ -496,6 +1252,9 @@ begin
       SearchHeight := Reg.ReadInteger('SearchHeight');
       SearchWidth := Reg.ReadInteger('SearchWidth');
 
+      Panel3.Height := Reg.ReadInteger('SearchPanelHeight'); //PinterPeti
+//      FormEditTag.cbCapitalization.Enabled := Reg.ReadBool('CapitalizationBoxState'); //PinterPeti
+//      FormEditTag.cboxCapitalization.ItemIndex := Reg.ReadInteger('CapitalizationBoxIndex');//PinterPeti
     except
 		end;
 
@@ -540,6 +1299,8 @@ begin
 	Gridlines1.Checked := not Gridlines1.Checked;
 	ListView1.GridLines := Gridlines1.Checked;
   ListView1.RowSelect := ListView1.GridLines;
+  ListView2.GridLines := Gridlines1.Checked;     //PinterPeti
+  ListView2.RowSelect := ListView1.GridLines;    //PinterPeti
 end;
 
 { --------------------------------------------------------------------------- }
@@ -548,7 +1309,8 @@ procedure TfrmMain.Hottrack1Click(Sender: TObject);
 begin
 	Hottrack1.Checked := not Hottrack1.Checked;
 	TreeView1.HotTrack := Hottrack1.Checked;
-	ListView1.HotTrack := Hottrack1.Checked;
+  ListView1.HotTrack := Hottrack1.Checked;       //PinterPeti
+  ListView2.HotTrack := Hottrack1.Checked;       //PinterPeti
 end;
 
 { --------------------------------------------------------------------------- }
@@ -616,22 +1378,36 @@ begin
   Select1.Caption := GetText(149);
   Information1.Caption := GetText(52);
   StatusBar2.Hint := GetText(52);
+
+  MenuItem1.Caption := GetText(152);   //PinterPeti
+  MenuItem2.Caption := GetText(153);   //PinterPeti
+  MenuItem3.Caption := GetText(154);   //PinterPeti
+  MenuItem4.Caption := GetText(242);   //PinterPeti
+  MenuItem6.Caption := GetText(52);    //PinterPeti
+  MenuItem7.Caption := GetText(91);    //PinterPeti
+  EditID3.Caption   := GetText(309);   //PinterPeti
+  Delete3.Caption   := GetText(231);   //PinterPeti
+  Delete4.Caption   := GetText(319);   //PinterPeti
+  TabSheet1.Caption := GetText(1);     //PinterPeti
+  TabSheet2.Caption := GetText(43);    //PinterPeti
 end;
 
 { --------------------------------------------------------------------------- }
 
-procedure TfrmMain.SetColumns;
+procedure TfrmMain.SetColumns(ListView:TListView);
+//PinterPeti - added parameter to the procedure and changed ListView1 to ListView
+// so I can use this to build the ListView2's headers
 var
 	Index: integer;
   LColumn: TListColumn;
 begin
-	ListView1.Items.Clear;
-	while ListView1.Columns.Count > 0 do ListView1.Columns.Delete(0);
+	ListView.Items.Clear;
+	while ListView.Columns.Count > 0 do ListView.Columns.Delete(0);
 
   for Index := 0 to InfoCol_nCols do // MB
 	  if InfoCol[Index] > 0 then
 	  begin
-  	  LColumn := ListView1.Columns.Add;
+  	  LColumn := ListView.Columns.Add;
 
   		case InfoCol[Index] div 10000 mod 100 of
       	0: LColumn.Caption := GetText(41);
@@ -666,11 +1442,12 @@ begin
       Height := Height - 1;
 	  end;
 
-  if ListView1.Columns.Count < Abs(ColumnToSorting) then ColumnToSorting := 1;
-  if ColumnToSorting > 0 then ListView1.Columns[ColumnToSorting - 1].ImageIndex := 5
-  else ListView1.Columns[Abs(ColumnToSorting) - 1].ImageIndex := 6;
+  if ListView.Columns.Count < Abs(ColumnToSorting) then ColumnToSorting := 1;
+  if ColumnToSorting > 0 then ListView.Columns[ColumnToSorting - 1].ImageIndex := 5
+  else ListView.Columns[Abs(ColumnToSorting) - 1].ImageIndex := 6;
 
-  UpdateListView;
+  if ListView = ListView1 then
+	UpdateListView;
 end;
 
 { --------------------------------------------------------------------------- }
@@ -691,6 +1468,8 @@ begin
 	Tree := TreeView2;
 	TempTree := TreeView3;
 	TempList := ListBox3;
+	STempList := ListBox5;         //PinterPeti - added new listbox
+	TabSheet2.TabVisible := False; //PinterPeti
 	DirList := DirectoryListBox1;
 	FileList := FileListBox1;
 	Lang := ListBox1;
@@ -914,18 +1693,27 @@ end;
 function TfrmMain.GetSelectedNode: TTreeNode;
 var
 	Index, Value: integer;
+    TempListView:TListView;
 begin
 	Result := nil;
   ListBox4.Items.Clear;
 
-	if ActiveControl = ListView1 then
-   	for Index := 0 to ListView1.Items.Count - 1 do
-     	if ListView1.Items[Index].Selected then
+	if (ActiveControl = ListView1) or (ActiveControl = ListView2) then
+	begin
+		if ActiveControl = ListView1 then      //PinterPeti
+			TempListView := ListView1;           //PinterPeti
+		if ActiveControl = ListView2 then      //PinterPeti
+			TempListView := ListView2;           //PinterPeti
+
+   	for Index := 0 to TempListView.Items.Count - 1 do
+     	if TempListView.Items[Index].Selected then
       begin
-				Result := ListView1.Items[Index].Data;
+				Result := TempListView.Items[Index].Data;
 		    Value := ListBox4.Items.Add(Result.Text);
 		    ListBox4.Items.Objects[Value] := Result;
      	end;
+
+	end;
 
 	if (ActiveControl = TreeView1) and (TreeView1.Selected <> nil) then
   begin
@@ -1068,6 +1856,7 @@ begin
 		ToolButton9.Visible := false;
 		ToolButton10.Visible := false;
 		ToolButton12.Visible := false;
+		ToolButton13.Visible := false; //PinterPeti
 	end
 	else
 	begin
@@ -1081,6 +1870,7 @@ begin
 		ToolButton9.Visible := true;
 		ToolButton10.Visible := true;
 		ToolButton12.Visible := true;
+		ToolButton13.Visible := true; //PinterPeti
 	end;
 end;
 
@@ -1235,7 +2025,14 @@ begin
 	OpenDialog1.Filter := GetText(161) + ' (*.' + DefaultExt + ')|*.' + DefaultExt;
 	OpenDialog1.InitialDir := LastOpenDir;
 	OpenDialog1.FileName := '';
-	if OpenDialog1.Execute then OpenFile(OpenDialog1.FileName);
+	if OpenDialog1.Execute then begin
+		ListView2.Items.Clear;  //PinterPeti
+		ListView2.Items.Clear;  //PinterPeti
+		ListBox5.Clear;         //PinterPeti
+		STempList.Clear;        //PinterPeti
+		STempList.Tag := 0;     //PinterPeti
+		OpenFile(OpenDialog1.FileName);
+	end;
 end;
 
 { --------------------------------------------------------------------------- }
@@ -1456,6 +2253,7 @@ begin
 
 	TreeView1.Items.Clear;
 	ListView1.Items.Clear;
+	ListView2.Items.Clear;
 
 	DataIsChanged := false;
 
@@ -1578,6 +2376,10 @@ begin
 				CloseWaitWindow;
 
 				TreeView1.Selected := TreeView1.Items[ItemCount];
+				if AutoSort = True then
+					Sort1Click(Sender);
+				if AutoSave = True then
+					Save1Click(Sender);
 			end
 			else Dialog(GetText(100), GetText(52), GetText(54), '', '', 1, 3);
 		end
@@ -2084,7 +2886,8 @@ begin
   end;
 
 	SetCaptions;
-  SetColumns;
+	SetColumns(ListView1);
+	SetColumns(ListView2); //PinterPeti
 end;
 
 { --------------------------------------------------------------------------- }
@@ -2094,7 +2897,11 @@ var
 	FileName: string;
 begin
 	FileName := LangName;
-	if (OptionsOK) and (LangName <> FileName) then SetLanguage(LangName);
+	if (OptionsOK) and (LangName <> FileName) then begin
+		SetLanguage(LangName);
+		FormEditTag.SetCaptions;                   //PinterPeti
+		FormEditOggTag.SetCaptions;                //PinterPeti
+	end;
 end;
 
 { --------------------------------------------------------------------------- }
@@ -2104,7 +2911,7 @@ var
 	Index: longint;
 	SelNode: TTreeNode;
 begin
-	for Index := 0 to 10 do PopupMenu1.Items[Index].Visible := false;
+	for Index := 0 to PopupMenu1.Items.Count-1 do PopupMenu1.Items[Index].Visible := false;
 
 	SelNode := GetSelectedNode;
 
@@ -2112,10 +2919,15 @@ begin
 	begin
 		Play1.Visible := true;
 		Enqueue1.Visible := true;
+		if (PopUpMenu1.PopupComponent <> TreeView1) then begin  //PinterPeti
+			Delete3.Visible := True;                            //PinterPeti
+  			Delete4.Visible := True;                                //PinterPeti
+		end;
     if ListBox4.Items.Count = 1 then OpenDir.Visible := True;
 		N3.Visible := true;
     Select1.Visible := true;
     if ListBox4.Items.Count = 1 then Information1.Visible := true;
+	if (ListBox4.Items.Count = 1) and (PopUpMenu1.PopupComponent <> TreeView1) then EditID3.Visible := true;                                  //PinterPeti
     if ActiveControl = ListView1 then Select1.Checked := ListView1.ItemFocused.OverlayIndex >= 0
     else Select1.Checked := SelNode.OverlayIndex >= 0;
     if (SelNode.HasChildren) or (ListBox4.Items.Count > 1) then Playlist1.Visible := true;
@@ -2516,11 +3328,14 @@ begin
 	Count := Statusbar2.Panels.Count;
 	PWidth := Statusbar2.Width div Count;
 	for Index := 0 to Count - 1 do Statusbar2.Panels[Index].Width := PWidth;
+	ComboBox1.Width := Panel5.Width - 2;
 end;
 
 { --------------------------------------------------------------------------- }
 
 function TfrmMain.FindDuplicatesOK(FItem: longint): boolean;
+// PinterPeti - TempList changed to STempList because it was used to create a playlist file when Enqueueing or playing with WinAmp
+// And after these the list forgot the contents or positions or something like that I don't remember, sorry
 var
 	Index: longint;
 	Item, Line, Duplicate: string;
@@ -2556,52 +3371,54 @@ begin
 				Line := Line + IntToStr(ItemData[1]) + #1 + IntToStr(ItemData[2]) + #1;
 			end;
 
-			TempList.Items.Objects[TempList.Items.Add(Line)] := Tree.Items[Index];
+			STempList.Items.Objects[STempList.Items.Add(Line)] := Tree.Items[Index];
 		end;
 
 	SetWaitWindowText(GetText(111) + '...');
 
-	TempList.Sorted := true;
+	STempList.Sorted := true;
 
 	Index := 0;
-	while Index < TempList.Items.Count - 1 do
+	while Index < STempList.Items.Count - 1 do
 	begin
-		if CompareText(TempList.Items.Strings[Index], TempList.Items.Strings[Index + 1]) <> 0 then
-			TempList.Items.Delete(Index)
+		if CompareText(STempList.Items.Strings[Index], STempList.Items.Strings[Index + 1]) <> 0 then
+			STempList.Items.Delete(Index)
 		else
 		begin
-			Duplicate := TempList.Items.Strings[Index];
+			Duplicate := STempList.Items.Strings[Index];
 			Inc(Index);
 
-			while Index < TempList.Items.Count - 1 do
+			while Index < STempList.Items.Count - 1 do
 			begin
 				Inc(Index);
-				if CompareText(Duplicate, TempList.Items.Strings[Index]) <> 0 then break;
+				if CompareText(Duplicate, STempList.Items.Strings[Index]) <> 0 then break;
 			end;
 		end;
 	end;
-	if CompareText(Duplicate, TempList.Items.Strings[Index]) <> 0 then TempList.Items.Delete(Index);
+	if CompareText(Duplicate, STempList.Items.Strings[Index]) <> 0 then STempList.Items.Delete(Index);
 
 	CloseWaitWindow;
 
-	if TempList.Items.Count > 1 then Result := true;
+	if STempList.Items.Count > 1 then Result := true;
 end;
 
 { --------------------------------------------------------------------------- }
 
 function TfrmMain.FindDuplicates(FirstItem: longint; SPath: string): TTreeNode;
+//PinterPeti see comment at FindDuplicatesOK
 begin
   Result := nil;
 	if FindDuplicatesOK(FirstItem) then
   	Result := ShowDuplicatesResults(SPath, GridLines1.Checked, HotTrack1.Checked)
 	else
   	if Dialog(GetText(139), GetText(52), GetText(54), GetText(15), '', 1, 3) = 2 then
-    	TempList.Tag := 1;
+    	STempList.Tag := 1;
 end;
 
 { --------------------------------------------------------------------------- }
 
 function TfrmMain.FindNameOK(FItem: longint): boolean;
+//PinterPeti see comment at FindDuplicatesOK
 var
 	Index, Index2: longint;
 	Line: string;
@@ -2617,7 +3434,6 @@ begin
   Count := 0;
   Line := LastNameText[1];
   repeat
-  begin
 		Index := Pos(#32, Line);
    	if Count < 99 then Inc(Count);
     if Index > 0 then
@@ -2628,7 +3444,6 @@ begin
     end
     else
     	Words[Count] := Line;
-  end;
   until Index <= 0;
 
 	for Index := FItem to Tree.Items.Count - 1 do
@@ -2647,36 +3462,39 @@ begin
 
       	if (Hit > 0) and (Hit = Count) then
         begin
-					Index2 := TempList.Items.Add(IntToStr(Index));
-          TempList.Items.Objects[Index2] := Tree.Items[Index];
+					Index2 := STempList.Items.Add(IntToStr(Index));
+          STempList.Items.Objects[Index2] := Tree.Items[Index];
         end;
       end;
 	end;
 
 	CloseWaitWindow;
 
-	if TempList.Items.Count > 0 then Result := true;
+	if STempList.Items.Count > 0 then Result := true;
 end;
 
 { --------------------------------------------------------------------------- }
 
 function TfrmMain.FindName(FirstItem: longint; SPath: string): TTreeNode;
+//PinterPeti see comment at FindDuplicatesOK
 begin
   Result := nil;
 	if FindNameOK(FirstItem) then
   	Result := ShowNameResults(SPath, GridLines1.Checked, HotTrack1.Checked)
 	else
   	if Dialog(GetText(139), GetText(52), GetText(54), GetText(15), '', 1, 3) = 2 then
-    	TempList.Tag := 1;
+    	STempList.Tag := 1;
 end;
 
 { --------------------------------------------------------------------------- }
 
 function TfrmMain.FindTagOK(FItem: longint): boolean;
+//PinterPeti see comment at FindDuplicatesOK
 var
 	Index, Index2: longint;
   TagInfo: TagArray;
 begin
+
 	Result := false;
   if FItem < 0 then FItem := 1;
 
@@ -2703,24 +3521,26 @@ begin
 
 	CloseWaitWindow;
 
-	if TempList.Items.Count > 0 then Result := true;
+	if STempList.Items.Count > 0 then Result := true;
 end;
 
 { --------------------------------------------------------------------------- }
 
 function TfrmMain.FindTag(FirstItem: longint; SPath: string): TTreeNode;
+//PinterPeti see comment at FindDuplicatesOK
 begin
   Result := nil;
 	if FindTagOK(FirstItem) then
   	Result := ShowTagResults(SPath, GridLines1.Checked, HotTrack1.Checked)
 	else
   	if Dialog(GetText(139), GetText(52), GetText(54), GetText(15), '', 1, 3) = 2 then
-    	TempList.Tag := 1;
+    	STempList.Tag := 1;
 end;
 
 { --------------------------------------------------------------------------- }
 
 function TfrmMain.FindPropertyOK(FItem: longint): boolean;
+//PinterPeti see comment at FindDuplicatesOK
 var
 	Index, Index2: longint;
   MProp: MatchArray;
@@ -2735,25 +3555,26 @@ begin
 		if not Tree.Items[Index].HasChildren then
 			if PropertyOK(Tree.Items[Index], Prop, MProp) then
       begin
-				Index2 := TempList.Items.Add(IntToStr(Index));
-        TempList.Items.Objects[Index2] := Tree.Items[Index];
+				Index2 := STempList.Items.Add(IntToStr(Index));
+        STempList.Items.Objects[Index2] := Tree.Items[Index];
 			end;
       
 	CloseWaitWindow;
 
-	if TempList.Items.Count > 0 then Result := true;
+	if STempList.Items.Count > 0 then Result := true;
 end;
 
 { --------------------------------------------------------------------------- }
 
 function TfrmMain.FindProperty(FirstItem: longint; SPath: string): TTreeNode;
+//PinterPeti see comment at FindDuplicatesOK
 begin
   Result := nil;
 	if FindPropertyOK(FirstItem) then
   	Result := ShowPropertyResults(SPath, GridLines1.Checked, HotTrack1.Checked)
 	else
   	if Dialog(GetText(139), GetText(52), GetText(54), GetText(15), '', 1, 3) = 2 then
-    	TempList.Tag := 1;
+    	STempList.Tag := 1;
 end;
 
 { --------------------------------------------------------------------------- }
@@ -2768,9 +3589,12 @@ end;
 
 procedure TfrmMain.OnPopupClick(Sender: TObject);
 begin
-	if Sender is TMenuItem then OpenFile(LastCol[(Sender as TMenuItem).Tag]);
+	if Sender is TMenuItem then begin
+		OpenFile(LastCol[(Sender as TMenuItem).Tag]);
+		ListView2.Items.Clear; //PinterPeti
+		ComboBox1.Items.Clear; //PinterPeti
+	end;
 end;
-
 { --------------------------------------------------------------------------- }
 
 procedure TfrmMain.OnClearPopup(Sender: TObject);
@@ -2953,12 +3777,17 @@ end;
 
 procedure TfrmMain.TreeView1MouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-	if Button = mbRight then TreeView1.Selected := TreeView1.GetNodeAt(X, Y);
+	if Button = mbRight then
+		if TreeView1.GetNodeAt(X, Y) <> nil then            //PinterPeti
+			TreeView1.Selected := TreeView1.GetNodeAt(X, Y)
+		else                                                //PinterPeti
+			TreeView1.Selected := TreeView1.TopItem;        //PinterPeti
 end;
 
 { --------------------------------------------------------------------------- }
 
 procedure TfrmMain.OnSearch;
+//PinterPeti see comment at FindDuplicatesOK
 var
 	Path: string;
   ItemCount: longint;
@@ -2967,9 +3796,8 @@ begin
 	if FindOK(Path) then
   begin
   	Repaint;
-		TempList.Clear;
-		TempList.Sorted := false;
-
+		STempList.Clear;
+		STempList.Sorted := false;
 		if Path = '' then
     begin
     	ClickedItem := nil;
@@ -3000,28 +3828,29 @@ begin
         end
         else
         	if Dialog(GetText(100), GetText(52), GetText(54), GetText(15), '', 1, 3) = 2 then
-	          TempList.Tag := 1;
+	          STempList.Tag := 1;
       end
    		else
 				if Tree.Items.Count > ItemCount then Tree.Items.Delete(Tree.Items[ItemCount]);
 		end;
 
-		TempList.Clear;
-		TempList.Sorted := false;
+	if FindArea <> 3 then begin
+		STempList.Clear;
+		STempList.Sorted := false;
+	end;
   end;
-end;
 
+end;
 { --------------------------------------------------------------------------- }
 
 procedure TfrmMain.Search1Click(Sender: TObject);
+//PinterPeti see comment at FindDuplicatesOK
 begin
   repeat
-  begin
-  	TempList.Tag := 0;
+  	STempList.Tag := 0;
    	Repaint;
   	OnSearch;
-  end;
-  until TempList.Tag = 0;
+  until STempList.Tag = 0;
 end;
 
 { --------------------------------------------------------------------------- }
@@ -3087,11 +3916,18 @@ end;
 
 procedure TfrmMain.ListView1Compare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer);
 var
-  Index: integer;
+  Index, TInd, AInd: integer; //ArtistIndex,TitleIndex /PP
   Node1, Node2: TTreeNode;
 begin
 	Node1 := Item1.Data;
   Node2 := Item2.Data;
+
+  for Index := 0 to ListView1.Columns.Count-1 do begin
+    if ListView1.Column[Index].Caption = GetText(43) then
+      AInd := Index-1;
+    if ListView1.Column[Index].Caption = GetText(42) then
+      TInd := Index-1;
+  end;
 
 	if Node1.HasChildren = Node2.HasChildren then
 		if Abs(ColumnToSorting) = 1 then
@@ -3099,7 +3935,13 @@ begin
 		else
 		begin
 			Index := Abs(ColumnToSorting) - 2;
-			Compare := CompareText(Item1.SubItems[Index], Item2.SubItems[Index]);
+
+		if Index+2 = AInd then
+			Compare := AnsiCompareText(Item1.SubItems[Index]+Item1.SubItems[AInd], Item2.SubItems[Index]+Item2.SubItems[AInd])
+		else if Index+2 = TInd then
+			Compare := AnsiCompareText(Item1.SubItems[Index]+Item1.SubItems[TInd], Item2.SubItems[Index]+Item2.SubItems[TInd])
+		else
+			Compare := AnsiCompareText(Item1.SubItems[Index], Item2.SubItems[Index]);
 
       if (InfoCol[ListView1.Columns[Index + 1].Tag] div 10000 mod 100) in [1, 3] then
       begin
@@ -3125,6 +3967,8 @@ begin
   begin
   	TreeView1.Font.Assign(FontDialog1.Font);
     ListView1.Font.Assign(FontDialog1.Font);
+    ListView2.Font.Assign(FontDialog1.Font); //PinterPeti
+    ComboBox1.Font.Assign(TreeView1.Font); //PinterPeti
 
     Index := ListView1.Columns[Abs(ColumnToSorting) - 1].ImageIndex;
     ListView1.Columns[Abs(ColumnToSorting) - 1].ImageIndex := -1;
@@ -3157,7 +4001,11 @@ begin
     InfoCol[ListView1.Columns[Index].Tag] := Value;
   end;
 
-	if ColumnsDialogOK then SetColumns;
+  if ColumnsDialogOK then begin
+    SetColumns(ListView1);
+    SetColumns(ListView2); //PinterPeti
+  end;
+
 end;
 
 { --------------------------------------------------------------------------- }
@@ -3351,5 +4199,260 @@ begin
 end;
 
 { --------------------------------------------------------------------------- }
+
+procedure TfrmMain.ToolButton13Click(Sender: TObject);
+begin
+  try
+    if GetSelectedNode.HasChildren = False then begin
+       if UpperCase(ExtractFileExt(GetFilePath(frmMain.GetSelectedNode))) = '.MP3' then
+         FormEditTag.ShowModal;
+       if UpperCase(ExtractFileExt(GetFilePath(frmMain.GetSelectedNode))) = '.OGG' then
+         FormEditOggTag.ShowModal;
+    end else
+      MessageBox(Handle, PChar(GetText(308)), PChar('Error'), $00000010);
+  except on EAccessViolation do
+  end;
+end;
+
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmMain.EditID3Click(Sender: TObject);  //PinterPeti
+begin
+  ToolButton13Click(Sender);
+end;
+
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmMain.FormActivate(Sender: TObject);
+begin
+  EditID3.ShortCut := ShortCut(Word('3'), [ssAlt]);  //PinterPeti
+  Delete4.ShortCut := ShortCut(VK_Delete,[ssCtrl,ssShift]);  //PinterPeti
+end;
+
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmMain.ListView2DblClick(Sender: TObject);  //PinterPeti
+begin
+  if ListView2.Selected <> nil then begin
+    FindItem := ListView2.Selected.Data;
+    ListView1.Selected := nil;
+    ShowNode(FindItem);
+  end;
+end;
+
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmMain.ListView2ColumnClick(Sender: TObject;Column: TListColumn); //PinterPeti
+var Value: integer;
+begin
+  Value := Abs(Tag) - 1;
+  Tag := Column.Index + 1;
+  if ListView2.Columns[Column.Index].ImageIndex = 2 then
+    Tag := -Tag;
+  if Value >= 0 then
+    ListView2.Columns[Value].ImageIndex := -1;
+  ListView2.AlphaSort;
+  if Tag < 0 then
+    ListView2.Columns[Column.Index].ImageIndex := 3
+  else
+    ListView2.Columns[Column.Index].ImageIndex := 2;
+end;
+
+{ --------------------------------------------------------------------------- }
+procedure TfrmMain.ListView2Compare(Sender: TObject; Item1, Item2: TListItem; Data: Integer; var Compare: Integer); //PinterPeti
+
+var VData1, VData2: DataArray;
+begin
+  VData1 := ExtractData(TTreeNode(Item1.Data).Text);
+  VData2 := ExtractData(TTreeNode(Item2.Data).Text);
+  Compare := 0;
+  case Abs(Tag) of
+    1: Compare := AnsiCompareText(Item1.Caption,Item2.Caption);
+    2: Compare := AnsiCompareText(Item1.SubItems.Strings[0],Item2.SubItems.Strings[0]);
+    3: if VData1[1] <> VData2[1] then
+         if VData1[1] > VData2[1] then
+           Compare := 1
+         else
+           Compare := -1;
+    4: if Abs(VData1[2]) <> Abs(VData2[2]) then
+         if Abs(VData1[2]) > Abs(VData2[2]) then
+           Compare := 1
+         else
+           Compare := -1;
+    5: if (VData1[1] / Abs(VData1[2])) <> (VData2[1] / Abs(VData2[2])) then
+         if (VData1[1] / Abs(VData1[2])) > (VData2[1] / Abs(VData2[2])) then
+           Compare := 1
+         else
+           Compare := -1;
+  end;
+  if Tag < 0 then
+    Compare := -Compare;
+end;
+
+{ --------------------------------------------------------------------------- }
+procedure TfrmMain.ListView2KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);//PinterPeti
+begin
+  if Key = VK_RETURN then
+    ListView2DblClick(Self);
+end;
+
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmMain.MenuItem7Click(Sender: TObject);
+var SaveIdx:Byte;
+begin
+  SaveDialog1.Title := GetText(5);
+  SaveDialog1.DefaultExt := '*.' + TextExt;
+  SaveDialog1.Filter := GetText(169) + ' (*.' + TextExt + ')|*.' + TextExt;
+  SaveDialog1.InitialDir := LastSaveDir;
+  if SaveDialog1.Execute then begin
+    Repaint;
+    LastSaveDir := ExtractFilePath(SaveDialog1.FileName);
+    ShowWaitWindow(GetText(78));
+    SetWaitWindowText(GetText(79) + '...');
+    if SaveResults(SaveDialog1.FileName,SearchArea) then
+     // PinterPeti
+     { I have to use a  new variable (SearchArea, because of some reason I can' use
+       frmFind.PageControl1.ActivePageIndex , don't know why )}
+      Dialog(GetText(181) + ': ' + SaveDialog1.FileName, GetText(52), GetText(54), '', '', 1, 3)
+    else
+       Dialog(GetText(77) + ': ' + SaveDialog1.FileName, GetText(51), GetText(54), '', '', 1, 2);
+    CloseWaitWindow;
+  end;
+end;
+
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmMain.ComboBox1Change(Sender: TObject); //PinterPeti
+begin
+  DuplicateOnChange;
+end;
+
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmMain.ListView1MouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+//PinterPeti: There could be some problem with this so maybe it should be removed
+// I think under Win98 it crashes the program (not sure,I can't remember it (again))
+// with winXP it works (for me)
+
+var Index: Byte;
+begin
+  try
+    for Index := 0 to ListView1.Columns.Count-1 do
+      ListView2.Column[Index].Width := ListView1.Column[Index].Width;
+    except
+  end;
+end;
+
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmMain.ListView2MouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+//PinterPeti: There could be some problem with this so maybe it should be removed
+// I think under Win98 it crashes the program (not sure,I can't remember it (again))
+// with winXP it works (for me)
+var Index: Byte;
+begin
+  try
+    for Index := 0 to ListView1.Columns.Count-1 do
+      ListView1.Column[Index].Width := ListView2.Column[Index].Width;
+    except
+  end;
+end;
+
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmMain.Delete3Click(Sender: TObject);
+//PinterPeti removes entries from list BUT the files' informations left in the
+//Volume's property (size,duration etc) and I couldn't figured out how to remove them
+var Item: TListItem;
+    SelectedItem,Node: TTreeNode;
+    FileData1,FileData: DataArray;
+    Index: Integer;
+    Line,Line1:String;
+begin
+  while ListView1.SelCount <> 0 do begin
+    Item := frmMain.ListView1.Selected;
+    Node := TTreeNode(Item.Data);
+    Item.Selected := False;
+    FileData1 := ExtractData(Node.Text);
+    Line1 := Node.Text;
+//    for Index := 0 to ListBox4.Items.Count - 1 do begin
+//      SelectedItem := TTreeNode(ListBox4.Items.Objects[Index]);
+//      Line := SelectedItem.Text;
+//      FileData := ExtractData(Line);
+//      if Line1 = Line then
+//        ListBox4.Items.Delete(Index);
+//    end;
+    TreeView1.Items.Delete(Node);
+//    repeat
+//      if ListBox4.Items.Objects.
+//      SelectedItem := TTreeNode(ListBox4.Items.Objects[Index]);
+//      Line := SelectedItem.Text;
+//      FileData := ExtractData(Line);
+//      Inc(Index)
+//    until Node <> SelectedItem;
+//    ListBox4.Items.Delete(Index);
+    Item.Delete;
+  end;
+  Node := TreeView1.Selected;
+//  if (not Node.HasChildren) and (Node.get ) then
+//    Node.Delete;
+  DataIsChanged := True;
+  UpdateListView;
+//  UpdateTreeView;
+  UpdateInformation;
+  UpdateControls;
+  //  GetSelectedNode
+
+end;
+
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmMain.Delete4Click(Sender: TObject);
+//PinterPeti deletes from writeable media BUT files' informations left in the
+//Volume's property (size,duration etc) and I couldn't figured out how to remove them
+var Item: TListItem;
+    Node: TTreeNode;
+    FName: String;
+    Index: Integer;
+begin
+  if MessageBox(Handle, PChar(GetText(320)), PChar('Warning'), $00000034) = IDYES then begin
+    while ListView1.SelCount <> 0 do begin
+      Item := frmMain.ListView1.Selected;
+      Node := Item.Data;
+      FName := GetFilePath(Node);
+      DeleteFile(FName);
+      Item.Selected := False;
+      TreeView1.Items.Delete(Node);
+      Item.Delete;
+    end;
+  end;
+  //  ListView1.DeleteSelected;
+//  Node := TreeView1.Selected;
+//  if not Node.HasChildren then
+//    Node.Delete;
+  DataIsChanged := True;
+  UpdateListView;
+  UpdateTreeView;
+  UpdateInformation;
+  UpdateControls;
+
+end;
+
+{ --------------------------------------------------------------------------- }
+
+procedure TfrmMain.pmnSearchPopup(Sender: TObject);
+//PinterPeti
+var Index: Byte;
+begin
+  if ListView2.Items.Count = 0 then
+    for Index := 0 to pmnSearch.Items.Count-1 do
+      pmnSearch.Items[Index].Visible := false
+  else
+    for Index := 0 to pmnSearch.Items.Count-1 do
+      pmnSearch.Items[Index].Visible := True
+end;
 
 end.

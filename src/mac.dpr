@@ -20,10 +20,6 @@ uses
   ReportThread in 'Units\ReportThread.pas',
   PrintCover in 'Units\PrintCover.pas' {frmPrintCover},
   Stretch in 'Units\Stretch.pas' {frmStretch},
-  DuplicatesResults in 'Units\DuplicatesResults.pas' {frmDuplicatesResults},
-  NameResults in 'Units\NameResults.pas' {frmNameResults},
-  TagResults in 'Units\TagResults.pas' {frmTagResults},
-  PropertyResults in 'Units\PropertyResults.pas' {frmPropertyResults},
   ColumnsDialog in 'Units\ColumnsDialog.pas' {frmColumnsDialog},
   RenameLabel in 'Units\RenameLabel.pas' {frmRenameLabel},
   FileInfo in 'Units\FileInfo.pas' {frmFileInfo},
@@ -58,7 +54,10 @@ uses
   Freedb in 'Units\Freedb.pas' {frmFreedb},
   SptiCD in 'Units\SptiCD.pas',
   CDROMIOCTL in 'Units\CDROMIOCTL.PAS',
-  scsidefs in 'Units\scsidefs.pas';
+  scsidefs in 'Units\scsidefs.pas',
+  EditTag in 'Units\EditTag.pas' {FormEditTag},                               //PinterPeti
+  EditOggTag in 'Units\EditOggTag.pas' {FormEditOggTag};                      //PinterPeti
+
 
 {$R *.RES}
 {$R Units\XPThemes.res}
@@ -67,6 +66,9 @@ begin
   Application.Initialize;
   Application.Title := '';
   Application.CreateForm(TfrmMain, frmMain);
+  Application.CreateForm(TfrmFind, frmFind);
+  Application.CreateForm(TFormEditTag, FormEditTag);
+  Application.CreateForm(TFormEditOggTag, FormEditOggTag);
   Application.CreateForm(TfrmPreview, frmPreview);
   Application.CreateForm(TfrmRemTags, frmRemTags);
   Application.CreateForm(TfrmFilenameToTag, frmFilenameToTag);

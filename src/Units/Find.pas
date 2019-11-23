@@ -92,6 +92,7 @@ type
     Image24: TImage;
     Label7: TLabel;
     Edit1: TEdit;
+    cbClearResults: TCheckBox;   //PinterPeti
 // end MB
 		procedure Button2Click(Sender: TObject);
 		procedure Button1Click(Sender: TObject);
@@ -117,6 +118,8 @@ type
 function FindOK(var Area: string): boolean;
 
 implementation
+
+uses Main;
 
 {$R *.DFM}
 
@@ -194,7 +197,7 @@ begin
 		if RadioButton6.Checked then DuplicateArea := 3;
 
 		FindArea := PageControl1.ActivePageIndex;
-
+      Main.SearchArea := FindArea; //PinterPeti
     SearchOK := true;
 
 		Close;
@@ -212,6 +215,14 @@ end;
 
 procedure TfrmFind.Button1Click(Sender: TObject);
 begin
+  if cbClearResults.Checked then begin //PinterPeti
+    frmMain.ListView2.Items.Clear;
+    STempList.Clear;
+    STempList.Tag := 0;
+    frmMain.ListBox5.Clear;
+    frmMain.ComboBox1.Clear;
+  end;
+
 	StartSearch;
 end;
 
@@ -236,6 +247,7 @@ begin
 	RadioButton3.Caption := GetText(125);
 	GroupBox2.Caption := GetText(126);
 	CheckBox1.Caption := GetText(127);
+	cbClearResults.Caption := GetText(294);       //PinterPeti
 
   for Index := 1 to 6 do
   	if LastNameText[Index] <> '' then ComboBox11.Items.Add(LastNameText[Index]);
@@ -370,7 +382,7 @@ end;
 
 procedure TfrmFind.Edit2KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-	if Key = VK_RETURN then StartSearch;
+	if Key = VK_RETURN then Button1Click(Sender);
 end;
 
 { --------------------------------------------------------------------------- }
@@ -384,7 +396,7 @@ begin
 	if SourcePathOK(GetText(17), SourcePath, SourceLabel, SourceSerial, SourceType) then
 	begin
 		SearchArea := SourcePath;
-		StartSearch;
+		Button1Click(Sender);
   end;
 end;
 
@@ -406,7 +418,7 @@ end;
 procedure TfrmFind.Edit1KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-	if Key = VK_RETURN then StartSearch;
+	if Key = VK_RETURN then Button1Click(Sender);
 end;
 
 { --------------------------------------------------------------------------- }
@@ -414,7 +426,7 @@ end;
 procedure TfrmFind.ComboBox11KeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-	if Key = VK_RETURN then StartSearch;
+	if Key = VK_RETURN then Button1Click(Sender);
 end;
 
 { --------------------------------------------------------------------------- }

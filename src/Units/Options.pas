@@ -38,6 +38,10 @@ type
     ImageAllFiles: TImage;
     edtFoobar: TEdit;
     spdbtnFoobar: TSpeedButton;
+    cbAutoSort: TCheckBox;
+    cbAutoSave: TCheckBox;
+    Image9: TImage;
+    Image10: TImage;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
@@ -85,6 +89,8 @@ begin
   UseFoobar := CheckBoxFoobar.Checked;
   FoobarPath := edtFoobar.Text;
   AllFiles := CheckBoxAllFiles.Checked;
+  AutoSort := cbAutoSort.Checked; //PP
+  AutoSave := cbAutoSave.Checked; //PP
 
   if RadioButton2.Checked then PreferTag := 2
   else PreferTag := 1;
@@ -145,6 +151,8 @@ begin
   CheckBox4.Caption := GetText(224);
   CheckBoxFoobar.Caption := GetText(235);
   CheckBoxAllFiles.Caption := GetText(236);
+  cbAutoSort.Caption := GetText(330);//PP
+  cbAutoSave.Caption := GetText(331);//PP
 
 	if DirectoryExists(RootD + LanguageDir) then LangPath := RootD + LanguageDir + '\'
   else LangPath := RootD;
@@ -176,6 +184,8 @@ begin
   spdbtnFoobar.Enabled := UseFoobar;
   edtFoobar.Text := FoobarPath;
   CheckBoxAllFiles.Checked := AllFiles;
+  cbAutoSort.Checked := AutoSort;//PP
+  cbAutoSave.Checked := AutoSave;//PP
   if PreferTag = 2 then RadioButton2.Checked := true
   else RadioButton1.Checked := true;
 end;

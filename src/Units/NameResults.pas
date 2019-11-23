@@ -79,14 +79,14 @@ begin
 
       Tag := 0;
 			Caption := GetText(140) + ': ' + GetText(120) + ' (' + LastNameText[1] + '): ' + IntToStr(TempList.Items.Count);
-			Button6.Caption := GetText(93);
-		  Button4.Caption := GetText(91);
-      Button5.Caption := GetText(15);
-			ListView1.Column[0].Caption := GetText(41);
-		  ListView1.Column[1].Caption := GetText(104);
-		  ListView1.Column[2].Caption := GetText(171);
-		  ListView1.Column[3].Caption := GetText(172);
-		  ListView1.Column[4].Caption := GetText(131);
+			//Button6.Caption := GetText(93);
+		//Button4.Caption := GetText(91);
+      //Button5.Caption := GetText(15);
+			ListView2.Column[0].Caption := GetText(41);
+		ListView2.Column[1].Caption := GetText(104);
+		ListView2.Column[2].Caption := GetText(171);
+		ListView2.Column[3].Caption := GetText(172);
+		ListView2.Column[4].Caption := GetText(131);
 
 			ShowProgressWindow(GetText(141));
 
@@ -97,7 +97,7 @@ begin
 
         Item := TTreeNode(TempList.Items.Objects[Index]);
 
-				ListItem := ListView1.Items.Add;
+				ListItem := ListView2.Items.Add;
     		ListItem.Data := Item;
 
         ItemText := ExtractName(Item.Text);
@@ -146,12 +146,12 @@ begin
         ListItem.SubItems.Add(ItemText);
 			end;
 
-			ListView1.Selected := ListView1.Items[0];
-			ListView1.ItemFocused := ListView1.Selected;
+			ListView2.Selected := ListView2.Items[0];
+			ListView2.ItemFocused := ListView2.Selected;
 
 		  CloseProgressWindow;
 
-      ShowModal;
+      //ShowModal;
       Result := FindItem;
 		end;
 		finally Release;

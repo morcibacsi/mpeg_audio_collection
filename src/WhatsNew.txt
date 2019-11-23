@@ -1,3 +1,13 @@
+MPEG Audio Collection 2.92+ (14. May 2005)
+-------------------------------
+ - added autosorting & autosaving after adding a new volume
+ - added Tag editor (directly edits files from list,if they are exist,only mp3 & ogg for now)
+ - search result displaying changed
+ - Lyrics3 v2 Tag support (read & write)
+ - TPreview component changed from 3.01 to 4.61
 
-MPEG Audio Collection 2.92 (Oct-05-2003):
- - stable release
+ works, but buggy:
+ - remove entries from list (information on summary remains there)
+ - physically remove files from disc (information on summary remains there)
+  (it should be: [Volume Size]-[Removed Files' Size] 
+     and it is : [Volume Size])
