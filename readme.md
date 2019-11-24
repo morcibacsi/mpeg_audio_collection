@@ -6,6 +6,11 @@
 
 The project used cvs for version control system at SourceForge and it contained the versions until version 2.91 alpha 4. The versions after that were added manually by extracting the files from the published archives.
 
+## Some history
+Back in 2007 I've added some features and published those versions on my personal page. Also fixed a few issues reported by users. Back then I contacted the mac team to join them but got no reply. Now 12 years later I found the source code of my versions.
+
+Since I got no reply from the original team and also there were no further releases from them I think I can consider the project abandoned. Now I have released my versions so at least my work won't get lost. I won't promise new versions as these kind of projects are not that useful nowadays but if you still use it and find a bug feel free to open an issue. I might fix them.
+
 ## Info
 
 MAC is an ultimate freeware utility for Windows 95/98/NT/2000/ME/XP
