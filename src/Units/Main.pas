@@ -1204,6 +1204,7 @@ begin
   	(LowerCase(DriveComboBox1.Items.Strings[0][1]) = 'a') then Inc(FirstDrive);
   if (DriveComboBox1.Items.Count > 1) and
   	(LowerCase(DriveComboBox1.Items.Strings[1][1]) = 'b') then Inc(FirstDrive);
+  if FirstDrive = 0 then Inc(FirstDrive);
 
 	Tree := TreeView2;
 	TempTree := TreeView3;

@@ -6,7 +6,7 @@ object frmAbout: TfrmAbout
   BorderStyle = bsDialog
   Caption = '_Title'
   ClientHeight = 194
-  ClientWidth = 410
+  ClientWidth = 529
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,13 +16,17 @@ object frmAbout: TfrmAbout
   OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
+  DesignSize = (
+    529
+    194)
   PixelsPerInch = 96
   TextHeight = 13
   object Image2: TImage
-    Left = 343
-    Top = 64
+    Left = 463
+    Top = 80
     Width = 32
     Height = 32
+    Anchors = [akBottom]
     AutoSize = True
     Picture.Data = {
       055449636F6E0000010001002020000001000800A80800001600000028000000
@@ -99,23 +103,27 @@ object frmAbout: TfrmAbout
     OnDblClick = Image2DblClick
   end
   object Button1: TButton
-    Left = 319
+    Left = 438
     Top = 160
     Width = 83
     Height = 25
+    Anchors = [akRight, akBottom]
     Cancel = True
     Caption = '_Caption'
     TabOrder = 0
     OnClick = Button1Click
+    ExplicitLeft = 319
   end
   object Panel1: TPanel
     Left = 16
     Top = 16
-    Width = 293
+    Width = 412
     Height = 169
+    Anchors = [akLeft, akTop, akRight, akBottom]
     BevelInner = bvRaised
     BevelOuter = bvLowered
     TabOrder = 1
+    ExplicitWidth = 293
     object Label1: TLabel
       Left = 48
       Top = 16

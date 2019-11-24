@@ -1,7 +1,13 @@
-Enhanced MPEG Audio Collection: history
+MPEG Audio Collection: history
+
+(24. November 2019) 2.93.63
+---------------------------
+ - Fixed Access violation when opening CD cover editor
+ - Updated project website in about section
+ - Updated email address in about section
 
 (07. October 2007) 2.92.52
-------------------------
+--------------------------
  - WavPack 4.x files were not correctly recognized (thanks to Gert Kanis to draw my attention to this problem)
  - when volume label contained spaces as first charachters, the collection got corrupted (now spaces trimmed automatically)
  - the "Add volume" dialog can be resized now

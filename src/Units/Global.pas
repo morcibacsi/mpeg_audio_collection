@@ -21,17 +21,17 @@ type
 
 var
 	AuthorName: string = 'MAC Team';
-	AppTitle: string = 'Enhanced MPEG Audio Collection';
+	AppTitle: string = 'MPEG Audio Collection';
   AppTitleShort: string = 'MAC';
 	////////////////////////////
-	AVersion: string = '2.92+';
-  ADate: string = '11 January 2006';
+	AVersion: string = '2.93';
+  ADate: string = '24 November 2019';
 	////////////////////////////
   AppCopyright: string = 'Freeware, copyright by J. Faul && The MAC Team';
 	Homepage: string = 'http://mac.sourceforge.net/';
-	HomePage2: string = 'http://pinterpeti.tvn.hu'; //PP
+	HomePage2: string = 'https://github.com/morcibacsi/mpeg_audio_collection'; //PP
 	EMail: string = 'macteam@users.sourceforge.net';
-    EMail2: string = 'pinterpeti@tvn.hu';  //PP
+    EMail2: string = 'pinterpeti@gmail.com';  //PP
   MACHelpFile: string = 'mac.hlp';
 	InfoFile: string = 'info.txt';
 	HistoryFile: string = 'history.txt';

@@ -69,7 +69,7 @@ begin
 	Button1.Caption := GetText(54);
 
 	Label1.Caption := AppTitle;
-	Label2.Caption := 'Version ' + AVersion + ',  ' + ADate;
+	Label2.Caption := 'Version ' + AVersion;
 	Label3.Caption := AppCopyright;
 	Label4.Caption := EMail;
 	Label5.Caption := Homepage;

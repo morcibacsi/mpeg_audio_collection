@@ -1,7 +1,7 @@
 ;MPEG Audio Collection Installer Script
 
 !define MUI_PRODUCT "MPEG Audio Collection" ;Define your own software name here
-!define MUI_VERSION "2.92" ;Define your own software version here
+!define MUI_VERSION "2.93" ;Define your own software version here
 
 !include "MUI.nsh"
 
@@ -9,7 +9,7 @@
 ;Configuration
 
   ;General
-  OutFile "mac292.exe"
+  OutFile "mac293.exe"
 
   ;Folder selection page
   InstallDir "$PROGRAMFILES\${MUI_PRODUCT}"
@@ -53,7 +53,7 @@
 ;Language Strings
 
   ;Description
-  LangString DESC_SecCopyUI ${LANG_ENGLISH} "Will install MPEG Audio Collection 2.92"
+  LangString DESC_SecCopyUI ${LANG_ENGLISH} "Will install MPEG Audio Collection 2.93"
 
 ;--------------------------------
 ;Data
