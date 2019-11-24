@@ -3,15 +3,15 @@
 {                                                                             }
 {    Tnt Delphi Unicode Controls                                              }
 {      http://www.tntware.com/delphicontrols/unicode/                         }
-{        Version: 2.2.1                                                       }
+{        Version: 2.3.0                                                       }
 {                                                                             }
-{    Copyright (c) 2002-2005, Troy Wolbrink (troy.wolbrink@tntware.com)       }
+{    Copyright (c) 2002-2007, Troy Wolbrink (troy.wolbrink@tntware.com)       }
 {                                                                             }
 {*****************************************************************************}
 
 unit TntMenus_Design;
 
-{$INCLUDE ..\TntCompilers.inc}
+{$INCLUDE ..\Source\TntCompilers.inc}
 
 {*******************************************************}
 {  Special Thanks to Francisco Leong for getting these  }
@@ -29,7 +29,7 @@ interface
 {$ENDIF}
 
 uses
-  Windows, Classes, Menus, TntMenus, Forms, Messages, Controls,
+  Windows, Classes, Menus, Messages,
   {$IFDEF MNUBUILD_AVAILABLE} MnuBuild, {$ENDIF}
   DesignEditors, DesignIntf;
 
@@ -47,7 +47,7 @@ implementation
 
 uses
   {$IFDEF MNUBUILD_AVAILABLE} MnuConst, {$ELSE} DesignWindows, {$ENDIF} SysUtils, Graphics, ActnList,
-  Dialogs, TntDesignEditors_Design, TntActnList;
+  Controls, Forms, TntDesignEditors_Design, TntActnList, TntMenus;
 
 procedure Register;
 begin

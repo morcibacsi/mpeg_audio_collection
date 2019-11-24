@@ -386,7 +386,6 @@ object frmFreedb: TfrmFreedb
     Top = 184
   end
   object TCP: TIdTCPClient
-    MaxLineAction = maException
     ReadTimeout = 0
     Port = 0
     Left = 40

@@ -155,8 +155,8 @@ object frmAbout: TfrmAbout
     object Image1: TImage
       Left = 24
       Top = 16
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -208,8 +208,8 @@ object frmAbout: TfrmAbout
     object Image3: TImage
       Left = 24
       Top = 88
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -261,8 +261,8 @@ object frmAbout: TfrmAbout
     object Image4: TImage
       Left = 23
       Top = 40
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -314,8 +314,8 @@ object frmAbout: TfrmAbout
     object Image5: TImage
       Left = 24
       Top = 64
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000
@@ -382,8 +382,8 @@ object frmAbout: TfrmAbout
     object Image6: TImage
       Left = 24
       Top = 128
-      Width = 16
-      Height = 16
+      Width = 32
+      Height = 32
       AutoSize = True
       Picture.Data = {
         055449636F6E0000010001001010000001000800680500001600000028000000

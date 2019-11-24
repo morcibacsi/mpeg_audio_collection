@@ -33,7 +33,7 @@ uses
 	RenameLabel,
   ColumnsDialog, PrintCover, Options, ReportDialog,
   Find, ReportProcess, ScanDialog, SourcePath, TagEditor, SelectVolume,
-  ProgressWindow, Statistic, About, WaitWindow, MessageDialog, Global, pkID3,
+  ProgressWindow, Statistic, About, WaitWindow, MessageDialog, Global,
 
   Windows, SysUtils, Classes, Forms, Registry, ShellAPI,
   Dialogs, Menus, ImgList, Controls, ComCtrls, ToolWin, StdCtrls,
@@ -162,7 +162,6 @@ type
     Panel5: TPanel;
     ILSearchResults: TImageList;
     cbDuplicates: TComboBox;
-    pkID3: TpkID3;
     Delete4: TMenuItem;
     Delete3: TMenuItem;
     PageControl1: TPageControl;
@@ -312,12 +311,12 @@ var
 	frmMain: TfrmMain;
 	SourcePath:String;   //PinterPeti
 	FindItem: TTreeNode; //PinterPeti
-	frmFind: TfrmFind;   //PinterPeti
+	//frmFind: TfrmFind;   //PinterPeti
 	SearchArea:Byte;     //PinterPeti
 
 implementation
 
-uses EditTag, EditOggTag;
+uses EditTag, EditOggTag, Helpers;
 
 {$R *.DFM}
 
@@ -863,130 +862,138 @@ end;
 
 procedure TfrmMain.ReadSettings;
 var
-	Reg: TRegistry;
+	Reg: TRegIniFile;
 	Index: longint;
   // Gambit - reads foobar path
   Reg2: TRegistry;
 begin
-	Reg := TRegistry.Create;
+	Reg := TRegIniFile.Create;
 
 	Reg.RootKey := HKEY_CURRENT_USER;
 
 	if Reg.OpenKey('\Software\' + AppTitle, false) then
 		try
-			LangName := Reg.ReadString('LangName');
-			CurrentCollection := Reg.ReadString('CurrentCollection');
-			FindArea := Reg.ReadInteger('FindArea');
-      for Index := 1 to 6 do LastNameText[Index] := Reg.ReadString('LastNameText' + IntToStr(Index));
-			NameArea := Reg.ReadInteger('NameArea');
-			NameCase := Reg.ReadBool('NameCase');
-			for Index := 0 to 17 do Prop[(Index div 3) + 1, (Index mod 3) + 1] := Reg.ReadInteger('Property' + IntToStr(Index));
-			for Index := 1 to numTag do TagText[Index] := Reg.ReadString('TagText' + IntToStr(Index)); // MB
-			AutoOpen := Reg.ReadBool('AutoOpen');
-			UseWindowSettings := Reg.ReadBool('UseWindowSettings');
-			for Index := 1 to 21 do RowCol[Index] := Reg.ReadBool('ReportItems' + IntToStr(Index));
-      for Index := 1 to 17 do RowColIndex[Index] := Reg.ReadInteger('ReportItemsIndex' + IntToStr(Index));
-			RFormat := Reg.ReadInteger('ReportFormat');
-      RScanning := Reg.ReadInteger('ReportScanning');
-			LastReportFile := Reg.ReadString('LastReportFile');
-			LastOpenDir := Reg.ReadString('LastOpenDir');
-			LastSaveDir := Reg.ReadString('LastSaveDir');
-			CompareName := Reg.ReadBool('CompareName');
-			CompareProperty := Reg.ReadBool('CompareProperty');
-      for Index := 1 to 5 do LastCol[Index] := Reg.ReadString('LastCol' + IntToStr(Index));
-      LastDrive := Reg.ReadString('LastDrive');
-      LastZoom := Reg.ReadInteger('LastZoom');
-      FontName := Reg.ReadString('FontName');
-      FontSize := Reg.ReadInteger('FontSize');
-      FontColor := Reg.ReadInteger('FontColor');
-      FontCharSet := Reg.ReadInteger('FontCharSet');
-      for Index := 1 to 4 do FontStyle[Index] := Reg.ReadBool('FontStyle' + IntToStr(Index));
-      for Index := 1 to 2 do IStretch[Index] := Reg.ReadInteger('Stretch' + IntToStr(Index));
+			LangName := Reg.ReadString('','LangName',LangName);
+			CurrentCollection := Reg.ReadString('','CurrentCollection',CurrentCollection);
+			FindArea := Reg.ReadInteger('','FindArea',FindArea);
+      for Index := 1 to 6 do LastNameText[Index] := Reg.ReadString('','LastNameText' + IntToStr(Index),LastNameText[Index]);
+			NameArea := Reg.ReadInteger('','NameArea',NameArea);
+			NameCase := Reg.ReadBool('','NameCase',NameCase);
+			for Index := 0 to 17 do Prop[(Index div 3) + 1, (Index mod 3) + 1] := Reg.ReadInteger('','Property' + IntToStr(Index),Prop[(Index div 3) + 1, (Index mod 3) + 1]);
+			for Index := 1 to numTag do TagText[Index] := Reg.ReadString('','TagText' + IntToStr(Index),TagText[Index]); // MB
+			AutoOpen := Reg.ReadBool('','AutoOpen',AutoOpen);
+			UseWindowSettings := Reg.ReadBool('','UseWindowSettings',UseWindowSettings);
+			for Index := 1 to 21 do RowCol[Index] := Reg.ReadBool('','ReportItems' + IntToStr(Index),RowCol[Index]);
+      for Index := 1 to 17 do RowColIndex[Index] := Reg.ReadInteger('','ReportItemsIndex' + IntToStr(Index),RowColIndex[Index]);
+			RFormat := Reg.ReadInteger('','ReportFormat',RFormat);
+      RScanning := Reg.ReadInteger('','ReportScanning',RScanning);
+			LastReportFile := Reg.ReadString('','LastReportFile',LastReportFile);
+			LastOpenDir := Reg.ReadString('','LastOpenDir',LastOpenDir);
+			LastSaveDir := Reg.ReadString('','LastSaveDir',LastSaveDir);
+			CompareName := Reg.ReadBool('','CompareName',CompareName);
+			CompareProperty := Reg.ReadBool('','CompareProperty',CompareProperty);
+      for Index := 1 to 5 do LastCol[Index] := Reg.ReadString('','LastCol' + IntToStr(Index),LastCol[Index]);
+      LastDrive := Reg.ReadString('','LastDrive',LastDrive);
+      LastZoom := Reg.ReadInteger('','LastZoom',LastZoom);
+      FontName := Reg.ReadString('','FontName',FontName);
+      FontSize := Reg.ReadInteger('','FontSize',FontSize);
+      FontColor := Reg.ReadInteger('','FontColor',FontColor);
+      FontCharSet := Reg.ReadInteger('','FontCharSet',FontCharSet);
+      for Index := 1 to 4 do FontStyle[Index] := Reg.ReadBool('','FontStyle' + IntToStr(Index),FontStyle[Index]);
+      for Index := 1 to 2 do IStretch[Index] := Reg.ReadInteger('','Stretch' + IntToStr(Index),IStretch[Index]);
 
-			Gridlines1.Checked := Reg.ReadBool('GridLines');
+			Gridlines1.Checked := Reg.ReadBool('','GridLines',Gridlines1.Checked);
       ListView1.GridLines := Gridlines1.Checked;
       lvSearchResults.GridLines := Gridlines1.Checked;   //PinterPeti
       ListView1.RowSelect := ListView1.GridLines;
       lvSearchResults.RowSelect := ListView1.GridLines;  //PinterPeti
-			Hottrack1.Checked := Reg.ReadBool('HotTrack');
+			Hottrack1.Checked := Reg.ReadBool('','HotTrack',Hottrack1.Checked);
 			TreeView1.HotTrack := Hottrack1.Checked;
 			ListView1.HotTrack := Hottrack1.Checked;
             lvSearchResults.HotTrack := Hottrack1.Checked;    //PinterPeti
-
-			Toolbar1.Checked := Reg.ReadBool('Toolbar');
+			Toolbar1.Checked := Reg.ReadBool('','Toolbar',Toolbar1.Checked);
       Toolbar2.Visible := Toolbar1.Checked;
-			Statusbar1.Checked := Reg.ReadBool('Statusbar');
+			Statusbar1.Checked := Reg.ReadBool('','Statusbar',Statusbar1.Checked);
       Statusbar2.Visible := Statusbar1.Checked;
-			Panel1.Width := Reg.ReadInteger('PanelWidth');
+			Panel1.Width := Reg.ReadInteger('','PanelWidth',Panel1.Width);
+
 			if UseWindowSettings then
 			begin
-				Top := Abs(Reg.ReadInteger('Top'));
-				Left := Reg.ReadInteger('Left');
-				Height := Reg.ReadInteger('Height');
-				Width := Reg.ReadInteger('Width');
+				Top := Abs(Reg.ReadInteger('','Top',Top));
+				Left := Reg.ReadInteger('','Left',Left);
+				Height := Reg.ReadInteger('','Height',Height);
+				Width := Reg.ReadInteger('','Width',Width);
 			end;
 
-      RSorting := Reg.ReadBool('ReportSorting');
-      DuplicateArea := Reg.ReadInteger('DuplicateArea');
-      ColumnToSorting := Reg.ReadInteger('ColumnToSorting');
+      RSorting := Reg.ReadBool('','ReportSorting',RSorting);
+      DuplicateArea := Reg.ReadInteger('','DuplicateArea',DuplicateArea);
+      ColumnToSorting := Reg.ReadInteger('','ColumnToSorting',ColumnToSorting);
 
-      for Index := 1 to numTag do TagField[Index] := Reg.ReadBool('TagField' + IntToStr(Index)); // MB
+      for Index := 1 to numTag do TagField[Index] := Reg.ReadBool('','TagField' + IntToStr(Index),TagField[Index]); // MB
 
-      AutoBackup := Reg.ReadBool('AutoBackup');
-      Numeration := Reg.ReadBool('Numeration');
-      AddDate := Reg.ReadBool('AddDate');
-      CustomLabel := Reg.ReadBool('CustomLabel');
-      LabelText := Reg.ReadString('LabelText');
+      AutoBackup := Reg.ReadBool('','AutoBackup',AutoBackup);
+      Numeration := Reg.ReadBool('','Numeration',Numeration);
+      AddDate := Reg.ReadBool('','AddDate',AddDate);
+      CustomLabel := Reg.ReadBool('','CustomLabel',CustomLabel);
+      LabelText := Reg.ReadString('','LabelText',LabelText);
 
-      TreeView1.Font.Name := Reg.ReadString('WFName');
-      TreeView1.Font.Size := Reg.ReadInteger('WFSize');
-      TreeView1.Font.Color := Reg.ReadInteger('WFColor');
-      TreeView1.Font.CharSet := Reg.ReadInteger('WFCharSet');
-      if Reg.ReadBool('WFBold') then TreeView1.Font.Style := TreeView1.Font.Style + [fsBold];
-      if Reg.ReadBool('WFItalic') then TreeView1.Font.Style := TreeView1.Font.Style + [fsItalic];
-      if Reg.ReadBool('WFUnderline') then TreeView1.Font.Style := TreeView1.Font.Style + [fsUnderline];
-      if Reg.ReadBool('WFStrikeOut') then TreeView1.Font.Style := TreeView1.Font.Style + [fsStrikeOut];
+      TreeView1.Font.Name := Reg.ReadString('','WFName',TreeView1.Font.Name);
+      TreeView1.Font.Size := Reg.ReadInteger('','WFSize',TreeView1.Font.Size);
+      TreeView1.Font.Color := Reg.ReadInteger('','WFColor',TreeView1.Font.Color);
+      TreeView1.Font.CharSet := Reg.ReadInteger('','WFCharSet',TreeView1.Font.CharSet);
+
+      if Reg.ReadBool('','WFBold',False) then TreeView1.Font.Style := TreeView1.Font.Style + [fsBold];
+      if Reg.ReadBool('','WFItalic',False) then TreeView1.Font.Style := TreeView1.Font.Style + [fsItalic];
+      if Reg.ReadBool('','WFUnderline',False) then TreeView1.Font.Style := TreeView1.Font.Style + [fsUnderline];
+      if Reg.ReadBool('','WFStrikeOut',False) then TreeView1.Font.Style := TreeView1.Font.Style + [fsStrikeOut];
 			ListView1.Font.Assign(TreeView1.Font);
 
       lvSearchResults.Font.Assign(TreeView1.Font); //PinterPeti
       cbDuplicates.Font.Assign(TreeView1.Font); //PinterPeti
-      PlayListSaveDir := Reg.ReadString('PlayListSaveDir');
-      LastAddDir := Reg.ReadString('LastAddDir');
-      AddSize := Reg.ReadBool('AddSize');
-      ValidFiles := Reg.ReadBool('ValidFiles');
-      CompareTag := Reg.ReadBool('CompareTag');
-      for Index := 0 to InfoCol_nCols do InfoCol[Index] := Reg.ReadInteger('InfoCol' + IntToStr(Index)); // MB
+      PlayListSaveDir := Reg.ReadString('','PlayListSaveDir',PlayListSaveDir);
+      LastAddDir := Reg.ReadString('','LastAddDir',LastAddDir);
+      AddSize := Reg.ReadBool('','AddSize',AddSize);
+      ValidFiles := Reg.ReadBool('','ValidFiles',ValidFiles);
+      CompareTag := Reg.ReadBool('','CompareTag',CompareTag);
+      for Index := 0 to InfoCol_nCols do InfoCol[Index] := Reg.ReadInteger('','InfoCol' + IntToStr(Index),InfoCol[Index]); // MB
 
-      Fileextensions1.Checked := Reg.ReadBool('FileExtensions');
+      Fileextensions1.Checked := Reg.ReadBool('','FileExtensions',Fileextensions1.Checked);
       FileExtensions := Fileextensions1.Checked;
-      ItemNumeration := Reg.ReadBool('ItemNumeration');
-      Fullpath1.Checked := Reg.ReadBool('FullPath');
+      ItemNumeration := Reg.ReadBool('','ItemNumeration',ItemNumeration);
+      Fullpath1.Checked := Reg.ReadBool('','FullPath',Fullpath1.Checked);
       FullPath := Fullpath1.Checked;
-      ReportSummary := Reg.ReadBool('ReportSummary');
-			AppState := Reg.ReadInteger('AppState');
-      LastMacro := Reg.ReadString('LastMacro');
+      ReportSummary := Reg.ReadBool('','ReportSummary',ReportSummary);
+			AppState := Reg.ReadInteger('','AppState',AppState);
+      LastMacro := Reg.ReadString('','LastMacro',LastMacro);
+      GuessedEncoder := Reg.ReadBool('','GuessedEncoder',GuessedEncoder);
+      UseFoobar := Reg.ReadBool('','UseFoobar',UseFoobar);
+      FoobarPath := Reg.ReadString('','FoobarPath',FoobarPath);
+      AllFiles := Reg.ReadBool('','AllFiles',AllFiles);
+      AutoSort := Reg.ReadBool('','AutoSort',AutoSort);//PP
+      AutoSave := Reg.ReadBool('','AutoSave',AutoSave);//PP
+      PreferTag := Reg.ReadInteger('','PreferTag',PreferTag);
 
-      GuessedEncoder := Reg.ReadBool('GuessedEncoder');
-      UseFoobar := Reg.ReadBool('UseFoobar');
-      FoobarPath := Reg.ReadString('FoobarPath');
-      AllFiles := Reg.ReadBool('AllFiles');
-      AutoSort := Reg.ReadBool('AutoSort');//PP
-      AutoSave := Reg.ReadBool('AutoSave');//PP
-      PreferTag := Reg.ReadInteger('PreferTag');
+      LastEditDir := Reg.ReadString('','LastEditDir',LastEditDir);
+      ColumnAutoSize := Reg.ReadBool('','ColumnAutoSize',ColumnAutoSize);
 
-      LastEditDir := Reg.ReadString('LastEditDir');
-      ColumnAutoSize := Reg.ReadBool('ColumnAutoSize');
+      EjectCD := Reg.ReadBool('','EjectCD',EjectCD);
 
-      EjectCD := Reg.ReadBool('EjectCD');
+      SearchTop := Abs(Reg.ReadInteger('','SearchTop',SearchTop));
+      SearchLeft := Reg.ReadInteger('','SearchLeft',SearchLeft);
+      SearchHeight := Reg.ReadInteger('','SearchHeight',SearchHeight);
+      SearchWidth := Reg.ReadInteger('','SearchWidth',SearchWidth);
 
-      SearchTop := Abs(Reg.ReadInteger('SearchTop'));
-      SearchLeft := Reg.ReadInteger('SearchLeft');
-      SearchHeight := Reg.ReadInteger('SearchHeight');
-      SearchWidth := Reg.ReadInteger('SearchWidth');
+      Panel3.Height := Reg.ReadInteger('','SearchPanelHeight',Panel3.Height); //PinterPeti
 
-      Panel3.Height := Reg.ReadInteger('SearchPanelHeight'); //PinterPeti
-//      FormEditTag.cbCapitalization.Enabled := Reg.ReadBool('CapitalizationBoxState'); //PinterPeti
-//      FormEditTag.cboxCapitalization.ItemIndex := Reg.ReadInteger('CapitalizationBoxIndex');//PinterPeti
+      CapitalizationBoxState := Reg.ReadBool('','CapitalizationBoxState',CapitalizationBoxState);
+      CapitalizationBoxIndex := Reg.ReadInteger('','CapitalizationBoxIndex',CapitalizationBoxIndex);
+      FileFormat := Reg.ReadString('','FileFormat',FileFormat);
+      DeleteIfNotEmpty := Reg.ReadBool('','DeleteIfNotEmpty',DeleteIfNotEmpty);
+      WordDelimiterChars := Reg.ReadString('','WordDelimiterChars',WordDelimiterChars);
+
+      if WordDelimiterChars = '' then
+        WordDelimiterChars := ' _!+-.,[(&@#=';
+
     except
 		end;
 
@@ -1186,6 +1193,7 @@ end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
 begin
+    AVersion := Sto_GetFmtFileVersion(ParamStr(0));
 	Application.Title := AppTitle;
 	Caption := AppTitle;
 
@@ -3937,10 +3945,16 @@ begin
   try
     if GetSelectedNode.HasChildren = False then begin
        if UpperCase(ExtractFileExt(GetFilePath(frmMain.GetSelectedNode))) = '.MP3' then
-         FormEditTag.ShowModal;
+         with TFormEditTag.Create(Application) do
+           try ShowModal;
+             finally Release;
+           end;
        if UpperCase(ExtractFileExt(GetFilePath(frmMain.GetSelectedNode))) = '.OGG' then
-         FormEditOggTag.ShowModal;
-    end else
+         with TFormEditOggTag.Create(Application) do
+           try ShowModal;
+             finally Release;
+           end;
+       end else
       MessageBox(Handle, PChar(GetText(308)), PChar('Error'), $00000010);
   except on EAccessViolation do
   end;

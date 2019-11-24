@@ -23,6 +23,7 @@ type
     procedure FolderTree1Change(Sender: TObject; Node: TTreeNode);
     procedure Edit1KeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormResize(Sender: TObject);
 	private
 		SourcePath: string;
 		SourceLabel: string;
@@ -118,7 +119,7 @@ begin
 		SourcePath := FolderTree1.Directory;
 		if Length(SourcePath) > 3 then SourceLabel := SourceLabel + Copy(SourcePath, 3, Length(SourcePath) - 2);
 
-    UserVolumeLabel := Edit1.Text;
+    UserVolumeLabel := Trim(Edit1.Text);
     if Pos('\', UserVolumeLabel) > 0 then
     	UserVolumeLabel := Trim(StringReplace(UserVolumeLabel, '\', ' ', [rfReplaceAll]));
 
@@ -190,5 +191,11 @@ begin
 end;
 
 { --------------------------------------------------------------------------- }
+
+procedure TfrmSourcePath.FormResize(Sender: TObject);
+begin
+  FolderTree1.Width  := GroupBox1.Width - 34;
+  FolderTree1.Height := GroupBox1.Height - 40;
+end;
 
 end.

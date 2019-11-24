@@ -3,7 +3,7 @@ unit ScanThread;
 interface
 
 uses
-	Monkey, WAVfile, OggVorbis, TwinVQ, MPEGplus, ID3v2, MPEGaudio, WMAfile, WavPackfile,
+	Monkey, WAVfile, OggVorbis, TwinVQ, MPEGplus, APETag, ID3v2, MPEGaudio, WMAfile, WavPackfile,
   FlacFile, OptimFROG, AACfile, Global, Classes, StdCtrls,ComCtrls, SysUtils,
   Masks;
 
@@ -169,6 +169,7 @@ var
 	Child: TTreeNode;
   FileUnknown: file of Byte;
   SizeUnknown: Longint;
+  APETag: TAPETag;
 begin
 	for Index := 1 to 4 do Result[Index] := 0;
 
@@ -267,7 +268,7 @@ begin
         if FlacFile.Channels = 2 then FileData[4] := 1;
         FileData[5] := 35;
         FileData[6] := FlacFile.BitsPerSample;
-
+{
         if FlacFile.VorbisComment.Valid then
         begin
           FileTag[1] := TextFilter(FlacFile.VorbisComment.Value['Title'], 0);
@@ -278,10 +279,10 @@ begin
 					FileTag[6] := TextFilter(FlacFile.VorbisComment.Value['Comment'], 0);
           FileTag[7] := TextFilter(FlacFile.VorbisComment.Value['Genre'], 0);
         end;
-
+}
         if GuessedEncoder then begin
-            if FlacFile.VorbisComment.Vendor <> '' then
-               FileTag[6] := FlacFile.VorbisComment.Vendor
+            if FlacFile.Vendor <> '' then
+               FileTag[6] := FlacFile.Vendor
             else
                FileTag[6] := 'FLAC';
         end;
@@ -336,16 +337,16 @@ begin
 
 				if MPPFile.APEtag.Exists then
 				begin
-					FileTag[1] := TextFilter(MPPFile.APEtag.Title, 0);
-					FileTag[2] := TextFilter(MPPFile.APEtag.Artist, 0);
-					FileTag[3] := TextFilter(MPPFile.APEtag.Album, 0);
+					FileTag[1] := TextFilter(MPPFile.APETag.SeekField('Title'),0);
+					FileTag[2] := TextFilter(MPPFile.APETag.SeekField('Artist'), 0);
+					FileTag[3] := TextFilter(MPPFile.APETag.SeekField('Album'), 0);
           // Gambit - changed, check it again
 {					if MPPFile.APEtag.Track in [1..99] then
             FileTag[4] := IntToStr(MPPFile.APEtag.Track);    }
-          FileTag[4] := IntToStr(MPPFile.APEtag.Track);
-					FileTag[5] := TextFilter(MPPFile.APEtag.Year, 0);
-					FileTag[6] := TextFilter(MPPFile.APEtag.Comment, 0);
-          FileTag[7] := TextFilter(MPPFile.APEtag.Genre, 0); //MB
+          FileTag[4] := MPPFile.APETag.SeekField('Track');
+					FileTag[5] := TextFilter(MPPFile.APETag.SeekField('Year'), 0);
+					FileTag[6] := TextFilter(MPPFile.APETag.SeekField('Comment'), 0);
+          FileTag[7] := TextFilter(MPPFile.APETag.SeekField('Genre'), 0); //MB
 				end;
 
   			for Index2 := 1 to numTag do // MB
@@ -468,20 +469,20 @@ begin
 				FileData[5] := 50;
 				FileData[6] := WAVPackFile.Bits;
 
-      		if (WAVPackFile.ID3v1.Exists) or (WAVPackFile.ID3v2.Exists) then
-               FileTag2 := GetFileTag(FileList.FileName, 0, 0);
+      		//if (WAVPackFile.ID3v1.Exists) or (WAVPackFile.ID3v2.Exists) then
+               //FileTag2 := GetFileTag(FileList.FileName, 0, 0); //- removed id3 tag in ATL 2.3
 
 				if WAVPackFile.APEtag.Exists then
 				begin
-					FileTag[1] := TextFilter(WAVPackFile.APEtag.Title, 0);
-					FileTag[2] := TextFilter(WAVPackFile.APEtag.Artist, 0);
-					FileTag[3] := TextFilter(WAVPackFile.APEtag.Album, 0);
+					FileTag[1] := TextFilter(WAVPackFile.APEtag.SeekField('Title'), 0);
+					FileTag[2] := TextFilter(WAVPackFile.APEtag.SeekField('Artist'), 0);
+					FileTag[3] := TextFilter(WAVPackFile.APEtag.SeekField('Album'), 0);
           // Gambit - changed, check it again
 {					if MPPFile.APEtag.Track in [1..99] then FileTag[4] := IntToStr(WAVPackFile.APEtag.Track);  }
-          FileTag[4] := IntToStr(WAVPackFile.APEtag.Track);
-					FileTag[5] := TextFilter(WAVPackFile.APEtag.Year, 0);
-					FileTag[6] := TextFilter(WAVPackFile.APEtag.Comment, 0);
-          FileTag[7] := TextFilter(WAVPackFile.APEtag.Genre, 0); // MB
+          FileTag[4] := WAVPackFile.APEtag.SeekField('Track');
+					FileTag[5] := TextFilter(WAVPackFile.APEtag.SeekField('Year'), 0);
+					FileTag[6] := TextFilter(WAVPackFile.APEtag.SeekField('Comment'), 0);
+          FileTag[7] := TextFilter(WAVPackFile.APEtag.SeekField('Genre'), 0); // MB
 				end;
 
   			   for Index2 := 1 to numTag do // MB
@@ -512,16 +513,16 @@ begin
 
 				if OfrFile.APEtag.Exists then
 				begin
-					FileTag[1] := TextFilter(OfrFile.APEtag.Title, 0);
-					FileTag[2] := TextFilter(OfrFile.APEtag.Artist, 0);
-					FileTag[3] := TextFilter(OfrFile.APEtag.Album, 0);
+					FileTag[1] := TextFilter(OfrFile.APEtag.SeekField('Title'), 0);
+					FileTag[2] := TextFilter(OfrFile.APEtag.SeekField('Artist'), 0);
+					FileTag[3] := TextFilter(OfrFile.APEtag.SeekField('Album'), 0);
           // Gambit - changed, check it again
 {					if Monkey.APEtag.Track in [1..99] then FileTag[4] :=
             IntToStr(OfrFile.APEtag.Track);                    }
-					FileTag[4] := IntToStr(OfrFile.APEtag.Track);
-					FileTag[5] := TextFilter(OfrFile.APEtag.Year, 0);
-					FileTag[6] := TextFilter(OfrFile.APEtag.Comment, 0);
-          FileTag[7] := TextFilter(OfrFile.APEtag.Genre, 0);
+					FileTag[4] := OfrFile.APEtag.SeekField('Track');
+					FileTag[5] := TextFilter(OfrFile.APEtag.SeekField('Year'), 0);
+					FileTag[6] := TextFilter(OfrFile.APEtag.SeekField('Comment'), 0);
+          FileTag[7] := TextFilter(OfrFile.APEtag.SeekField('Genre'), 0);
 				end;
 
   			for Index2 := 1 to numTag do
@@ -551,15 +552,16 @@ begin
 
 				if Monkey.APEtag.Exists then
 				begin
-					FileTag[1] := TextFilter(Monkey.APEtag.Title, 0);
-					FileTag[2] := TextFilter(Monkey.APEtag.Artist, 0);
-					FileTag[3] := TextFilter(Monkey.APEtag.Album, 0);
+					FileTag[1] := TextFilter(Monkey.APEtag.SeekField('Title'), 0);
+					FileTag[2] := TextFilter(Monkey.APEtag.SeekField('Artist'), 0);
+					FileTag[3] := TextFilter(Monkey.APEtag.SeekField('Album'), 0);
           // Gambit - changed, check it again
 {					if Monkey.APEtag.Track in [1..99] then FileTag[4] := IntToStr(Monkey.APEtag.Track);  }
-          FileTag[4] := IntToStr(Monkey.APEtag.Track);
-					FileTag[5] := TextFilter(Monkey.APEtag.Year, 0);
-					FileTag[6] := TextFilter(Monkey.APEtag.Comment, 0);
-          FileTag[7] := TextFilter(Monkey.APEtag.Genre, 0); // MB
+          FileTag[4] := Monkey.APEtag.SeekField('Track');
+					FileTag[5] := TextFilter(Monkey.APEtag.SeekField('Year'), 0);
+					FileTag[6] := TextFilter(Monkey.APEtag.SeekField('Comment'), 0);
+          FileTag[7] := TextFilter(Monkey.APEtag.SeekField('Genre'), 0); // MB
+
 				end;
 
   			for Index2 := 1 to numTag do

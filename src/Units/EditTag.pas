@@ -1,14 +1,11 @@
-// mixed using of mpegaudio and pkid3 -  maybe i should use one of them, but this
-// was easier
-
 unit EditTag;
 
 interface
 uses
   ComCtrls, SysUtils, Windows, Forms,
-  Controls, StdCtrls, ExtCtrls, Classes,
-  Main, Global, TagEditor, MPEGAudio, pkID3, Registry, Helpers,
-  Graphics, Math, Buttons, StrUtils;
+  Controls, StdCtrls, Classes,
+  Main, Global, TagEditor, MPEGAudio, Helpers,
+  Graphics, Math, StrUtils, ExtCtrls;
 
 type
   TFormEditTag = class(TForm)
@@ -56,7 +53,6 @@ type
     lbArL: TLabel;
     lbTiL: TLabel;
     lbAlL: TLabel;
-    pkID31: TpkID3;
     imSwap: TImage;
     gbCapitalization: TGroupBox;
     cbCapitalization: TCheckBox;
@@ -205,8 +201,7 @@ procedure TFormEditTag.DisableAll;
 var i: Integer;
 begin
   for i := 0 to ComponentCount-1 do try
-    if Components[i].Name <> pkID31.Name then
-      TControl(Components[i]).Enabled := False;
+    TControl(Components[i]).Enabled := False;
     except
   end;
   try
@@ -221,8 +216,7 @@ procedure TFormEditTag.EnableAll;
 var i: Integer;
 begin
   for i := 0 to ComponentCount-1 do try
-    if Components[i].Name <> pkID31.Name then
-      TControl(Components[i]).Enabled := True;
+    TControl(Components[i]).Enabled := True;
     except
   end;
   try
@@ -336,59 +330,21 @@ begin
 end;
 { --------------------------------------------------------------------------- }
 procedure TFormEditTag.FormCreate(Sender: TObject);
-var Reg: TRegistry;
 begin
   NeedUpd := False;
   ClearAll1;
   ClearAll2;
-//  cbID3v1.Checked    := False;
-//  cbID3v2.Checked    := False;
-//  lbLyrics3Tag.Visible := False;
   DisableAll;
 
-{  leTrack1.Enabled   := False;
-  leArtist1.Enabled  := False;
-  leTitle1.Enabled   := False;
-  leAlbum1.Enabled   := False;
-  leYear1.Enabled    := False;
-  leComment1.Enabled := False;
-  cbGenre1.Enabled   := False;
-
-  leTrack2.Enabled     := False;
-  leArtist2.Enabled    := False;
-  leTitle2.Enabled     := False;
-  leAlbum2.Enabled     := False;
-  leYear2.Enabled      := False;
-  leComment2.Enabled   := False;
-  leComposer.Enabled   := False;
-  leOrigArtist.Enabled := False;
-  leCopyright.Enabled  := False;
-  leURL.Enabled        := False;
-  leEncodedby.Enabled  := False;
-  cbGenre2.Enabled     := False;
-}
   SetCaptions;
-  Reg := TRegistry.Create;
-  Reg.RootKey := HKEY_CURRENT_USER;
-  if Reg.OpenKey('\Software\' + AppTitle, false) then try
-    cbCapitalization.Checked := Reg.ReadBool('CapitalizationBoxState');
-    cboxCapitalization.Enabled := Reg.ReadBool('CapitalizationBoxState');
-    edDelimiters.Enabled := Reg.ReadBool('CapitalizationBoxState');
-    cboxCapitalization.ItemIndex := Reg.ReadInteger('CapitalizationBoxIndex');
+  cbCapitalization.Checked := CapitalizationBoxState;
+  cboxCapitalization.Enabled := CapitalizationBoxState;
+  edDelimiters.Enabled := CapitalizationBoxState;
+  cboxCapitalization.ItemIndex := CapitalizationBoxIndex;
+  edDelimiters.Text := WordDelimiterChars;
+  edFileFormat.Text := FileFormat;
+  cbDeleteIfNotEmpty.Checked := DeleteIfNotEmpty;
 
-    if Reg.ReadString('WordDelimiters') = '' then
-      edDelimiters.Text := ' _!+-.,[(&@#='
-    else
-      edDelimiters.Text := Reg.ReadString('WordDelimiters');
-    if Reg.ReadString('FileFormat') = '' then
-      edFileFormat.Text := '%a - %b'
-    else
-      edFileFormat.Text := Reg.ReadString('FileFormat');
-    cbDeleteIfNotEmpty.Checked := Reg.ReadBool('DeleteIfNotEmpty');
-
-  except
-  end;
-  Reg.Free;
 end;
 { --------------------------------------------------------------------------- }
 procedure TFormEditTag.btCancelClick(Sender: TObject);
@@ -399,7 +355,7 @@ end;
 { --------------------------------------------------------------------------- }
 procedure TFormEditTag.cbID3v1Click(Sender: TObject);
 begin
-  if cbID3v1.Checked = False then //begin
+  if cbID3v1.Checked = False then
     if Data.ID3v1.Exists then
       NeedUpd := True;
 
@@ -419,7 +375,7 @@ end;
 { --------------------------------------------------------------------------- }
 procedure TFormEditTag.cbID3v2Click(Sender: TObject);
 begin
-  if (cbID3v2.Checked = False) then// begin
+  if (cbID3v2.Checked = False) then
     if Data.ID3v2.Exists then
       NeedUpd := True;
 
@@ -451,45 +407,16 @@ begin
     EnableAll;
     if Data.ReadFromFile( edPath.Text ) then begin
 
-{       cbID3v1.Enabled := True;
-       cbID3v2.Enabled := True;
-       cbCapitalization.Enabled := True;
-       cboxCapitalization.Enabled := True;
-       edDelimiters.Enabled := True;
-}
-       frmMain.pkID3.LoadFromFile(edPath.Text);
-       if (frmMain.pkID3.UseID3v1) and (frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 = False) then begin
+       if Data.ID3v1.Exists then begin
          cbID3v1.Checked := True;
-         leArtist1.Text  := frmMain.pkID3.ID3v1.Artist;
-         leTrack1.Text   := IntToStr(frmMain.pkID3.ID3v1.TrackNo);
-         leTitle1.Text   := frmMain.pkID3.ID3v1.Title;
-         leAlbum1.Text   := frmMain.pkID3.ID3v1.Album;
-         leYear1.Text    := frmMain.pkID3.ID3v1.Year;
-         leComment1.Text := frmMain.pkID3.ID3v1.Comment;
-         cbGenre1.Text   := frmMain.pkID3.ID3v1.Genre;
-         cbGenre1.ItemIndex := frmMain.pkID3.ID3v1.GenreID+1;
-       end;
-       if (frmMain.pkID3.UseID3v1) and (frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 = True) then begin
-         cbID3v1.Checked := True;
-         lbLyrics3Tag.Visible := True;
-         if frmMain.pkID3.ID3v1.Lyrics3.Title <> '' then
-           leTitle1.Text := frmMain.pkID3.ID3v1.Lyrics3.Title
-         else
-           leTitle1.Text := frmMain.pkID3.ID3v1.Title;
-         if frmMain.pkID3.ID3v1.Lyrics3.Artist <> '' then
-           leArtist1.Text := frmMain.pkID3.ID3v1.Lyrics3.Artist
-         else
-           leArtist1.Text := frmMain.pkID3.ID3v1.Artist;
-         if frmMain.pkID3.ID3v1.Lyrics3.Album <> '' then
-           leAlbum1.Text := frmMain.pkID3.ID3v1.Lyrics3.Album
-         else
-           leAlbum1.Text := frmMain.pkID3.ID3v1.Album;
-         leTrack1.Text := IntToStr(frmMain.pkID3.ID3v1.TrackNo);
-         leYear1.Text := frmMain.pkID3.ID3v1.Year;
-         leComment1.Text := frmMain.pkID3.ID3v1.Comment;
-         cbGenre1.Text := frmMain.pkID3.ID3v1.Genre;
-         cbGenre1.ItemIndex := frmMain.pkID3.ID3v1.GenreID+1;
-
+         leArtist1.Text  := Data.ID3v1.Artist;
+         leTrack1.Text   := IntToStr(Data.ID3v1.Track);
+         leTitle1.Text   := Data.ID3v1.Title;
+         leAlbum1.Text   := Data.ID3v1.Album;
+         leYear1.Text    := Data.ID3v1.Year;
+         leComment1.Text := Data.ID3v1.Comment;
+         cbGenre1.Text   := Data.ID3v1.Genre;
+         cbGenre1.ItemIndex := Data.ID3v1.GenreID+1;
        end;
       if Data.ID3v2.Exists then begin
         cbID3v2.Checked := True;
@@ -636,25 +563,9 @@ var SelectedIndex,Value, Code: Integer;
 begin
   Close;
   if not ( cbID3v1.Checked ) then begin
-//    Data.ID3v1.RemoveFromFile( edPath.Text );
-//    Data.ID3v2.ReadFromFile(edPath.Text);
-//frmMain.pkID3.AutoSave := true;
-//    frmMain.pkID3.ID3v1.Lyrics3.Clear;
-//    frmMain.pkID3.UseID3v1 := False;
-//    frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 := False;
-//    frmMain.pkID3.Clear;
-//    frmMain.pkID3.ID3v1.Clear;
-//    frmMain.pkID3.ID3v1.Lyrics3.Clear;
-//    frmMain.pkID3.UseID3v1 := False;
-//    frmMain.pkID3.ID3v1.UseID3v11 := False;
-//    frmMain.pkID3.ID3v1.UseID3v11 := False;
-//    frmMain.pkID3.ID3v1.SaveToFile;
-//    frmMain.pkID3.ID3v1.SaveToFile( edPath.Text );
-    frmMain.pkID3.ID3v1.UseLyrics3 := False;
-    frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 := False;
-    frmMain.pkID3.SaveToFile(edPath.Text);
     Data.ID3v1.RemoveFromFile( edPath.Text );
-//frmMain.pkID3.AutoSave := False;
+    Data.ID3v1.ReadFromFile( edPath.Text );
+
   end;
 
   if not ( cbID3v2.Checked ) then begin
@@ -695,27 +606,21 @@ begin
       CaseConvertIndex := cboxCapitalization.ItemIndex;
     if cbCapitalization.Checked = False then
       CaseConvertIndex := 6;
-    frmMain.pkID3.ID3v1.Lyrics3.Title   := SetCapital(leTitle1.Text,CaseConvertIndex,edDelimiters.Text);
-    frmMain.pkID3.ID3v1.Lyrics3.Artist  := SetCapital(leArtist1.Text,CaseConvertIndex,edDelimiters.Text);
-    frmMain.pkID3.ID3v1.Lyrics3.Album   := SetCapital(leAlbum1.Text,CaseConvertIndex,edDelimiters.Text);
-    frmMain.pkID3.ID3v1.Title   := SetCapital(leTitle1.Text,CaseConvertIndex,edDelimiters.Text);
-    frmMain.pkID3.ID3v1.Artist  := SetCapital(leArtist1.Text,CaseConvertIndex,edDelimiters.Text);
-    frmMain.pkID3.ID3v1.Album   := SetCapital(leAlbum1.Text,CaseConvertIndex,edDelimiters.Text);
-    frmMain.pkID3.ID3v1.Year    := SetCapital(leYear1.Text,CaseConvertIndex,edDelimiters.Text);
-//    Data.ID3v1.GenreID := GetID3v1GenreID(cbGenre1.Text); PinterPeti - removed
-    frmMain.pkID3.ID3v1.GenreID := GetID3v1GenreID(cbGenre1.Text); //PinterPeti much nicer than previous
-
-    frmMain.pkID3.ID3v1.Comment := SetCapital(leComment1.Text,CaseConvertIndex,edDelimiters.Text);
-
+      Data.ID3v1.Title   := SetCapital(leTitle1.Text,CaseConvertIndex,edDelimiters.Text);
+      Data.ID3v1.Artist  := SetCapital(leArtist1.Text,CaseConvertIndex,edDelimiters.Text);
+      Data.ID3v1.Album   := SetCapital(leAlbum1.Text,CaseConvertIndex,edDelimiters.Text);
+      Data.ID3v1.Year    := SetCapital(leYear1.Text,CaseConvertIndex,edDelimiters.Text);
+      Data.ID3v1.GenreID := GetID3v1GenreID(cbGenre1.Text);
+      Data.ID3v1.Comment := SetCapital(leComment1.Text,CaseConvertIndex,edDelimiters.Text);
     Val(leTrack1.Text, Value, Code);
     if (Code = 0) and (Value > 0) then
-      frmMain.pkID3.ID3v1.TrackNo := Value
+      Data.ID3v1.Track := Value
     else
-      frmMain.pkID3.ID3v1.TrackNo := 0;
+     Data.ID3v1.Track := 0;
 //    if (not FileExists(edPath.Text)) or (not Data.ID3v1.SaveToFile(edPath.Text)) then
 //      ShowMessage('Can not save tag to the file: ' + edPath.Text);
-    frmMain.pkID3.ID3v1.SaveToFile(edPath.Text);
-    frmMain.pkID3.ID3v1.LoadFromFile(edPath.Text);
+     Data.ID3v1.SaveToFile(edPath.Text);
+     Data.ID3v1.ReadFromFile(edPath.Text);
   end;
 
   if ((NeedUpd) and (cbID3v1.Checked)) and ((Length(leArtist1.Text)<31) and (Length(leTitle1.Text)<31) and (Length(leAlbum1.Text)<31)) then begin
@@ -723,10 +628,6 @@ begin
       CaseConvertIndex := cboxCapitalization.ItemIndex;
     if cbCapitalization.Checked = False then
       CaseConvertIndex := 6;
-
-    frmMain.pkID3.ID3v1.UseLyrics3 := False;
-    frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 := False;
-    frmMain.pkID3.SaveToFile(edPath.Text);
 
     Data.ID3v1.Title   := SetCapital(leTitle1.Text,CaseConvertIndex,edDelimiters.Text);
     Data.ID3v1.Artist  := SetCapital(leArtist1.Text,CaseConvertIndex,edDelimiters.Text);
@@ -805,11 +706,13 @@ begin
     DataIsChanged := True;
 
     SelectedIndex := frmMain.ListView1.Selected.Index;
-    frmMain.UpdateControls;
-    frmMain.UpdateListView;
-    frmMain.ListView1.Items[SelectedIndex].Selected := true;
-    frmMain.ListView1.Items[SelectedIndex].Focused := True;
-    frmMain.ListView1.Items[SelectedIndex].MakeVisible(False);
+    with frmMain do begin
+      UpdateControls;
+      UpdateListView;
+      ListView1.Items[SelectedIndex].Selected := true;
+      ListView1.Items[SelectedIndex].Focused := True;
+      ListView1.Items[SelectedIndex].MakeVisible(False);
+    end;
   end;
 end;
 { --------------------------------------------------------------------------- }
@@ -819,6 +722,13 @@ begin
   ClearAll1;
   ClearAll2;
   Data.Free;
+  
+  CapitalizationBoxState := cbCapitalization.Checked;
+  CapitalizationBoxIndex := cboxCapitalization.ItemIndex;
+  WordDelimiterChars := edDelimiters.Text;
+  FileFormat := edFileFormat.Text;
+  DeleteIfNotEmpty := cbDeleteIfNotEmpty.Checked;
+
 end;
 { --------------------------------------------------------------------------- }
 procedure TFormEditTag.btUpdateKeyDown(Sender: TObject; var Key: Word;
@@ -996,20 +906,12 @@ end;
 procedure TFormEditTag.cboxCapitalizationChange(Sender: TObject);
 begin
   if cboxCapitalization.ItemIndex = 6 then begin
-    if (frmMain.pkID3.UseID3v1) and (frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 = False) then begin
-      leArtist1.Text  := SetCapital(frmMain.pkID3.ID3v1.Artist,cboxCapitalization.ItemIndex,edDelimiters.Text);
-      leTitle1.Text   := SetCapital(frmMain.pkID3.ID3v1.Title,cboxCapitalization.ItemIndex,edDelimiters.Text);
-      leAlbum1.Text   := SetCapital(frmMain.pkID3.ID3v1.Album,cboxCapitalization.ItemIndex,edDelimiters.Text);
-      leYear1.Text    := SetCapital(frmMain.pkID3.ID3v1.Year,cboxCapitalization.ItemIndex,edDelimiters.Text);
-      leComment1.Text := SetCapital(frmMain.pkID3.ID3v1.Comment,cboxCapitalization.ItemIndex,edDelimiters.Text);
-    end;
-    if (frmMain.pkID3.UseID3v1) and (frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 = True) then begin
-      leArtist1.Text  := SetCapital(frmMain.pkID3.ID3v1.Lyrics3.Artist,cboxCapitalization.ItemIndex,edDelimiters.Text);
-      leTitle1.Text   := SetCapital(frmMain.pkID3.ID3v1.Lyrics3.Title,cboxCapitalization.ItemIndex,edDelimiters.Text);
-      leAlbum1.Text   := SetCapital(frmMain.pkID3.ID3v1.Lyrics3.Album,cboxCapitalization.ItemIndex,edDelimiters.Text);
-      leYear1.Text    := SetCapital(frmMain.pkID3.ID3v1.Year,cboxCapitalization.ItemIndex,edDelimiters.Text);
-      leComment1.Text := SetCapital(frmMain.pkID3.ID3v1.Comment,cboxCapitalization.ItemIndex,edDelimiters.Text);
-    end;
+    leArtist1.Text  := SetCapital(Data.ID3v1.Artist,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leTitle1.Text   := SetCapital(Data.ID3v1.Title,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leAlbum1.Text   := SetCapital(Data.ID3v1.Album,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leYear1.Text    := SetCapital(Data.ID3v1.Year,cboxCapitalization.ItemIndex,edDelimiters.Text);
+    leComment1.Text := SetCapital(Data.ID3v1.Comment,cboxCapitalization.ItemIndex,edDelimiters.Text);
+
     leTrack2.Text     := SetCapital(Data.ID3v2.TrackString,cboxCapitalization.ItemIndex,edDelimiters.Text);
     leArtist2.Text    := SetCapital(Data.ID3v2.Artist,cboxCapitalization.ItemIndex,edDelimiters.Text);
     leTitle2.Text     := SetCapital(Data.ID3v2.Title,cboxCapitalization.ItemIndex,edDelimiters.Text);

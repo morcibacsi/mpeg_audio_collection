@@ -10,6 +10,9 @@ These controls are provided as-is, with no implied warranty.  They are freely av
 
 The most simple way to install these components is by opening the appropriate design package in Delphi and clicking on the big "Install" button.  For instance, Delphi 5's design package is TntUnicodeVcl_D50.dpk.
 
+For BCB 2006 and newer, open the appropriate design package in the packages\bcbx\ folder using the Delphi personality.  After compiling and installing, you should be able to use the components in both the Delphi and BCB personality.  Remember to set the library path in menu "Tools->Options" for both the C++ Builder and the Delphi.
+
+
 ---A note on fonts----------------------
 
 The default TFont uses "MS Sans Serif" which doesn't work well with most non-ANSI characters.  I'd recommend using a TrueType font such as "Tahoma" if it is installed on the machine.  To make TFont use a different font like "Tahoma" add this to the first line in the project:

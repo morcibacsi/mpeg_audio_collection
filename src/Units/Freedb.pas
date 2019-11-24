@@ -222,26 +222,27 @@ begin
     exit;
    end;
 
-   Str := TCP.ReadLn;
+   Str := TCP.IOHandler.ReadLn;
+
    CheckResultCodeStr(Str);
-   TCP.WriteLn('cddb hello '+ {e-mail before @)}'boereck'+' '+ 'mac.de'{e-mail after @)}+' MPEGAudioCollection 2.92');
-   Str := TCP.ReadLn;
+   TCP.IOHandler.WriteLn('cddb hello '+ {e-mail before @)}'boereck'+' '+ 'mac.de'{e-mail after @)}+' MPEGAudioCollection 2.92');
+   Str := TCP.IOHandler.ReadLn;
    CheckResultCodeStr(Str);
-   TCP.WriteLn('cddb read ' + Genre + ' ' + FreedbID);
-   Str := TCP.ReadLn;
+   TCP.IOHandler.WriteLn('cddb read ' + Genre + ' ' + FreedbID);
+   Str := TCP.IOHandler.ReadLn;
    if GetCddbReturnCode(Str) = 210 then
       begin
         while Str <> '.' do
         begin
           AlbumList.Append(Str);
-          Str := TCP.ReadLn;
+          Str := TCP.IOHandler.ReadLn;
         end;
       end
    else
       begin
         Showmessage(Str); //<- MAC Errormessage
       end;
-   TCP.WriteLn('quit');
+   TCP.IOHandler.WriteLn('quit');
    TCP.Disconnect;
    if AlbumList.Count>0 then InterpretFreedbResult(AlbumList);
 end;
@@ -379,32 +380,32 @@ begin
     Exit;
    end;
    Result:=TStringlist.Create;
-   Str := TCP.ReadLn;
+   Str := TCP.IOHandler.ReadLn;
    CheckResultCodeStr(Str);
-   TCP.WriteLn('cddb hello '+ 'boereck' {before @}+' '+'mac.de'+' MPEGAudioCollection 2.92');
-   Str := TCP.ReadLn;
+   TCP.IOHandler.WriteLn('cddb hello '+ 'boereck' {before @}+' '+'mac.de'+' MPEGAudioCollection 2.92');
+   Str := TCP.IOHandler.ReadLn;
    if GetCddbReturnCode(Str) div 100 = 4 then
    begin
     Showmessage(Str);
     Exit;
    end;
-   TCP.WriteLn('proto 5');
-   Str := TCP.ReadLn;
+   TCP.IOHandler.WriteLn('proto 5');
+   Str := TCP.IOHandler.ReadLn;
    CheckResultCodeStr(Str);
-   TCP.WriteLn('cddb query ' + Command);
-   Str := TCP.ReadLn;
+   TCP.IOHandler.WriteLn('cddb query ' + Command);
+   Str := TCP.IOHandler.ReadLn;
     if (GetCddbReturnCode(Str) div 10 = 21) then
      begin
-      Str := TCP.ReadLn;
+      Str := TCP.IOHandler.ReadLn;
       while Str <> '.' do begin
         Result.Append(Str);
-        Str := TCP.ReadLn;
+        Str := TCP.IOHandler.ReadLn;
       end;
      end
     else
      if GetCddbReturnCode(Str)=200 then Exact:=true
     else Showmessage(Str); //<- MAC Error
-    TCP.WriteLn('quit');
+    TCP.IOHandler.WriteLn('quit');
     TCP.Disconnect;
 
     if Exact then

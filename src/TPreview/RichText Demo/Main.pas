@@ -211,12 +211,12 @@ begin
   with PrintPreview do
   begin
     Units := mmHiMetric; // All units are in 1/100th of millimeter
-    SetRect(TextRect[False], 2000, 2000, PaperWidth div 2 - 500, PaperHeight div 2 + 3000);
-    SetRect(ImageRect[False], PaperWidth div 2 + 500, 2000, PaperWidth - 2000, PaperHeight div 2 - 4000);
-    SetRect(TextRect[True], PaperWidth div 2 + 500, PaperHeight div 2 - 3000, PaperWidth - 2000, PaperHeight - 2000);
-    SetRect(ImageRect[True], 2000, PaperHeight div 2 + 4000, PaperWidth div 2 - 500, PaperHeight - 2000);
     BeginDoc;
     try
+      SetRect(TextRect[False], 2000, 2000, PaperWidth div 2 - 500, PaperHeight div 2 + 3000);
+      SetRect(ImageRect[False], PaperWidth div 2 + 500, 2000, PaperWidth - 2000, PaperHeight div 2 - 4000);
+      SetRect(TextRect[True], PaperWidth div 2 + 500, PaperHeight div 2 - 3000, PaperWidth - 2000, PaperHeight - 2000);
+      SetRect(ImageRect[True], 2000, PaperHeight div 2 + 4000, PaperWidth div 2 - 500, PaperHeight - 2000);
       Offset := 0;
       Toggled := False;
       while (Offset >= 0) and

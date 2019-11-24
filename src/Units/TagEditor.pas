@@ -200,62 +200,95 @@ begin
      APEtag.ReadFromFile(Filename);
      if not FromTagArray then
      begin
-      if cbTitle.Text<>'' then if cbTitle.ItemIndex=0 then APEtag.Title:='' else APEtag.Title:=cbTitle.Text;
-      if cbArtist.Text<>'' then if cbArtist.ItemIndex=0 then APEtag.Artist:='' else APEtag.Artist:=cbArtist.Text;
-      if cbAlbum.Text<>'' then if cbAlbum.ItemIndex=0 then APEtag.Album:='' else APEtag.Album:=cbAlbum.Text;
-      if cbYear.Text<>'' then if cbYear.ItemIndex=0 then APEtag.Year:='' else APEtag.Year:=cbYear.Text;
-      if cbGenre.Text<>'' then if cbGenre.ItemIndex=0 then APEtag.Genre:='' else APEtag.Genre:=cbGenre.Text;
-      if cbComment.Text<>'' then if cbComment.ItemIndex=0 then APEtag.Comment:='' else APEtag.Comment:=cbComment.Text;
-      if cbTrack.Text<>'' then if cbTrack.ItemIndex=0 then APEtag.Track:=0 else
-        try APETag.Track:=StrToInt(cbTrack.Text);
+      if cbTitle.Text<>'' then if cbTitle.ItemIndex=0 then
+        APEtag.AppendField('Title','')
+      else
+        APEtag.AppendField('Title',cbTitle.Text);
+
+      if cbArtist.Text<>'' then
+        if cbArtist.ItemIndex=0 then
+          APEtag.AppendField('Artist','')
+        else
+          APEtag.AppendField('Artist','cbArtist.Text');
+
+      if cbAlbum.Text<>'' then
+        if cbAlbum.ItemIndex=0 then
+          APEtag.AppendField('Album','')
+        else
+          APEtag.AppendField('Album',cbAlbum.Text);
+
+      if cbYear.Text<>'' then
+        if cbYear.ItemIndex=0 then
+          APEtag.AppendField('Year','')
+        else
+          APEtag.AppendField('Year',cbYear.Text);
+
+      if cbGenre.Text<>'' then
+        if cbGenre.ItemIndex=0 then
+          APEtag.AppendField('Genre','')
+        else
+          APEtag.AppendField('Genre',cbGenre.Text);
+
+      if cbComment.Text<>'' then
+        if cbComment.ItemIndex=0 then
+          APEtag.AppendField('Comment','')
+        else
+          APEtag.AppendField('Comment',cbComment.Text);
+
+      if cbTrack.Text<>'' then
+        if cbTrack.ItemIndex=0 then
+          APEtag.AppendField('Track','0')
+        else
+        try
+          APEtag.AppendField('Track',cbTrack.Text);
         except
         end;
      end
      else
      begin
-        if FilenameTag[1]<>'' then APETag.Title:=FilenameTag[1];
-        if FilenameTag[2]<>'' then APETag.Artist:=FilenameTag[2];
-        if FilenameTag[3]<>'' then APETag.Album:=FilenameTag[3];
-        if FilenameTag[4]<>'' then APETag.Track:=StrToInt(FilenameTag[4]);
-        if FilenameTag[5]<>'' then APETag.Year:=FilenameTag[5];
-        if FilenameTag[6]<>'' then APETag.Comment:=FilenameTag[6];
-        if FilenameTag[7]<>'' then APETag.Genre:=FilenameTag[7];
+        if FilenameTag[1]<>'' then APEtag.AppendField('Title',FilenameTag[1]);
+        if FilenameTag[2]<>'' then APEtag.AppendField('Artist',FilenameTag[2]);
+        if FilenameTag[3]<>'' then APEtag.AppendField('Album',FilenameTag[3]);
+        if FilenameTag[4]<>'' then APEtag.AppendField('Track',FilenameTag[4]);
+        if FilenameTag[5]<>'' then APEtag.AppendField('Year',FilenameTag[5]);
+        if FilenameTag[6]<>'' then APEtag.AppendField('Comment',FilenameTag[6]);
+        if FilenameTag[7]<>'' then APEtag.AppendField('Genre',FilenameTag[7]);
      end;
       if cbCapitalize.ItemIndex>0 then
       begin
         Case cbCapitalize.ItemIndex of
          1: begin
-              if ((not cbSecify.Checked)or(cbCapsTitle.Checked)) then APETag.Title:=UpperCaseWords(APETag.Title);
-              if ((not cbSecify.Checked)or(cbCapsArtist.Checked)) then APETag.Artist:=UpperCaseWords(APETag.Artist);
-              if ((not cbSecify.Checked)or(cbCapsAlbum.Checked)) then APETag.Album:=UpperCaseWords(APETag.Album);
-              if ((not cbSecify.Checked)or(cbCapsComment.Checked)) then APETag.Comment:=UpperCaseWords(APETag.Comment);
+              if ((not cbSecify.Checked)or(cbCapsTitle.Checked)) then APEtag.AppendField('Title',UpperCaseWords(APEtag.SeekField('Title')));
+              if ((not cbSecify.Checked)or(cbCapsArtist.Checked)) then APEtag.AppendField('Artist',UpperCaseWords(APEtag.SeekField('Artist')));
+              if ((not cbSecify.Checked)or(cbCapsAlbum.Checked)) then APEtag.AppendField('Album',UpperCaseWords(APEtag.SeekField('Album')));
+              if ((not cbSecify.Checked)or(cbCapsComment.Checked)) then APEtag.AppendField('Comment',UpperCaseWords(APEtag.SeekField('Comment')));
             end;
          2: begin
-              if ((not cbSecify.Checked)or(cbCapsTitle.Checked)) then APETag.Title:=UpperCaseFirstWord(APETag.Title);
-              if ((not cbSecify.Checked)or(cbCapsArtist.Checked)) then APETag.Artist:=UpperCaseFirstWord(APETag.Artist);
-              if ((not cbSecify.Checked)or(cbCapsAlbum.Checked)) then APETag.Album:=UpperCaseFirstWord(APETag.Album);
-              if ((not cbSecify.Checked)or(cbCapsComment.Checked)) then APETag.Comment:=UpperCaseFirstWord(APETag.Comment);
+              if ((not cbSecify.Checked)or(cbCapsTitle.Checked)) then APEtag.AppendField('Title',UpperCaseFirstWord(APEtag.SeekField('Title')));
+              if ((not cbSecify.Checked)or(cbCapsArtist.Checked)) then APEtag.AppendField('Artist',UpperCaseFirstWord(APETag.SeekField('Artist')));
+              if ((not cbSecify.Checked)or(cbCapsAlbum.Checked)) then APEtag.AppendField('Album',UpperCaseFirstWord(APETag.SeekField('Album')));
+              if ((not cbSecify.Checked)or(cbCapsComment.Checked)) then APEtag.AppendField('Comment',UpperCaseFirstWord(APETag.SeekField('Comment')));
             end;
          3: begin
-             if ((not cbSecify.Checked)or(cbCapsTitle.Checked)) then APETag.Title:=WideLowerCase(APETag.Title);
-             if ((not cbSecify.Checked)or(cbCapsArtist.Checked)) then APETag.Artist:=WideLowerCase(APETag.Artist);
-             if ((not cbSecify.Checked)or(cbCapsAlbum.Checked)) then APETag.Album:=WideLowerCase(APETag.Album);
-             if ((not cbSecify.Checked)or(cbCapsComment.Checked)) then APETag.Comment:=WideLowerCase(APETag.Comment);
+             if ((not cbSecify.Checked)or(cbCapsTitle.Checked)) then APETag.AppendField('Title',WideLowerCase(APETag.SeekField('Title')));
+             if ((not cbSecify.Checked)or(cbCapsArtist.Checked)) then APETag.AppendField('Artist',WideLowerCase(APETag.SeekField('Artist')));
+             if ((not cbSecify.Checked)or(cbCapsAlbum.Checked)) then APETag.AppendField('Album',WideLowerCase(APETag.SeekField('Album')));
+             if ((not cbSecify.Checked)or(cbCapsComment.Checked)) then APETag.AppendField('Comment',WideLowerCase(APETag.SeekField('Comment')));
             end;
          4: begin
-             if ((not cbSecify.Checked)or(cbCapsTitle.Checked)) then APETag.Title:=WideUpperCase(APETag.Title);
-             if ((not cbSecify.Checked)or(cbCapsArtist.Checked)) then APETag.Artist:=WideUpperCase(APETag.Artist);
-             if ((not cbSecify.Checked)or(cbCapsAlbum.Checked)) then APETag.Album:=WideUpperCase(APETag.Album);
-             if ((not cbSecify.Checked)or(cbCapsComment.Checked)) then APETag.Comment:=WideUpperCase(APETag.Comment);
+             if ((not cbSecify.Checked)or(cbCapsTitle.Checked)) then APETag.AppendField('Title',WideUpperCase(APETag.SeekField('Title')));
+             if ((not cbSecify.Checked)or(cbCapsArtist.Checked)) then APETag.AppendField('Artist',WideUpperCase(APETag.SeekField('Artist')));
+             if ((not cbSecify.Checked)or(cbCapsAlbum.Checked)) then APETag.AppendField('Album',WideUpperCase(APETag.SeekField('Album')));
+             if ((not cbSecify.Checked)or(cbCapsComment.Checked)) then APETag.AppendField('Comment',WideUpperCase(APETag.SeekField('Comment')));
             end;
         end;
 
        if cbCapitalize.ItemIndex<>0 then
        begin
-        APETag.Title := GoCaseException(APETag.Title);
-        APETag.Artist := GoCaseException(APETag.Artist);
-        APETag.Album := GoCaseException(APETag.Album);
-        APETag.Comment := GoCaseException(APETag.Comment);
+        APETag.AppendField('Title', GoCaseException(APETag.SeekField('Title')));
+        APETag.AppendField('Artist', GoCaseException(APETag.SeekField('Artist')));
+        APETag.AppendField('Album', GoCaseException(APETag.SeekField('Album')));
+        APETag.AppendField('Comment', GoCaseException(APETag.SeekField('Comment')));
        end;
 
       end;
@@ -263,25 +296,25 @@ begin
       begin
         for Index := 1 to ListView2.Items.Count do
          begin
-          APETag.Title:=AnsiReplaceStr(APETag.Title,ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]);
-          APETag.Artist:=AnsiReplaceStr(APETag.Artist,ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]);
-          APETag.Album:=AnsiReplaceStr(APETag.Album,ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]);
-          APETag.Comment:=AnsiReplaceStr(APETag.Comment,ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]);
+          APETag.AppendField('Title',AnsiReplaceStr(APETag.SeekField('Title'),ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]));
+          APETag.AppendField('Artist',AnsiReplaceStr(APETag.SeekField('Artist'),ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]));
+          APETag.AppendField('Album',AnsiReplaceStr(APETag.SeekField('Album'),ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]));
+          APETag.AppendField('Comment',AnsiReplaceStr(APETag.SeekField('Comment'),ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]));
          end;
       end;
      if Testmode then
       begin
-        FilenameTag[1]:=APETag.Title;
-        FilenameTag[2]:=APETag.Artist;
-        FilenameTag[3]:=APETag.Album;
-        FilenameTag[4]:=IntToStr(APETag.Track);
-        FilenameTag[5]:=APETag.Year;
-        FilenameTag[6]:=APETag.Comment;
-        FilenameTag[7]:=APETag.Genre;
+        FilenameTag[1]:=APETag.SeekField('Title');
+        FilenameTag[2]:=APETag.SeekField('Artist');
+        FilenameTag[3]:=APETag.SeekField('Album');
+        FilenameTag[4]:=APETag.SeekField('Track');
+        FilenameTag[5]:=APETag.SeekField('Year');
+        FilenameTag[6]:=APETag.SeekField('Comment');
+        FilenameTag[7]:=APETag.SeekField('Genre');
         frmPreview.AddTagEntry(FilenameTag,Filename,'APE 1');
       end
      else
-     APEtag.SaveToFile(Filename);
+     APEtag.WriteTagInFile(Filename);
      APEtag.ResetData;
 end;
 
@@ -352,10 +385,10 @@ begin
       begin
         for Index := 1 to ListView2.Items.Count do
          begin
-          ID3v1.Title:=AnsiReplaceStr(APETag.Title,ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]);
-          ID3v1.Artist:=AnsiReplaceStr(APETag.Artist,ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]);
-          ID3v1.Album:=AnsiReplaceStr(APETag.Album,ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]);
-          ID3v1.Comment:=AnsiReplaceStr(APETag.Comment,ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]);
+          ID3v1.Title:=AnsiReplaceStr(APETag.SeekField('Title'),ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]);
+          ID3v1.Artist:=AnsiReplaceStr(APETag.SeekField('Artist'),ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]);
+          ID3v1.Album:=AnsiReplaceStr(APETag.SeekField('Album'),ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]);
+          ID3v1.Comment:=AnsiReplaceStr(APETag.SeekField('Comment'),ListView2.Items[Index - 1].Caption,ListView2.Items[Index - 1].SubItems.Strings[0]);
          end;
       end;
      if Testmode then
@@ -947,7 +980,7 @@ procedure TfrmTagger.RemoveTags(ThisFile: String);
 begin
   if (frmRemTags.rbRemAll.Checked)or(frmRemTags.cbID3v1.Checked) then ID3v1.RemoveFromFile(ThisFile);
   if (frmRemTags.rbRemAll.Checked)or(frmRemTags.cbID3v2.Checked) then ID3v2.RemoveFromFile(ThisFile);
-  if (frmRemTags.rbRemAll.Checked)or(frmRemTags.cbAPE.Checked) then APETag.RemoveFromFile(ThisFile);
+  if (frmRemTags.rbRemAll.Checked)or(frmRemTags.cbAPE.Checked) then APETag.RemoveTagFromFile(ThisFile);
 end;
 
 // -----------------------------------------------------------------------------

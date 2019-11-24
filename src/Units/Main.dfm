@@ -1,7 +1,6 @@
 object frmMain: TfrmMain
-  Left = 231
-  Top = 178
-  AutoScroll = False
+  Left = 215
+  Top = 117
   Caption = 'frmMain'
   ClientHeight = 434
   ClientWidth = 763
@@ -602,6 +601,10 @@ object frmMain: TfrmMain
       object TabSheet2: TTabSheet
         Caption = '_Artist'
         ImageIndex = 1
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Label1: TLabel
           Left = 40
           Top = 224
@@ -680,8 +683,6 @@ object frmMain: TfrmMain
       AutoSize = True
       ButtonHeight = 38
       ButtonWidth = 44
-      EdgeBorders = []
-      Flat = True
       Images = ImageList3
       TabOrder = 0
       Transparent = True
@@ -5159,17 +5160,5 @@ object frmMain: TfrmMain
       0E770001FF3DFFC3E8170001FF99FFDBE8070001FFDBFF99EF470001FFC3FFBD
       E77F0001FFE7FF3CE17F0001FFFFFF00F07F0001FFFFFFFFFC7F807FFFFFFFFF
       FFFFC0FFFFFFFFFFFFFFFFFFFFFFFFFF}
-  end
-  object pkID3: TpkID3
-    ID3v1.Lyrics3.UseLyrics3v2 = False
-    ID3v1.Lyrics3.UseTimestamp = False
-    ID3v1.GenreID = 0
-    ID3v1.Genre = 'Blues'
-    ID3v1.TrackNo = 0
-    ID3v1.UseID3v11 = True
-    AutoLoad = True
-    UseID3v1 = True
-    Left = 614
-    Top = 135
   end
 end

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ExtCtrls, ImgList, StdCtrls;
+  ExtCtrls, StdCtrls;
 
 type
   TfrmMessageDialog = class(TForm)

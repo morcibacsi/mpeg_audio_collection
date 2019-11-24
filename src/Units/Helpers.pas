@@ -2,7 +2,7 @@ unit Helpers;
 
 interface
 
-uses CommDlg,Windows,SysUtils,jclUniCode,StrUtils,ShellAPI, ShlObj, ActiveX;
+uses CommDlg,Windows,SysUtils,TNTSystem,StrUtils,ShellAPI, ShlObj, ActiveX;
 
 function Hex( Decimal: Integer ): String;
 function HexToInt( HexNumber: String ): Int64;
@@ -23,6 +23,7 @@ function ReplaceString(InPutStr,Str2Replace,Replace4This,IfNotFound: String;Case
 function LoCase(ch:Char):Char;
 function VolumeID(DriveChar: Char): string;
 function FindSystemDir: string;
+function Sto_GetFmtFileVersion(const FileName: String; const Fmt: String = '%d.%d.%d.%d%s'): String;
 
 implementation
 { --------------------------------------------------------------------------- }
@@ -433,6 +434,45 @@ begin
   GetSystemDirectory(pSystemDir, 255);
   sSystemDir := StrPas(pSystemDir);
   Result := sSystemDir;
+end;
+{ --------------------------------------------------------------------------- }
+function Sto_GetFmtFileVersion(const FileName: String; const Fmt: String = '%d.%d.%d.%d%s'): String;
+var
+  iBufferSize: DWORD;
+  iDummy: DWORD;
+  pBuffer: Pointer;
+  pFileInfo: Pointer;
+  iVer: Array[1..4] of Word;
+  sCompileTime: string;
+  pcCompileTime: PChar;
+begin
+  // set default value
+  Result := '';
+  // get size of version info (0 if no version info exists)
+  iBufferSize := GetFileVersionInfoSize(PChar(FileName), iDummy);
+  if (iBufferSize > 0) then begin
+    GetMem(pBuffer, iBufferSize);
+    try
+    // get fixed file info
+    GetFileVersionInfo(PChar(FileName), 0, iBufferSize, pBuffer);
+    VerQueryValue(pBuffer, '\', pFileInfo, iDummy);
+    // read version blocks
+    iVer[1] := HiWord(PVSFixedFileInfo(pFileInfo)^.dwFileVersionMS);
+    iVer[2] := LoWord(PVSFixedFileInfo(pFileInfo)^.dwFileVersionMS);
+    iVer[3] := HiWord(PVSFixedFileInfo(pFileInfo)^.dwFileVersionLS);
+    iVer[4] := LoWord(PVSFixedFileInfo(pFileInfo)^.dwFileVersionLS);
+
+    If VerQueryValue(pBuffer,PChar('StringFileInfo\040904E4\LastCompiledTime'),pFileInfo,iDummy) Then begin
+        pcCompileTime := PChar(pFileInfo);
+        sCompileTime := ' - ' + string(pcCompileTime);
+    end else
+      sCompileTime := '';
+    finally
+      FreeMem(pBuffer);
+    end;
+    // format result string
+    Result := Format(Fmt, [iVer[1], iVer[2], iVer[3], iVer[4], sCompileTime] );
+  end;
 end;
 { --------------------------------------------------------------------------- }
 end.

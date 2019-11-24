@@ -31,15 +31,16 @@ type
     SaveButton: TButton;
     LoadButton: TButton;
     PrintButton: TButton;
-    FastPrintCheckBox: TCheckBox;
     DirectPrintCheckBox: TCheckBox;
     Bevel1: TBevel;
+    Grayscale: TCheckBox;
+    SavePDFDialog: TSaveDialog;
+    SavePDFButton: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure ZoomComboBoxChange(Sender: TObject);
     procedure UnitComboBoxChange(Sender: TObject);
     procedure AnnotationCheckBoxClick(Sender: TObject);
-    procedure FastPrintCheckBoxClick(Sender: TObject);
     procedure PrintButtonClick(Sender: TObject);
     procedure SaveButtonClick(Sender: TObject);
     procedure LoadButtonClick(Sender: TObject);
@@ -59,6 +60,8 @@ type
       const CustomFormName: String; Operation: TOperation);
     procedure PrintPreviewAnnotation(Sender: TObject; PageNo: Integer;
       Canvas: TCanvas);
+    procedure GrayscaleClick(Sender: TObject);
+    procedure SavePDFButtonClick(Sender: TObject);
   private
     FirstActivation: Boolean;
     procedure CreateImageTextPage;
@@ -87,7 +90,7 @@ begin
   PrintPreview.FetchFormNames(FormComboBox.Items);
   FormComboBox.ItemIndex := FormComboBox.Items.IndexOf(PrintPreview.FormName);
   AnnotationCheckBox.Checked := PrintPreview.Annotation;
-  FastPrintCheckBox.Checked := PrintPreview.FastPrint;
+  SavePDFButton.Enabled := PrintPreview.CanSaveAsPDF;
   FirstActivation := True;
   if (ParamCount > 0) and FileExists(ParamStr(1)) then
     RichEdit1.Lines.LoadFromFile(ParamStr(1))
@@ -137,9 +140,12 @@ begin
   PrintPreview.Annotation := AnnotationCheckBox.Checked;
 end;
 
-procedure TMainForm.FastPrintCheckBoxClick(Sender: TObject);
+procedure TMainForm.GrayscaleClick(Sender: TObject);
 begin
-  PrintPreview.FastPrint := FastPrintCheckBox.Checked;
+  if Grayscale.Checked then
+    PrintPreview.Grayscale := [gsPreview, gsPrint]
+  else
+    PrintPreview.Grayscale := [];
 end;
 
 procedure TMainForm.PrintButtonClick(Sender: TObject);
@@ -161,6 +167,21 @@ begin
       end
       else
         PrintPreview.Print;
+    end;
+  end;
+end;
+
+procedure TMainForm.SavePDFButtonClick(Sender: TObject);
+begin
+  if SavePDFDialog.Execute then
+  begin
+    Screen.Cursor := crHourglass;
+    Caption := Application.Title + ' - Saving as PDF...';
+    try
+      PrintPreview.SaveAsPDF(SavePDFDialog.FileName);
+    finally
+      Caption := Application.Title;
+      Screen.Cursor := crDefault;
     end;
   end;
 end;
@@ -227,6 +248,7 @@ begin
   begin
     PrintButton.Enabled := PrintPreview.PrinterInstalled and (PrintPreview.TotalPages > 0);
     SaveButton.Enabled := (PrintPreview.TotalPages > 0);
+    SavePDFButton.Enabled := PrintPreview.CanSaveAsPDF and (PrintPreview.TotalPages > 0);
   end;
 
 end;
@@ -267,8 +289,9 @@ begin
   UnitComboBox.Enabled := True;
   FormComboBox.Enabled := True;
   PrintButton.Enabled := PrintPreview.PrinterInstalled and (PrintPreview.TotalPages > 0);
-  SaveButton.Enabled := (PrintPreview.TotalPages > 0);
   LoadButton.Enabled := True;
+  SaveButton.Enabled := (PrintPreview.TotalPages > 0);
+  SavePDFButton.Enabled := PrintPreview.CanSaveAsPDF and (PrintPreview.TotalPages > 0);
 end;
 
 procedure TMainForm.PrintPreviewBeforePrint(Sender: TObject);
@@ -278,9 +301,9 @@ begin
 
   UnitComboBox.Enabled := False;
   PrintButton.Enabled := False;
-  SaveButton.Enabled := False;
   LoadButton.Enabled := False;
-  FastPrintCheckBox.Enabled := False;
+  SaveButton.Enabled := False;
+  SavePDFButton.Enabled := False;
 end;
 
 procedure TMainForm.PrintPreviewAfterPrint(Sender: TObject);
@@ -292,7 +315,6 @@ begin
   PrintButton.Enabled := PrintPreview.PrinterInstalled and (PrintPreview.TotalPages > 0);
   SaveButton.Enabled := (PrintPreview.TotalPages > 0);
   LoadButton.Enabled := True;
-  FastPrintCheckBox.Enabled := True;
 end;
 
 procedure TMainForm.PrintPreviewPrintProgress(Sender: TObject; PageNum,
@@ -314,7 +336,8 @@ var
 begin
   with PrintPreview do
   begin
-    // The following line ensures one pixel pen width in any mapping mode.
+    SetStretchBltMode(Canvas.Handle, COLORONCOLOR);
+    // The following line ensures one pixel pen width in all mapping modes.
     Canvas.Pen.Width := 0;
     Canvas.Brush.Style := bsCLear;
     // We are going to draw a rectangular frame on the page with 1cm distance
@@ -365,7 +388,7 @@ begin
     R := PageBounds;
     InflateRect(R, -(2 * OneCM.X), -(2 * OneCM.Y));
     // We want to place an image horizontally in center of the paper and
-    // under the frame's top. In addition, we want the image height does
+    // under the top of frame. In addition, we want the image height does
     // not exceed 3cm limit.
     SavedBottom := R.Bottom;
     R.Bottom := R.Top + 3 * OneCM.Y;
@@ -383,13 +406,17 @@ begin
        R.Bottom - R.Top, UnitComboBox.Items[UnitComboBox.ItemIndex]]));
     // For the first line of the sample text, we set the font size to 12.
     Canvas.Font.Size := 12;
+    // The following two lines ensure the colored text be printed on
+    // black and white printers.
+    SetBkColor(Canvas.Handle, RGB(255, 255, 255));
+    SetBkMode(Canvas.Handle, TRANSPARENT);
     // While we have not reached to the frame's bottom...
     InflateRect(R, -OneCM.X div 5, -OneCM.Y div 5);
     while R.Top - Canvas.Font.Height <= R.Bottom do
     begin
       // Randomly we select a font color
       Canvas.Font.Color := RGB(Random(256), Random(256), Random(256));
-      // draw the text,
+      // draw the text
       Canvas.TextRect(R, R.Left, R.Top, 'Powered by Borland Delphi.');
       // move the frame's top to the next line,
       Inc(R.Top, -Canvas.Font.Height);

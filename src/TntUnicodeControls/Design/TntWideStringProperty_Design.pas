@@ -3,15 +3,15 @@
 {                                                                             }
 {    Tnt Delphi Unicode Controls                                              }
 {      http://www.tntware.com/delphicontrols/unicode/                         }
-{        Version: 2.2.1                                                       }
+{        Version: 2.3.0                                                       }
 {                                                                             }
-{    Copyright (c) 2002-2005, Troy Wolbrink (troy.wolbrink@tntware.com)       }
+{    Copyright (c) 2002-2007, Troy Wolbrink (troy.wolbrink@tntware.com)       }
 {                                                                             }
 {*****************************************************************************}
 
 unit TntWideStringProperty_Design;
 
-{$INCLUDE ..\TntCompilers.inc}
+{$INCLUDE ..\Source\TntCompilers.inc}
 
 interface
 
@@ -24,7 +24,7 @@ interface
 {$ENDIF}
 
 uses
-  Classes, Messages, Windows, Graphics, Controls, Forms, TypInfo, TntDesignEditors_Design,
+  Classes, Messages, Windows, Graphics, TypInfo, TntDesignEditors_Design,
   DesignIntf, DesignEditors, VCLEditors;
 
 type
@@ -76,9 +76,9 @@ procedure Register;
 implementation
 
 uses
-  SysUtils, StdCtrls, TntClasses, TntGraphics, TntControls, 
-  TntSysUtils, TntStrEdit_Design, TntSystem, Consts,
-  RTLConsts, TntWindows;
+  Controls, Forms, SysUtils, StdCtrls, TntGraphics, TntControls,
+  TntSysUtils, TntSystem, Consts,
+  RTLConsts;
 
 procedure Register;
 begin

@@ -5,7 +5,7 @@ interface
 uses
 	Global, WaitWindow,
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ComCtrls, ImgList, StdCtrls, ExtCtrls;
+  ComCtrls, StdCtrls, ExtCtrls;
 
 type
   TfrmFolderInfo = class(TForm)

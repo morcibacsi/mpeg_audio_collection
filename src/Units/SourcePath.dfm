@@ -1,12 +1,14 @@
 object frmSourcePath: TfrmSourcePath
   Left = 283
   Top = 289
-  Width = 547
-  Height = 468
   ActiveControl = Button1
   BorderIcons = [biSystemMenu]
   Caption = '_Title'
+  ClientHeight = 434
+  ClientWidth = 539
   Color = clBtnFace
+  Constraints.MinHeight = 468
+  Constraints.MinWidth = 547
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -15,6 +17,10 @@ object frmSourcePath: TfrmSourcePath
   OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
+  OnResize = FormResize
+  DesignSize = (
+    539
+    434)
   PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage
@@ -22,6 +28,7 @@ object frmSourcePath: TfrmSourcePath
     Top = 128
     Width = 32
     Height = 32
+    Anchors = [akRight, akBottom]
     AutoSize = True
     Picture.Data = {
       055449636F6E0000010001002020000001000800A80800001600000028000000
@@ -101,6 +108,7 @@ object frmSourcePath: TfrmSourcePath
     Top = 16
     Width = 393
     Height = 329
+    Anchors = [akLeft, akTop, akRight, akBottom]
     Caption = '_Source'
     TabOrder = 0
     object FolderTree1: TFolderTree
@@ -122,6 +130,7 @@ object frmSourcePath: TfrmSourcePath
     Top = 368
     Width = 81
     Height = 25
+    Anchors = [akRight, akBottom]
     Caption = '_OK'
     TabOrder = 2
     OnClick = Button1Click
@@ -131,6 +140,7 @@ object frmSourcePath: TfrmSourcePath
     Top = 400
     Width = 81
     Height = 25
+    Anchors = [akRight, akBottom]
     Cancel = True
     Caption = '_Cancel'
     TabOrder = 3
@@ -141,13 +151,18 @@ object frmSourcePath: TfrmSourcePath
     Top = 360
     Width = 393
     Height = 65
+    Anchors = [akLeft, akRight, akBottom]
     Caption = '_Name'
     TabOrder = 1
+    DesignSize = (
+      393
+      65)
     object Edit1: TEdit
       Left = 16
       Top = 24
       Width = 361
       Height = 21
+      Anchors = [akLeft, akTop, akRight]
       MaxLength = 50
       TabOrder = 0
       OnKeyDown = Edit1KeyDown
@@ -159,6 +174,7 @@ object frmSourcePath: TfrmSourcePath
     Width = 90
     Height = 17
     Hint = 'Check this if you want the CD to be ejected after scanning'
+    Anchors = [akRight, akBottom]
     Caption = '_Eject'
     ParentShowHint = False
     ShowHint = True

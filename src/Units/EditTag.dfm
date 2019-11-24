@@ -1,6 +1,6 @@
 object FormEditTag: TFormEditTag
-  Left = 190
-  Top = 107
+  Left = 257
+  Top = 342
   BorderStyle = bsDialog
   Caption = 'MPEG file info box + ID3 tag editor'
   ClientHeight = 497
@@ -816,16 +816,5 @@ object FormEditTag: TFormEditTag
       TabOrder = 4
       OnKeyDown = FormKeyDown
     end
-  end
-  object pkID31: TpkID3
-    ID3v1.Lyrics3.UseLyrics3v2 = False
-    ID3v1.Lyrics3.UseTimestamp = False
-    ID3v1.GenreID = 0
-    ID3v1.Genre = 'Blues'
-    ID3v1.TrackNo = 0
-    ID3v1.UseID3v11 = True
-    UseID3v1 = True
-    Left = 288
-    Top = 272
   end
 end

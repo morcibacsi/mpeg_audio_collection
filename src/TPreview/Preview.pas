@@ -6,7 +6,7 @@
 {  kambiz@delphiarea.com                                                       }
 {  http://www.delphiarea.com                                                   }
 {                                                                              }
-{  TPrintPreview v4.61                                                         }
+{  TPrintPreview v4.75                                                         }
 {  TPaperPreview v1.03                                                         }
 {  TThumbnailPreview v1.02                                                     }
 {                                                                              }
@@ -27,16 +27,24 @@
 {    Arpad Toth                     <atsoft@atsoftware.czweb.org>              }
 {    Janet Agney                    <janet.agney@vaisala.com>                  }
 {    MeW                            <marco@wobben.com>                         }
+{    Mixy                           N/A                         //Mixy         }
+{    Miguel Gastelumendi            <mgd@satelier.com.br>                      }
+{    akeix                          N/A                                        }
+{    DwrCymru                       N/A                                        }
+{    John Hodgson                   <JohnHodgson@qmap.co.uk>                   }
 {                                                                              }
 {------------------------------------------------------------------------------}
 
 // Use ZLib Compression and Decompression for Streaming
 // Get the library at http://www.gzip.org/zlib
-{.$define ZLIB}
+{.$DEFINE ZLIB}
 
-{$ifdef VER110}         // C++Builder 3
-  {$DEFINE VER100}      // Delphi 3
-{$endif}
+// If you need transparent image printing, define IMAGE_TRANSPARENCY
+// Transparency on printers is not guaranteed. Instead, combine images
+// as needed, and then draw the final image to the printer.
+{.$DEFINE IMAGE_TRANSPARENCY}
+
+{$I DELPHIAREA.INC}
 
 unit Preview;
 
@@ -53,6 +61,7 @@ const
 type
 
   EInvalidPreviewData = class(Exception);
+  EMissingPDFLibrary = class(Exception);
 
   { TMetafileList }
 
@@ -222,14 +231,20 @@ type
   TPreviewAutoCustomForm = procedure(Sender: TObject; const CustomFormName: String;
     Operation: TOperation) of object;
 
-  TPreviewAnnotation = procedure(Sender: TObject; PageNo: Integer; Canvas: TCanvas) of object;
+  TPreviewPageDraw = procedure(Sender: TObject; PageNo: Integer; Canvas: TCanvas) of object;
 
   TVertAlign = (vaTop, vaCenter, vaBottom);  //rmk
   THorzAlign = (haLeft, haCenter, haRight);  //rmk
 
+  TGrayscaleOption = (gsPreview, gsPrint);
+  TGrayscaleOptions = set of TGrayscaleOption;
+
   TPreviewState = (psReady, psCreating, psPrinting, psEditing);
+
   TZoomState = (zsZoomOther, zsZoomToWidth, zsZoomToHeight, zsZoomToFit);
+
   TUnits = (mmPixel, mmLoMetric, mmHiMetric, mmLoEnglish, mmHiEnglish, mmTWIPS, mmPoints);
+
   TPaperType = (pLetter, pLetterSmall, pTabloid, pLedger, pLegal, pStatement,
     pExecutive, pA3, pA4, pA4Small, pA5, pB4, pB5, pFolio, pQuatro, p10x14,
     p11x17, pNote, pEnv9, pEnv10, pEnv11, pEnv12, pEnv14, pCSheet, pDSheet,
@@ -263,7 +278,7 @@ type
     FZoomMin: Integer;
     FZoomMax: Integer;
     FZoomStep: Integer;
-    FFastPrint: Boolean;
+    FFastPrint: Boolean;                // obsolete
     FUsePrinterOptions: Boolean;
     FDirectPrint: Boolean;
     FDirectPrinting: Boolean;
@@ -276,6 +291,8 @@ type
     FFormName: String;
     FAutoFormName: String;
     FAnnotation: Boolean;
+    FBackground: Boolean;
+    FGrayscale: TGrayscaleOptions;
     FOnBeginDoc: TNotifyEvent;
     FOnEndDoc: TNotifyEvent;
     FOnNewPage: TNotifyEvent;
@@ -287,9 +304,11 @@ type
     FOnAfterPrint: TNotifyEvent;
     FOnZoomChange: TNotifyEvent;
     FOnAutoCustomForm: TPreviewAutoCustomForm;
-    FOnAnnotation: TPreviewAnnoTation;
+    FOnAnnotation: TPreviewPageDraw;
+    FOnBackground: TPreviewPageDraw;
     PageMetafile: TMetafile;
     AnnotationMetafile: TMetafile;
+    BackgroundMetafile: TMetafile;
     WheelAccumulator: Integer;
     procedure SetPaperViewOptions(Value: TPaperPreviewOptions);
     procedure SetUnits(Value: TUnits);
@@ -301,6 +320,8 @@ type
     procedure SetPaperTypeByID(ID: Integer);
     procedure SetPaperSize(Width, Height: Integer);
     procedure SetAnnotation(Value: Boolean);
+    procedure SetBackground(Value: Boolean);
+    procedure SetGrayscale(Value: TGrayscaleOptions);
     function GetFormName: String;
     procedure SetFormName(const Value: String);
     function GetPageBounds: TRect;
@@ -334,6 +355,7 @@ type
     procedure Loaded; override;
     procedure Resize; override;
     procedure DoAnnotation(PageNo: Integer); virtual;
+    procedure DoBackground(PageNo: Integer); virtual;
     procedure DoProgress(Current, Done, Total: Integer); virtual;
     procedure PaintPage(Sender: TObject; Canvas: TCanvas; const PageRect: TRect); virtual;
     function FindPaperType(APaperWidth, APaperHeight: Integer; InUnits: TUnits): TPaperType;
@@ -379,6 +401,7 @@ type
     procedure Print;
     procedure UpdateZoom;
     procedure UpdateAnnotation;
+    procedure UpdateBackground;
     procedure SetPrinterOptions;
     procedure GetPrinterOptions;
     function FetchFormNames(FormNames: TStrings): Boolean;
@@ -390,6 +413,8 @@ type
     procedure SaveToStream(Stream: TStream);
     procedure LoadFromFile(const FileName: String);
     procedure SaveToFile(const FileName: String);
+    procedure SaveAsPDF(const FileName: String);
+    function CanSaveAsPDF: Boolean;
     property Aborted: Boolean read FAborted;
     property Canvas: TCanvas read GetCanvas;
     property TotalPages: Integer read GetTotalPages;
@@ -403,11 +428,13 @@ type
     property FormName: String read GetFormName write SetFormName;
     property AutoFormName: String read FAutoFormName;
     property Pages[PageNo: Integer]: TMetafile read GetPages;
+    property FastPrint: Boolean read FFastPrint write FFastPrint;       // obsolete
   published
     property Align default alClient;
     property Annotation: Boolean read FAnnotation write SetAnnotation default False;
+    property Background: Boolean read FBackground write SetBackground default False;
     property DirectPrint: Boolean read FDirectPrint write FDirectPrint default False;
-    property FastPrint: Boolean read FFastPrint write FFastPrint default True;
+    property Grayscale: TGrayscaleOptions read FGrayscale write SetGrayscale default [];
     property Units: TUnits read FUnits write SetUnits default mmHiMetric;
     property Orientation: TPrinterOrientation read FOrientation write SetOrientation default poPortrait;
     property PaperType: TPaperType read FPaperType write SetPaperType default pA4;
@@ -436,10 +463,13 @@ type
     property OnAfterPrint: TNotifyEvent read FOnAfterPrint write FOnAfterPrint;
     property OnZoomChange: TNotifyEvent read FOnZoomChange write FOnZoomChange;
     property OnAutoCustomForm: TPreviewAutoCustomForm read FOnAutoCustomForm write FOnAutoCustomForm;
-    property OnAnnotation: TPreviewAnnotation read FOnAnnotation write FOnAnnotation;
+    property OnAnnotation: TPreviewPageDraw read FOnAnnotation write FOnAnnotation;
+    property OnBackground: TPreviewPageDraw read FOnBackground write FOnBackground;
   end;
 
   { TThumbnailPreview }
+
+  TThumbnailClass = class of TThumbnail;
 
   TThumbnail = class(TObject)
   protected
@@ -447,10 +477,10 @@ type
     PageView: TPaperPreview;
     PageLabel: TLabel;
   public
-    constructor Create(AOwner: TThumbnailPreview; APageNo: Integer);
+    constructor Create(AOwner: TThumbnailPreview; APageNo: Integer); virtual;
     destructor Destroy; override;
-    function GetBoundRect: TRect;
-    function HasAsMember(Component: TComponent): Boolean;
+    function GetBoundRect: TRect; virtual;
+    function HasAsMember(Component: TComponent): Boolean; virtual;
   end;
 
   TThumbnailPreview = class(TScrollBox)
@@ -464,6 +494,7 @@ type
     FPaperViewOptions: TPaperPreviewOptions;
     FRowCount: Integer;
     FColCount: Integer;
+    FThumbnailClass: TThumbnailClass;
     FOnChange: TNotifyEvent;
     WheelAccumulator: Integer;
     ActiveThumb: TThumbnail;
@@ -473,6 +504,7 @@ type
     procedure SetMarkerColor(Value: TColor);
     procedure SetOrientation(Value: TScrollBarKind);
     procedure SetPrintPreview(Value: TPrintPreview);
+    procedure SetThumbnailClass(Value: TThumbnailClass);
     procedure SetPaperViewOptions(Value: TPaperPreviewOptions);
     procedure PaperViewOptionsChanged(Sender: TObject);
     procedure ThumbnailClick(Sender: TObject);
@@ -493,6 +525,7 @@ type
     destructor Destroy; override;
     property RowCount: Integer read FRowCount;
     property ColCount: Integer read FColCount;
+    property ThumbnailClass: TThumbnailClass read FThumbnailClass write SetThumbnailClass;
   published
     property Align default alLeft;
     property Margin: Byte read FMargin write SetMargin default 6;
@@ -582,19 +615,40 @@ const
     (ID: DMPAPER_A3_EXTRA_TRANSVERSE;     Width: 03220;     Height: 04450;     Units: mmLoMetric),
     (ID: DMPAPER_USER;                    Width: 0;         Height: 0;         Units: mmPixel));
 
-procedure DrawGraphicAsDIB(DC: HDC; X, Y: Integer; Graphic: TGraphic);
-procedure StretchDrawGraphicAsDIB(DC: HDC; const Rect: TRect; Graphic: TGraphic);
 function ConvertUnits(Value, DPI: Integer; InUnits, OutUnits: TUnits): Integer;
 
-var
-  UseHalfTonePrinting: Boolean;   //rmk
+procedure DrawGraphic(Canvas: TCanvas; X, Y: Integer; Graphic: TGraphic);
+procedure StretchDrawGraphic(Canvas: TCanvas; const Rect: TRect; Graphic: TGraphic);
+
+procedure DrawGrayscale(Canvas: TCanvas; X, Y: Integer; Graphic: TGraphic);
+procedure StretchDrawGrayscale(Canvas: TCanvas; const Rect: TRect; Graphic: TGraphic);
+
+procedure ConvertBitmapToGrayscale(Bitmap: TBitmap);
 
 procedure Register;
 
 implementation
 
 uses
-  RichEdit {$IFDEF ZLIB}, ZLib {$ENDIF};
+  RichEdit {$IFDEF ZLIB}, ZLib, Types {$ENDIF};
+
+const
+  dsPDF_lib = 'dspdf.dll';
+
+type
+  TdsPDF = record
+    Handle: HMODULE;
+    BeginDoc: function(FileName: PChar): Integer; stdcall;
+    EndDoc: function: Integer; stdcall;
+    NewPage: function: Integer; stdcall;
+    PrintPageMemory: function(Data: Pointer; Size: Integer): Integer; stdcall;
+    PrintPageFile: function(FileName: PChar): Integer; stdcall;
+    SetParameters: function(AOffsetX, AOffsetY: Integer; AConverterX, AConverterY: Double): Integer; stdcall;
+    SetPage: function(ps, orientation, w, h: Integer): Integer; stdcall;
+  end;
+
+var
+  dsPDF: TdsPDF;
 
 {$R *.RES}
 
@@ -622,272 +676,161 @@ begin
   Result := StrPas(TempFile);
 end;
 
-{ Based on:                                                                         }
-{ Sending an image to the printer - by Borland Developer Support Staff              }
-{ Article ID: 16211  Publish Date: July 16, 1998  Last Modified: September 01, 1999 }
-
-type
-  PPalEntriesArray = ^TPalEntriesArray; {for palette re-construction}
-  TPalEntriesArray = array[0..0] of TPaletteEntry;
-
-{$WARNINGS OFF}
-procedure BltBitmapAsDIB(DestDc : hdc;   {Handle of where to blt}
-                          x : word;       {Bit at x}
-                          y : word;       {Blt at y}
-                          Width : word;   {Width to stretch}
-                          Height : word;  {Height to stretch}
-                          bm : TBitmap);  {the TBitmap to Blt}
+{$IFDEF IMAGE_TRANSPARENCY}
+procedure TransparentStretchDIBits(dstDC: HDC;
+  dstX, dstY: Integer; dstW, dstH: Integer;
+  srcX, srcY: Integer; srcW, srcH: Integer;
+  bmpBits: Pointer; var bmpInfo: TBitmapInfo;
+  mskBits: Pointer; var mskInfo: TBitmapInfo;
+  Usage: DWORD);
 var
-  OriginalWidth :Integer;               {width of BM}
-  dc : hdc;                             {screen dc}
-  IsPaletteDevice : bool;               {if the device uses palettes}
-  IsDestPaletteDevice : bool;           {if the device uses palettes}
-  BitmapInfoSize : integer;             {sizeof the bitmapinfoheader}
-  lpBitmapInfo : PBitmapInfo;           {the bitmap info header}
-  hBm : hBitmap;                        {handle to the bitmap}
-  hPal : hPalette;                      {handle to the palette}
-  OldPal : hPalette;                    {temp palette}
-  hBits : THandle;                      {handle to the DIB bits}
-  pBits : pointer;                      {pointer to the DIB bits}
-  lPPalEntriesArray : PPalEntriesArray; {palette entry array}
-  NumPalEntries : integer;              {number of palette entries}
-  i : integer;                          {looping variable}
+  MemDC: HDC;
+  MemBmp: HBITMAP;
+  Save: THandle;
+  crText, crBack: TColorRef;
+  memInfo: pBitmapInfo;
+  memBits: Pointer;
+  HeaderSize: DWORD;
+  ImageSize: DWORD;
 begin
-{If range checking is on - lets turn it off for now}
-{we will remember if range checking was on by defining}
-{a define called CKRANGE if range checking is on.}
-{We do this to access array members past the arrays}
-{defined index range without causing a range check}
-{error at runtime. To satisfy the compiler, we must}
-{also access the indexes with a variable. ie: if we}
-{have an array defined as a: array[0..0] of byte,}
-{and an integer i, we can now access a[3] by setting}
-{i := 3; and then accessing a[i] without error}
-{$IFOPT R+}
-  {$DEFINE CKRANGE}
-  {$R-}
-{$ENDIF}
-
- {Save the original width of the bitmap}
-  OriginalWidth := bm.Width;
-
- {Get the screen's dc to use since memory dc's are not reliable}
-  dc := GetDc(0);
- {Are we a palette device?}
-  IsPaletteDevice :=
-    GetDeviceCaps(dc, RASTERCAPS) and RC_PALETTE = RC_PALETTE;
- {Give back the screen dc}
-  ReleaseDc(0, dc);
-
- {Allocate the BitmapInfo structure}
-  if IsPaletteDevice then
-    BitmapInfoSize := sizeof(TBitmapInfo) + (sizeof(TRGBQUAD) * 255)
-  else
-    BitmapInfoSize := sizeof(TBitmapInfo);
-  GetMem(lpBitmapInfo, BitmapInfoSize);
-
- {Zero out the BitmapInfo structure}
-  FillChar(lpBitmapInfo^, BitmapInfoSize, #0);
-
- {Fill in the BitmapInfo structure}
-  lpBitmapInfo^.bmiHeader.biSize := sizeof(TBitmapInfoHeader);
-  lpBitmapInfo^.bmiHeader.biWidth := OriginalWidth;
-  lpBitmapInfo^.bmiHeader.biHeight := bm.Height;
-  lpBitmapInfo^.bmiHeader.biPlanes := 1;
-  if IsPaletteDevice then
-    lpBitmapInfo^.bmiHeader.biBitCount := 8
-  else
-    lpBitmapInfo^.bmiHeader.biBitCount := 24;
-  lpBitmapInfo^.bmiHeader.biCompression := BI_RGB;
-  lpBitmapInfo^.bmiHeader.biSizeImage :=
-    ((lpBitmapInfo^.bmiHeader.biWidth *
-      Integer(lpBitmapInfo^.bmiHeader.biBitCount)) div 8) *
-      lpBitmapInfo^.bmiHeader.biHeight;
-  lpBitmapInfo^.bmiHeader.biXPelsPerMeter := 0;
-  lpBitmapInfo^.bmiHeader.biYPelsPerMeter := 0;
-  if IsPaletteDevice then begin
-    lpBitmapInfo^.bmiHeader.biClrUsed := 256;
-    lpBitmapInfo^.bmiHeader.biClrImportant := 256;
-  end else begin
-    lpBitmapInfo^.bmiHeader.biClrUsed := 0;
-    lpBitmapInfo^.bmiHeader.biClrImportant := 0;
-  end;
-
- {Take ownership of the bitmap handle and palette}
-  hBm := bm.ReleaseHandle;
-  hPal := bm.ReleasePalette;
-
- {Get the screen's dc to use since memory dc's are not reliable}
-  dc := GetDc(0);
-
-  if IsPaletteDevice then begin
-   {If we are using a palette, it must be}
-   {selected into the dc during the conversion}
-    OldPal := SelectPalette(dc, hPal, TRUE);
-   {Realize the palette}
-    RealizePalette(dc);
-  end;
- {Tell GetDiBits to fill in the rest of the bitmap info structure}
-  GetDiBits(dc,
-            hBm,
-            0,
-            lpBitmapInfo^.bmiHeader.biHeight,
-            nil,
-            TBitmapInfo(lpBitmapInfo^),
-            DIB_RGB_COLORS);
-
- {Allocate memory for the Bits}
-  hBits := GlobalAlloc(GMEM_MOVEABLE,
-                       lpBitmapInfo^.bmiHeader.biSizeImage);
-  pBits := GlobalLock(hBits);
- {Get the bits}
-  GetDiBits(dc,
-            hBm,
-            0,
-            lpBitmapInfo^.bmiHeader.biHeight,
-            pBits,
-            TBitmapInfo(lpBitmapInfo^),
-            DIB_RGB_COLORS);
-
-
-  if IsPaletteDevice then begin
-   {Lets fix up the color table for buggy video drivers}
-    GetMem(lPPalEntriesArray, sizeof(TPaletteEntry) * 256);
-   {$IFDEF VER100}
-      NumPalEntries := GetPaletteEntries(hPal,
-                                         0,
-                                         256,
-                                         lPPalEntriesArray^);
-   {$ELSE}
-      NumPalEntries := GetSystemPaletteEntries(dc,
-                                               0,
-                                               256,
-                                               lPPalEntriesArray^);
-   {$ENDIF}
-    for i := 0 to (NumPalEntries - 1) do begin
-      lpBitmapInfo^.bmiColors[i].rgbRed :=
-        lPPalEntriesArray^[i].peRed;
-      lpBitmapInfo^.bmiColors[i].rgbGreen :=
-        lPPalEntriesArray^[i].peGreen;
-      lpBitmapInfo^.bmiColors[i].rgbBlue :=
-        lPPalEntriesArray^[i].peBlue;
+  MemDC := CreateCompatibleDC(0);
+  try
+    MemBmp := CreateCompatibleBitmap(dstDC, srcW, srcH);
+    try
+      Save := SelectObject(MemDC, MemBmp);
+      SetStretchBltMode(MemDC, ColorOnColor);
+      StretchDIBits(MemDC, 0, 0, srcW, srcH, 0, 0, srcW, srcH, mskBits, mskInfo, Usage, SrcCopy);
+      StretchDIBits(MemDC, 0, 0, srcW, srcH, 0, 0, srcW, srcH, bmpBits, bmpInfo, Usage, SrcErase);
+      if Save <> 0 then SelectObject(MemDC, Save);
+      GetDIBSizes(MemBmp, HeaderSize, ImageSize);
+      GetMem(memInfo, HeaderSize);
+      try
+        GetMem(memBits, ImageSize);
+        try
+          GetDIB(MemBmp, 0, memInfo^, memBits^);
+          crText := SetTextColor(dstDC, RGB(0, 0, 0));
+          crBack := SetBkColor(dstDC, RGB(255, 255, 255));
+          SetStretchBltMode(dstDC, ColorOnColor);
+          StretchDIBits(dstDC, dstX, dstY, dstW, dstH, srcX, srcY, srcW, srcH, mskBits, mskInfo, Usage, SrcAnd);
+          StretchDIBits(dstDC, dstX, dstY, dstW, dstH, srcX, srcY, srcW, srcH, memBits, memInfo^, Usage, SrcInvert);
+          SetTextColor(dstDC, crText);
+          SetBkColor(dstDC, crBack);
+        finally
+          FreeMem(memBits);
+        end;
+      finally
+        FreeMem(memInfo);
+      end;
+    finally
+      DeleteObject(MemBmp);
     end;
-    FreeMem(lPPalEntriesArray, sizeof(TPaletteEntry) * 256);
+  finally
+    DeleteDC(MemDC);
   end;
-
-  if IsPaletteDevice then begin
-   {Select the old palette back in}
-    SelectPalette(dc, OldPal, TRUE);
-   {Realize the old palette}
-    RealizePalette(dc);
-  end;
-
- {Give back the screen dc}
-  ReleaseDc(0, dc);
-
- {Is the Dest dc a palette device?}
-  IsDestPaletteDevice :=
-    GetDeviceCaps(DestDc, RASTERCAPS) and RC_PALETTE = RC_PALETTE;
-
-
-  if IsPaletteDevice then begin
-   {If we are using a palette, it must be}
-   {selected into the dc during the conversion}
-    OldPal := SelectPalette(DestDc, hPal, TRUE);
-   {Realize the palette}
-    RealizePalette(DestDc);
-  end;
-
- {Revised by "Roy M Klever" <roy.magne@os.ino.no> to fix Windows 2000 & XP issue}
-  if UseHalfTonePrinting then                          //rmk
-  begin
-    SetStretchBltMode(DestDC, Halftone);
-    SetBrushOrgEx(DestDC, 0, 0, nil);
-  end
-  else
-    SetStretchBltMode(DestDC, ColorOnColor);
-
- {Do the blt}
-  StretchDiBits(DestDc,
-                x,
-                y,
-                Width,
-                Height,
-                0,
-                0,
-                OriginalWidth,
-                lpBitmapInfo^.bmiHeader.biHeight,
-                pBits,
-                lpBitmapInfo^,
-                DIB_RGB_COLORS,
-                SrcCopy);
-
-  if IsDestPaletteDevice then begin
-   {Select the old palette back in}
-    SelectPalette(DestDc, OldPal, TRUE);
-   {Realize the old palette}
-    RealizePalette(DestDc);
-  end;
-
- {De-Allocate the Dib Bits}
-  GlobalUnLock(hBits);
-  GlobalFree(hBits);
-
- {De-Allocate the BitmapInfo}
-  FreeMem(lpBitmapInfo, BitmapInfoSize);
-
- {Set the ownership of the bimap handles back to the bitmap}
-  bm.Handle := hBm;
-  bm.Palette := hPal;
-
-  {Turn range checking back on if it was on when we started}
-{$IFDEF CKRANGE}
-  {$UNDEF CKRANGE}
-  {$R+}
+end;
 {$ENDIF}
-end;
-{$WARNINGS ON}
 
-function EnhMetaHasDDB(hDC: HDC; lpHTable: PHANDLETABLE;
-  lpEMFR: PENHMETARECORD; nObj: Integer; Data: LPARAM): BOOL;
+procedure DrawBitmapAsDIB(DC: HDC; Bitmap: TBitmap; const Rect: TRect);
+var
+  BitmapHeader: pBitmapInfo;
+  BitmapImage: Pointer;
+  HeaderSize: DWORD;
+  ImageSize: DWORD;
+  {$IFDEF IMAGE_TRANSPARENCY}
+  MaskBitmapHeader: pBitmapInfo;
+  MaskBitmapImage: Pointer;
+  maskHeaderSize: DWORD;
+  MaskImageSize: DWORD;
+  {$ENDIF}
 begin
-  Result := not (lpEMFR^.iType in [EMR_BITBLT, EMR_STRETCHBLT]);
+  GetDIBSizes(Bitmap.Handle, HeaderSize, ImageSize);
+  GetMem(BitmapHeader, HeaderSize);
+  try
+    GetMem(BitmapImage, ImageSize);
+    try
+      GetDIB(Bitmap.Handle, Bitmap.Palette, BitmapHeader^, BitmapImage^);
+      {$IFDEF IMAGE_TRANSPARENCY}
+      if Bitmap.Transparent then
+      begin
+        GetDIBSizes(Bitmap.MaskHandle, MaskHeaderSize, MaskImageSize);
+        GetMem(MaskBitmapHeader, MaskHeaderSize);
+        try
+          GetMem(MaskBitmapImage, MaskImageSize);
+          try
+            GetDIB(Bitmap.MaskHandle, 0, MaskBitmapHeader^, MaskBitmapImage^);
+            TransparentStretchDIBits(
+              DC,                              // handle of destination device context
+              Rect.Left, Rect.Top,             // upper-left corner of destination rectagle
+              Rect.Right - Rect.Left,          // width of destination rectagle
+              Rect.Bottom - Rect.Top,          // height of destination rectagle
+              0, 0,                            // upper-left corner of source rectangle
+              Bitmap.Width, Bitmap.Height,     // width and height of source rectangle
+              BitmapImage,                     // address of bitmap bits
+              BitmapHeader^,                   // bitmap data
+              MaskBitmapImage,                 // address of mask bitmap bits
+              MaskBitmapHeader^,               // mask bitmap data
+              DIB_RGB_COLORS                   // usage: the color table contains literal RGB values
+            );
+          finally
+            FreeMem(MaskBitmapImage)
+          end;
+        finally
+          FreeMem(MaskBitmapHeader);
+        end;
+      end
+      else
+      {$ENDIF}
+      begin
+        SetStretchBltMode(DC, ColorOnColor);
+        StretchDIBits(
+          DC,                                  // handle of destination device context
+          Rect.Left, Rect.Top,                 // upper-left corner of destination rectagle
+          Rect.Right - Rect.Left,              // width of destination rectagle
+          Rect.Bottom - Rect.Top,              // height of destination rectagle
+          0, 0,                                // upper-left corner of source rectangle
+          Bitmap.Width, Bitmap.Height,         // width and height of source rectangle
+          BitmapImage,                         // address of bitmap bits
+          BitmapHeader^,                       // bitmap data
+          DIB_RGB_COLORS,                      // usage: the color table contains literal RGB values
+          SrcCopy                              // raster operation code: copy source pixels
+        );
+      end;
+    finally
+      FreeMem(BitmapImage)
+    end;
+  finally
+    FreeMem(BitmapHeader);
+  end;
 end;
 
-function MetafileHasDDB(Metafile: TMetafile; const Rect: TRect): Boolean;
-begin
-  Result := not EnumEnhMetafile(0, Metafile.Handle, @EnhMetaHasDDB, nil, Rect);
-end;
-
-procedure StretchDrawGraphicAsDIB(DC: HDC; const Rect: TRect; Graphic: TGraphic);
+procedure StretchDrawGraphic(Canvas: TCanvas; const Rect: TRect; Graphic: TGraphic);
 var
   Bitmap: TBitmap;
 begin
-  if (Graphic is TMetafile) and not MetafileHasDDB(TMetafile(Graphic), Rect) then
-    PlayEnhMetafile(DC, TMetafile(Graphic).Handle, Rect)
+  if Graphic is TBitmap then
+    DrawBitmapAsDIB(Canvas.Handle, TBitmap(Graphic), Rect)
+  else if Graphic is TMetafile then
+    Canvas.StretchDraw(Rect, Graphic)
+  else if Graphic is TIcon then
+    DrawIconEx(Canvas.Handle, Rect.Left, Rect.Top, TIcon(Graphic).Handle,
+      Rect.Right - Rect.Left, Rect.Bottom - Rect.Top, 0, 0, DI_NORMAL)
   else
   begin
-    if Graphic is TBitmap then
-      Bitmap := Graphic as TBitmap
-    else
-    begin
-      Bitmap := TBitmap.Create;
-      try
-        Bitmap.Assign(Graphic);
-      except
-        Bitmap.Width := Graphic.Width;
-        Bitmap.Height := Graphic.Height;
-        Bitmap.Canvas.Draw(0, 0, Graphic);
-      end;
-    end;
-    BltBitmapAsDIB(DC, Rect.Left, Rect.Top,
-      Rect.Right - Rect.Left, Rect.Bottom - Rect.Top, Bitmap);
-    if Bitmap <> Graphic then
+    Bitmap := TBitmap.Create;
+    try
+      Bitmap.Canvas.Brush.Color := clFuchsia;
+      Bitmap.Width := Graphic.Width;
+      Bitmap.Height := Graphic.Height;
+      Bitmap.Canvas.Draw(0, 0, Graphic);
+      Bitmap.Transparent := Graphic.Transparent;
+      DrawBitmapAsDIB(Canvas.Handle, Bitmap, Rect)
+    finally
       Bitmap.Free;
+    end;
   end;
 end;
 
-procedure DrawGraphicAsDIB(DC: HDC; X, Y: Integer; Graphic: TGraphic);
+procedure DrawGraphic(Canvas: TCanvas; X, Y: Integer; Graphic: TGraphic);
 var
   Rect: TRect;
 begin
@@ -895,7 +838,74 @@ begin
   Rect.Top := Y;
   Rect.Right := X + Graphic.Width;
   Rect.Bottom := Y + Graphic.Height;
-  StretchDrawGraphicAsDIB(DC, Rect, Graphic);
+  StretchDrawGraphic(Canvas, Rect, Graphic);
+end;
+
+procedure StretchDrawGrayscale(Canvas: TCanvas; const Rect: TRect; Graphic: TGraphic);
+var
+  Bitmap: TBitmap;
+  R: TRect;
+begin
+  Bitmap := TBitmap.Create;
+  try
+    Bitmap.Width := Rect.Right - Rect.Left;
+    Bitmap.Height := Rect.Bottom - Rect.Top;
+    SetRect(R, 0, 0, Bitmap.Width, Bitmap.Height);
+    Bitmap.Canvas.StretchDraw(R, Graphic);
+    ConvertBitmapToGrayscale(Bitmap);
+    DrawBitmapAsDIB(Canvas.Handle, Bitmap, Rect);
+  finally
+    Bitmap.Free;
+  end;
+end;
+
+procedure DrawGrayscale(Canvas: TCanvas; X, Y: Integer; Graphic: TGraphic);
+var
+  Rect: TRect;
+begin
+  Rect.Left := X;
+  Rect.Top := Y;
+  Rect.Right := X + Graphic.Width;
+  Rect.Bottom := Y + Graphic.Height;
+  StretchDrawGrayscale(Canvas, Rect, Graphic);
+end;
+
+procedure ConvertBitmapToGrayscale(Bitmap: TBitmap);
+var
+  LogPalette: PLogPalette;
+  NumEntries: Word;
+  Intensity: Byte;
+  I: Integer;
+  GrayPalette: HPALETTE;
+begin
+  Bitmap.PixelFormat := pf8bit;
+  GetObject(Bitmap.Palette, SizeOf(NumEntries), @NumEntries);
+  GetMem(LogPalette, SizeOf(TLogPalette) + NumEntries * SizeOf(TPaletteEntry));
+  try
+    with LogPalette^ do
+    begin
+      palVersion := $300;
+      palNumEntries := NumEntries;
+      GetPaletteEntries(Bitmap.Palette, 0, NumEntries, palPalEntry[0]);
+    end;
+    for I := 0 to NumEntries - 1 do
+      with LogPalette^.palPalEntry[I] do
+      begin
+        Intensity := (peRed * 30 + peGreen * 59 + peBlue * 11) div 100;
+        peRed := Intensity;
+        peGreen := Intensity;
+        peBlue := Intensity;
+        peFlags := 0;
+      end;
+      GrayPalette := CreatePalette(LogPalette^);
+      try
+        Bitmap.Palette := GrayPalette;
+      finally
+        DeleteObject(GrayPalette);
+      end;
+  finally
+    FreeMem(LogPalette);
+  end;
 end;
 
 { TMetafileList }
@@ -1591,7 +1601,6 @@ begin
   FZoomMin := 10;
   FZoomMax := 500;
   FZoomStep := 10;
-  FFastPrint := True;
   SetUnits(mmHiMetric);
   with PaperSizes[FPaperType] do
     FPageExt := ConvertXY(Width, Height, Units, FUnits);
@@ -1624,6 +1633,8 @@ begin
   FPaperViewOptions.Free;
   if Assigned(AnnotationMetafile) then
     AnnotationMetafile.Free;
+  if Assigned(BackgroundMetafile) then
+    BackgroundMetafile.Free;
   if AutoFormName <> '' then
     RemoveForm(AutoFormName);
   inherited Destroy;
@@ -1747,7 +1758,7 @@ begin
     Result.TopLeft := Rect.TopLeft;
   Result.Right := Result.Left + W;
   Result.Bottom := Result.Top + H;
-  StretchDrawGraphicAsDIB(Canvas.Handle, Result, Graphic);
+  StretchDrawGraphic(Canvas, Result, Graphic);
 end;
 
 //rmk
@@ -1801,7 +1812,7 @@ begin
   Result.Right := Result.Left + W;
   Result.Bottom := Result.Top + H;
 
-  StretchDrawGraphicAsDIB(Canvas.Handle, Result, Graphic);
+  StretchDrawGraphic(Canvas, Result, Graphic);
 end;
 
 function TPrintPreview.PaintWinControl(X, Y: Integer;
@@ -2000,12 +2011,12 @@ var
   Pt: TPoint;
 begin
   GetWindowRect(WindowHandle, Rect);
-  Pt.X := LoWord(Message.LParam);
-  Pt.Y := HiWord(Message.LParam);
+  Pt.X := Message.LParamLo;
+  Pt.Y := Message.LParamHi;
   if PtInRect(Rect, Pt) then
   begin
     Message.Result := 1;
-    Inc(WheelAccumulator, SmallInt(HiWord(Message.WParam)));
+    Inc(WheelAccumulator, SmallInt(Message.WParamHi));
     while Abs(WheelAccumulator) >= WHEEL_DELTA do
     begin
       IsNeg := WheelAccumulator < 0;
@@ -2152,25 +2163,22 @@ begin
           dmFields := dmFields or DM_FORMNAME;
           StrPLCopy(dmFormName, ActiveForm, CCHFORMNAME);
         end;
-        if (ActiveForm = '') or (Win32Platform <> VER_PLATFORM_WIN32_NT) then
+        if IsCustomPaper then
         begin
-          if IsCustomPaper then
-          begin
-            PaperSize := ConvertXY(FPageExt.X, FPageExt.Y, FUnits, mmLoMetric);
-            if FOrientation = poLandscape then
-              SwapValues(PaperSize.X, PaperSize.Y);
-            dmFields := dmFields or DM_PAPERSIZE;
-            dmPaperSize := DMPAPER_USER;
-            dmFields := dmFields or DM_PAPERWIDTH;
-            dmPaperWidth := PaperSize.X;
-            dmFields := dmFields or DM_PAPERLENGTH;
-            dmPaperLength := PaperSize.Y;
-          end
-          else
-          begin
-            dmFields := dmFields or DM_PAPERSIZE;
-            dmPaperSize := PaperSizes[FPaperType].ID;
-          end;
+          PaperSize := ConvertXY(FPageExt.X, FPageExt.Y, FUnits, mmLoMetric);
+          if FOrientation = poLandscape then
+            SwapValues(PaperSize.X, PaperSize.Y);
+          dmFields := dmFields or DM_PAPERSIZE;
+          dmPaperSize := DMPAPER_USER;
+          dmFields := dmFields or DM_PAPERWIDTH;
+          dmPaperWidth := PaperSize.X;
+          dmFields := dmFields or DM_PAPERLENGTH;
+          dmPaperLength := PaperSize.Y;
+        end
+        else
+        begin
+          dmFields := dmFields or DM_PAPERSIZE;
+          dmPaperSize := PaperSizes[FPaperType].ID;
         end;
         dmFields := dmFields or DM_ORIENTATION;
         case FOrientation of
@@ -2568,13 +2576,13 @@ begin
 
   if AutoScroll then
   begin
-    {$IFDEF VER100}
+    {$IFNDEF COMPILER4_UP}
     if HorzScrollBar.Visible and (GetWindowLong(Handle, GWL_STYLE) and SB_HORZ <> 0) then
     {$ELSE}
     if HorzScrollBar.IsScrollBarVisible then
     {$ENDIF}
       Inc(Space.Y, GetSystemMetrics(SM_CYHSCROLL));
-    {$IFDEF VER100}
+    {$IFNDEF COMPILER4_UP}
     if VertScrollBar.Visible and (GetWindowLong(Handle, GWL_STYLE) and SB_VERT <> 0) then
     {$ELSE}
     if VertScrollBar.IsScrollBarVisible then
@@ -2652,9 +2660,14 @@ procedure TPrintPreview.PaintPage(Sender: TObject; Canvas: TCanvas;
 begin
   if (FCurrentPage >= 1) and (FCurrentPage <= TotalPages) then
   begin
-    PlayEnhMetafile(Canvas.Handle, FPages[FCurrentPage-1].Handle, PageRect);
+    if Assigned(BackgroundMetafile) then
+      Canvas.StretchDraw(PageRect, BackgroundMetafile);
+    if gsPreview in FGrayscale then
+      StretchDrawGrayscale(Canvas, PageRect, FPages[FCurrentPage-1])
+    else
+      Canvas.StretchDraw(PageRect, FPages[FCurrentPage-1]);
     if Assigned(AnnotationMetafile) then
-      PlayEnhMetafile(Canvas.Handle, AnnotationMetafile.Handle, PageRect);
+      Canvas.StretchDraw(PageRect, AnnotationMetafile);
   end;
 end;
 
@@ -2677,6 +2690,7 @@ begin
     FCurrentPage := 1;
     FPaperView.Visible := True;
   end;
+  DoBackground(FCurrentPage);
   DoAnnotation(FCurrentPage);
   FPaperView.Refresh;
   UpdateThumbnailViews(True);
@@ -2688,6 +2702,7 @@ procedure TPrintPreview.PageChanged(Sender: TObject; PageIndex: Integer);
 begin
   if PageIndex = (FCurrentPage - 1) then
   begin
+    DoBackground(FCurrentPage);
     DoAnnotation(FCurrentPage);
     FPaperView.Refresh;
   end;
@@ -2805,18 +2820,24 @@ end;
 function TPrintPreview.GetPrinterPageBounds: TRect;
 var
   Offset: TPoint;
+  PrintArea: TPoint;
   DPI: TPoint;
 begin
   Result := PageBounds;
   if PrinterInstalled then
   begin
-    Offset.X := GetDeviceCaps(Printer.Handle, PHYSICALOFFSETX);
-    Offset.Y := GetDeviceCaps(Printer.Handle, PHYSICALOFFSETY);
     DPI.X := GetDeviceCaps(Printer.Handle, LOGPIXELSX);
     DPI.Y := GetDeviceCaps(Printer.Handle, LOGPIXELSY);
+    Offset.X := GetDeviceCaps(Printer.Handle, PHYSICALOFFSETX);
+    Offset.Y := GetDeviceCaps(Printer.Handle, PHYSICALOFFSETY);
     Offset.X := ConvertUnits(Offset.X, DPI.X, mmPixel, Units);
     Offset.Y := ConvertUnits(Offset.Y, DPI.Y, mmPixel, Units);
-    InflateRect(Result, -Offset.X, -Offset.Y);
+    //InflateRect(Result, -Offset.X, -Offset.Y);                                         //Mixy
+    PrintArea.X := GetDeviceCaps(Printer.Handle, HORZRES);                               //Mixy
+    PrintArea.Y := GetDeviceCaps(Printer.Handle, VERTRES);                               //Mixy
+    PrintArea.X := ConvertUnits(PrintArea.X, DPI.X, mmPixel, Units);                     //Mixy
+    PrintArea.Y := ConvertUnits(PrintArea.Y, DPI.Y, mmPixel, Units);                     //Mixy
+    SetRect(Result, Offset.X, Offset.Y, PrintArea.X + Offset.X, PrintArea.Y + Offset.Y); //Mixy
   end;
 end;
 
@@ -2901,6 +2922,7 @@ begin
     if FCurrentPage <> Value then
     begin
       FCurrentPage := Value;
+      DoBackground(FCurrentPage);
       DoAnnotation(FCurrentPage);
       FPaperView.Refresh;
       UpdateThumbnailViews(False);
@@ -2918,6 +2940,16 @@ end;
 procedure TPrintPreview.SetUseTempFile(Value: Boolean);
 begin
   FPages.UseTempFile := Value;
+end;
+
+procedure TPrintPreview.SetGrayscale(Value: TGrayscaleOptions);
+begin
+  if Grayscale <> Value then
+  begin
+    FGrayscale := Value;
+    FPaperView.Refresh;
+    UpdateThumbnailPage(-1);
+  end;
 end;
 
 function TPrintPreview.GetTotalPages: Integer;
@@ -3139,14 +3171,12 @@ end;
 
 procedure TPrintPreview.Abort;
 begin
-  if not FAborted then
+  if not FAborted and (FState <> psReady) then
   begin
+    FAborted := True;
     case State of
       psCreating:
       begin
-        FAborted := True;
-        if Assigned(FOnAbort) then
-          FOnAbort(Self);
         CloseMetafileCanvas(PageMetafile, FPageCanvas);
         if Assigned(PageMetafile) then
         begin
@@ -3157,13 +3187,13 @@ begin
       end;
       psPrinting:
       begin
-        FAborted := True;
-        if Assigned(FOnAbort) then
-          FOnAbort(Self);
         if Printer.Printing and not Printer.Aborted then
           Printer.Abort;
       end;
     end;
+    if Assigned(FOnAbort) then
+      FOnAbort(Self);
+    FState := psReady;
   end;
 end;
 
@@ -3302,6 +3332,66 @@ begin
   end;
 end;
 
+procedure TPrintPreview.SaveAsPDF(const FileName: String);
+
+  function PaperTypeToPDFPageSize(PaperType: TPaperType): Integer;
+  begin
+    case PaperType of
+      pCustom     : Result := 00;
+      pLetter     : Result := 01;
+      pLegal      : Result := 04;
+      pExecutive  : Result := 11;
+      pA3         : Result := 03;
+      pA4         : Result := 02;
+      pA5         : Result := 09;
+      pB4         : Result := 08;
+      pB5         : Result := 05;
+      pFolio      : Result := 10;
+      pEnvDL      : Result := 15;
+      pEnvB4      : Result := 12;
+      pEnvB5      : Result := 13;
+      pEnvMonarch : Result := 16;
+    else
+      Result := 0; // Default to custom
+    end;
+  end;
+
+var
+  I: Integer;
+  Mem: TMemoryStream;
+begin
+  if dsPDF.Handle > 0 then
+  begin
+    dsPDF.BeginDoc(PChar(FileName));
+    try
+      Mem := TMemoryStream.Create;
+      try
+        for I := 1 to TotalPages do
+        begin
+          Mem.Clear;
+          Pages[I].SaveToStream(Mem);
+          if I > 1 then dsPDF.NewPage;
+          dsPDF.SetPage(PaperTypeToPDFPageSize(PaperType), Ord(Orientation),
+            ConvertX(PaperWidth, Units, mmHiMetric),
+            ConvertY(PaperHeight, Units, mmHiMetric));
+          dsPDF.PrintPageMemory(Mem.Memory, Mem.Size);
+        end;
+      finally
+        Mem.Free;
+      end;
+    finally
+      dsPDF.EndDoc;
+    end;
+  end
+  else
+    raise EMissingPDFLibrary.Create('Cannot locate ' + dsPDF_lib);
+end;
+
+function TPrintPreview.CanSaveAsPDF: Boolean;
+begin
+  Result := (dsPDF.Handle > 0);
+end;
+
 procedure TPrintPreview.Print;
 begin
   PrintPages(1, TotalPages);
@@ -3371,8 +3461,8 @@ procedure TPrintPreview.PrintPages(FirstPage, LastPage: Integer);
 
 var
   CurPage: Integer;
-  Done: Boolean;
   PageRect: TRect;
+  Done: Boolean;
 begin
   if (FState = psReady) and (Printer.Printers.Count > 0) and
      (TotalPages > 0) and (FirstPage <= LastPage) then
@@ -3390,10 +3480,10 @@ begin
           DoProgress(CurPage, CurPage - FirstPage, LastPage - FirstPage + 1);
           if not FAborted then
           begin
-            if FFastPrint then
-              PlayEnhMetafile(Printer.Handle, FPages[CurPage-1].Handle, PageRect)
+            if gsPrint in FGrayscale then
+              StretchDrawGrayscale(Printer.Canvas, PageRect, FPages[CurPage-1])
             else
-              StretchDrawGraphicAsDIB(Printer.Handle, PageRect, FPages[CurPage-1]);
+              Printer.Canvas.StretchDraw(PageRect, FPages[CurPage-1]);
           end;
           DoProgress(CurPage, CurPage - FirstPage + 1, LastPage - FirstPage + 1);
           if not FAborted then
@@ -3501,12 +3591,50 @@ begin
   end;
   if FAnnotation and (PageNo > 0) and Assigned(FOnAnnotation) then
   begin
-
     CreateMetafileCanvas(AnnotationMetafile, AnnotationCanvas);
     try
       FOnAnnotation(Self, PageNo, AnnotationCanvas);
     finally
       CloseMetafileCanvas(AnnotationMetafile, AnnotationCanvas);
+    end;
+  end
+end;
+
+procedure TPrintPreview.SetBackground(Value: Boolean);
+begin
+  if FBackground <> Value then
+  begin
+    FBackground := Value;
+    DoBackground(FCurrentPage);
+    FPaperView.Refresh;
+  end;
+end;
+
+procedure TPrintPreview.UpdateBackground;
+begin
+  if FBackground then
+  begin
+    DoBackground(FCurrentPage);
+    FPaperView.Refresh;
+  end;
+end;
+
+procedure TPrintPreview.DoBackground(PageNo: Integer);
+var
+  BackgroundCanvas: TCanvas;
+begin
+  if Assigned(BackgroundMetafile) then
+  begin
+    BackgroundMetafile.Free;
+    BackgroundMetafile := nil;
+  end;
+  if FBackground and (PageNo > 0) and Assigned(FOnBackground) then
+  begin
+    CreateMetafileCanvas(BackgroundMetafile, BackgroundCanvas);
+    try
+      FOnBackground(Self, PageNo, BackgroundCanvas);
+    finally
+      CloseMetafileCanvas(BackgroundMetafile, BackgroundCanvas);
     end;
   end
 end;
@@ -3563,6 +3691,7 @@ begin
   FMargin := 6;
   FMarkerColor := clBlue;
   FOrientation  := sbVertical;
+  FThumbnailClass := TThumbnail;
   FPaperViewOptions := TPaperPreviewOptions.Create;
   FPaperViewOptions.OnChange := PaperViewOptionsChanged;
   FThumbnails := TList.Create;
@@ -3602,7 +3731,10 @@ var
   PageNo: Integer;
 begin
   PageNo := TPaperPreview(Sender).Tag;
-  PlayEnhMetafile(Canvas.Handle, PrintPreview.Pages[PageNo].Handle, PageRect);
+  if gsPreview in PrintPreview.Grayscale then
+    StretchDrawGrayscale(Canvas, PageRect, PrintPreview.Pages[PageNo])
+  else
+    Canvas.StretchDraw(PageRect, PrintPreview.Pages[PageNo]);
   if (ActiveThumb <> nil) and (ActiveThumb.PageNo = PageNo) then
   begin
    Canvas.Brush.Style := bsClear;
@@ -3679,7 +3811,7 @@ begin
           for I := 0 to PrintPreview.TotalPages - 1 do
           begin
             if I = FThumbnails.Count then
-              FThumbnails.Add(TThumbnail.Create(Self, I + 1));
+              FThumbnails.Add(FThumbnailClass.Create(Self, I + 1));
             Thumb := TThumbnail(FThumbnails[I]);
             Thumb.PageView.SetBounds(ThumbPos.X + ViewPos.X, ThumbPos.Y + ViewPos.Y, ViewSize.X, ViewSize.Y);
             Thumb.PageView.Parent := Self;
@@ -3847,6 +3979,15 @@ begin
   end;
 end;
 
+procedure TThumbnailPreview.SetThumbnailClass(Value: TThumbnailClass);
+begin
+  if FThumbnailClass <> Value then
+  begin
+    FThumbnailClass := Value;
+    UpdateThumbnails(True);
+  end;
+end;
+
 procedure TThumbnailPreview.PaperViewOptionsChanged(Sender: TObject);
 var
   I: Integer;
@@ -3913,12 +4054,12 @@ var
   Pt: TPoint;
 begin
   GetWindowRect(WindowHandle, Rect);
-  Pt.X := LoWord(Message.LParam);
-  Pt.Y := HiWord(Message.LParam);
+  Pt.X := Message.LParamLo;
+  Pt.Y := Message.LParamHi;
   if PtInRect(Rect, Pt) then
   begin
     Message.Result := 1;
-    Inc(WheelAccumulator, SmallInt(HiWord(Message.WParam)));
+    Inc(WheelAccumulator, SmallInt(Message.WParamLo));
     while Abs(WheelAccumulator) >= WHEEL_DELTA do
     begin
       IsNeg := WheelAccumulator < 0;
@@ -3975,8 +4116,33 @@ begin
   end;
 end;
 
+procedure LoadPDF;
+begin
+  dsPDF.Handle := LoadLibrary(dsPDF_lib);
+  if dsPDF.Handle > 0 then
+  begin
+    @dsPDF.BeginDoc := GetProcAddress(dsPDF.Handle, 'BeginDoc');
+    @dsPDF.EndDoc := GetProcAddress(dsPDF.Handle, 'EndDoc');
+    @dsPDF.NewPage := GetProcAddress(dsPDF.Handle, 'NewPage');
+    @dsPDF.PrintPageMemory := GetProcAddress(dsPDF.Handle, 'PrintPageM');
+    @dsPDF.PrintPageFile := GetProcAddress(dsPDF.Handle, 'PrintPageF');
+    @dsPDF.SetPage := GetProcAddress(dsPDF.Handle, 'SetPage');
+  end;
+end;
+
+procedure UnloadPDF;
+begin
+  if dsPDF.Handle > 0 then
+  begin
+    FreeLibrary(dsPDF.Handle);
+    FillChar(dsPDF, SizeOf(dsPDF), 0);
+  end;
+end;
+
 initialization
-  UseHalfTonePrinting := False; //rmk
   Screen.Cursors[crHand] := LoadCursor(hInstance, 'CURSOR_HAND');
   Screen.Cursors[crGrab] := LoadCursor(hInstance, 'CURSOR_GRAB');
+  LoadPDF;
+finalization
+  UnloadPDF;
 end.

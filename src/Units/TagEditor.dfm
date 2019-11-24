@@ -1,9 +1,9 @@
 object frmTagger: TfrmTagger
   Left = 242
   Top = 113
-  Width = 569
-  Height = 562
   Caption = '_Title'
+  ClientHeight = 528
+  ClientWidth = 561
   Color = clBtnFace
   Constraints.MinHeight = 533
   Constraints.MinWidth = 569
@@ -19,7 +19,7 @@ object frmTagger: TfrmTagger
   OnDragOver = FormDragOver
   DesignSize = (
     561
-    535)
+    528)
   PixelsPerInch = 96
   TextHeight = 13
   object gbCapitalize: TGroupBox

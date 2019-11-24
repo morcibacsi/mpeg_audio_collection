@@ -5,7 +5,7 @@ interface
 uses
 	Global,
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ComCtrls, ImgList, StdCtrls, ExtCtrls, Buttons;
+  ComCtrls, StdCtrls, ExtCtrls, Buttons;
 
 type
   TfrmFileInfo = class(TForm)
@@ -73,9 +73,6 @@ type
 procedure ShowFileInfo(const Node: TTreeNode);
 
 implementation
-
-uses
-  Main;
 
 {$R *.DFM}
 

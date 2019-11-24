@@ -3,7 +3,7 @@ unit PrintCover;
 interface
 
 uses
-	Global, WaitWindow, Stretch, ComCtrls, MessageDialog,
+	Global, Stretch, ComCtrls, 
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Preview, FileCtrl;
 

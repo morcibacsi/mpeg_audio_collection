@@ -2,8 +2,8 @@
 
 ; Define your application name
 !define APPNAME "Enhanced MPEG Audio Collection"
-!define APPNAMEANDVERSION "Enhanced MPEG Audio Collection 2.92+ (11. January 2006)"
-!define INSTALLEREXENAME "eMAC292(11_01_2006)"
+!define APPNAMEANDVERSION "Enhanced MPEG Audio Collection 2.92.52 (07. October 2007)"
+!define INSTALLEREXENAME "eMAC292(07_10_2007)"
 
 ; Main Install settings
 Name "${APPNAMEANDVERSION}"

@@ -198,6 +198,11 @@ var
   AllFiles: boolean = false;
   AutoSort: boolean = false; //PP
   AutoSave: boolean = false; //PP
+  CapitalizationBoxState: boolean = False;
+  CapitalizationBoxIndex: integer = 0;
+  WordDelimiterChars: String = ' _!+-.,[(&@#=';
+  FileFormat: String = '%a - %b';
+  DeleteIfNotEmpty: Boolean = False;
 
   PreferTag: integer = 1;
   MP3TagWrite: Integer;
@@ -836,50 +841,25 @@ begin
 
 	if FileExists(FileName) then
   begin
-//PinterPeti ID3v1 -> frmMain.pkID3.ID3v1 to Lyrics3 v2.00 support
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-	frmMain.pkID3.LoadFromFile(FileName); //PinterPeti
-	if (frmMain.pkID3.UseID3v1) and (frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 = False) then
-		begin
-    	Tag[1] := TextFilter(frmMain.pkID3.ID3v1.Title, LengthLimit);
-      Tag[2] := TextFilter(frmMain.pkID3.ID3v1.Artist, LengthLimit);
-      Tag[3] := TextFilter(frmMain.pkID3.ID3v1.Album, LengthLimit);
-      Tag[4] := IntToStr(frmMain.pkID3.ID3v1.TrackNo);
-      Tag[5] := TextFilter(frmMain.pkID3.ID3v1.Year, LengthLimit);
-      Tag[6] := TextFilter(frmMain.pkID3.ID3v1.Comment, LengthLimit);
-      Tag[7] := TextFilter(frmMain.pkID3.ID3v1.Genre, LengthLimit);
+    ID3v1.ReadFromFile(FileName);
+    if ID3v1.Exists then begin
+      Tag[1] := TextFilter(ID3v1.Title, LengthLimit);
+      Tag[2] := TextFilter(ID3v1.Artist, LengthLimit);
+      Tag[3] := TextFilter(ID3v1.Album, LengthLimit);
+      Tag[4] := IntToStr(ID3v1.Track);
+      Tag[5] := TextFilter(ID3v1.Year, LengthLimit);
+      Tag[6] := TextFilter(ID3v1.Comment, LengthLimit);
+      Tag[7] := TextFilter(ID3v1.Genre, LengthLimit); // MB
     end;
-
-    if (frmMain.pkID3.UseID3v1) and (frmMain.pkID3.ID3v1.Lyrics3.UseLyrics3v2 = True) then begin
-      if TextFilter(frmMain.pkID3.ID3v1.Lyrics3.Title, LengthLimit) <> '' then
-        Tag[1] := TextFilter(frmMain.pkID3.ID3v1.Lyrics3.Title, LengthLimit)
-      else
-        Tag[1] := TextFilter(frmMain.pkID3.ID3v1.Title, LengthLimit);
-      if TextFilter(frmMain.pkID3.ID3v1.Lyrics3.Artist, LengthLimit) <> '' then
-        Tag[2] := TextFilter(frmMain.pkID3.ID3v1.Lyrics3.Artist, LengthLimit)
-      else
-        Tag[2] := TextFilter(frmMain.pkID3.ID3v1.Artist, LengthLimit);
-      if TextFilter(frmMain.pkID3.ID3v1.Lyrics3.Album, LengthLimit) <> '' then
-        Tag[3] := TextFilter(frmMain.pkID3.ID3v1.Lyrics3.Album, LengthLimit)
-      else
-        Tag[3] := TextFilter(frmMain.pkID3.ID3v1.Album, LengthLimit);
-      Tag[4] := IntToStr(frmMain.pkID3.ID3v1.TrackNo);
-      Tag[5] := TextFilter(frmMain.pkID3.ID3v1.Year, LengthLimit);
-      Tag[6] := TextFilter(frmMain.pkID3.ID3v1.Comment, LengthLimit);
-      Tag[7] := TextFilter(frmMain.pkID3.ID3v1.Genre, LengthLimit); // MB
-    end;
-
     APEtag.ReadFromFile(FileName);
-    if APEtag.Exists then
-		begin
-    	Tag3[1] := TextFilter(APEtag.Title, LengthLimit);
-      Tag3[2] := TextFilter(APEtag.Artist, LengthLimit);
-      Tag3[3] := TextFilter(APEtag.Album, LengthLimit);
-      Tag3[4] := IntToStr(APEtag.Track);
-      Tag3[5] := TextFilter(APEtag.Year, LengthLimit);
-      Tag3[6] := TextFilter(APEtag.Comment, LengthLimit);
-      Tag3[7] := TextFilter(APEtag.Genre, LengthLimit); // MB
+    if APEtag.Exists then begin
+      Tag3[1] := TextFilter(APEtag.SeekField('Title'), LengthLimit);
+      Tag3[2] := TextFilter(APEtag.SeekField('Artist'), LengthLimit);
+      Tag3[3] := TextFilter(APEtag.SeekField('Album'), LengthLimit);
+      Tag3[4] := APEtag.SeekField('Track');
+      Tag3[5] := TextFilter(APEtag.SeekField('Year'), LengthLimit);
+      Tag3[6] := TextFilter(APEtag.SeekField('Comment'), LengthLimit);
+      Tag3[7] := TextFilter(APEtag.SeekField('Genre'), LengthLimit); // MB
     end;
 
     ID3v2.ReadFromFile(FileName);
